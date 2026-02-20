@@ -23,3 +23,7 @@ run
 
 # Files from Forge MDK
 forge*changelog.txt
+/src/generated/*
+/run-data/logs/*
+/run-data/config/fml.toml
+/run-data/logs/latest.log
