@@ -6,6 +6,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.v972.dinnerware.DinnerwareMod;
+import net.v972.dinnerware.item.custom.TrayItem;
 
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS =
@@ -14,7 +15,7 @@ public class ModItems {
     public  static final RegistryObject<Item> ICON = ITEMS.register("dinnerware_icon",
             () -> new Item(new Item.Properties().stacksTo(1).fireResistant()));
     public static final RegistryObject<Item> TRAY = ITEMS.register("tray",
-            () -> new Item(new Item.Properties().stacksTo(1)));
+            () -> new TrayItem(new Item.Properties().stacksTo(1)));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

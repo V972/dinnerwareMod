@@ -16,9 +16,9 @@ public class Config
             .comment(
                     " Max number of plates that can be carried on a tray.\n" +
                     " Set 0 for infinite amount.\n" +
-                    "Default: 4"
+                    "Default: 8"
             )
-            .defineInRange("trayPlatePileMaxSize", 4, 0, Integer.MAX_VALUE);
+            .defineInRange("trayPlatePileMaxSize", 8, 0, Integer.MAX_VALUE);
 
     private static final ForgeConfigSpec.BooleanValue FRAGILE_PLATES = BUILDER
             .comment(

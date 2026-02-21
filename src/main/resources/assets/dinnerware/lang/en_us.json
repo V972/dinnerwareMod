@@ -4,5 +4,7 @@
 
   "block.dinnerware.plate_block": "Plate Block",
 
-  "creativetab.dinnerware_tab": "Dinnerware"
+  "creativetab.dinnerware_tab": "Dinnerware",
+
+  "item.dinnerware.tray.fullness": "%s/%s Plates"
 }
