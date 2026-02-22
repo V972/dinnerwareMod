@@ -1,6 +1,7 @@
 package net.v972.dinnerware;
 
 import com.mojang.logging.LogUtils;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -14,8 +15,11 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.v972.dinnerware.block.ModBlocks;
+import net.v972.dinnerware.block.entity.ModBlockEntities;
 import net.v972.dinnerware.item.ModCreativeModTabs;
 import net.v972.dinnerware.item.ModItems;
+import net.v972.dinnerware.screen.ModMenuTypes;
+import net.v972.dinnerware.screen.PlateScreen;
 import net.v972.dinnerware.sound.ModSounds;
 import org.slf4j.Logger;
 
@@ -34,6 +38,8 @@ public class DinnerwareMod
         ModBlocks.register(modEventBus);
         ModCreativeModTabs.register(modEventBus);
         ModSounds.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
+        ModMenuTypes.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 
@@ -68,7 +74,7 @@ public class DinnerwareMod
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {
-
+            MenuScreens.register(ModMenuTypes.PLATE_MENU.get(), PlateScreen::new);
         }
     }
 }

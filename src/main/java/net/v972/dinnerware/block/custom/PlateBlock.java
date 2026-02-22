@@ -2,8 +2,10 @@ package net.v972.dinnerware.block.custom;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.RandomSource;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -11,11 +13,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
@@ -27,6 +26,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 import net.v972.dinnerware.Config;
+import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
@@ -44,10 +44,6 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         );
     }
 
-    public void destroy(LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
-        // deserialize food
-        // drop food if any
-    }
 
     @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
@@ -64,21 +60,13 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         pBuilder.add(FACING, WATERLOGGED);
     }
 
-    public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {
-        if (Config.fragilePlates && !pLevel.isClientSide()) {
-            // deserialize food ???
-            // drop food if any ???
-            // destroy
-        }
-    }
-
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
         BlockPos blockpos = pContext.getClickedPos();
         FluidState fluidstate = pContext.getLevel().getFluidState(blockpos);
         return defaultBlockState()
-            .setValue(FACING, pContext.getHorizontalDirection().getOpposite())
-            .setValue(WATERLOGGED, Boolean.valueOf(fluidstate.getType() == Fluids.WATER));
+                .setValue(FACING, pContext.getHorizontalDirection().getOpposite())
+                .setValue(WATERLOGGED, Boolean.valueOf(fluidstate.getType() == Fluids.WATER));
     }
 
     public FluidState getFluidState(BlockState pState) {
@@ -89,13 +77,62 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         return false;
     }
 
-
     public BlockState rotate(BlockState pState, Rotation pRot) {
         return pState.setValue(FACING, pRot.rotate(pState.getValue(FACING)));
     }
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return null;
+        return new PlateBlockBlockEntity(pPos, pState);
+    }
+
+
+    @Override
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+        if (pState.getBlock() != pNewState.getBlock()) {
+            BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+            if (blockEntity instanceof PlateBlockBlockEntity) {
+                Containers.dropContents(pLevel, pPos, (Container)blockEntity);
+            }
+        }
+
+        super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
+    }
+
+    @Override
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+        if (!pLevel.isClientSide()) {
+            BlockEntity bEntity = pLevel.getBlockEntity(pPos);
+            if (bEntity instanceof PlateBlockBlockEntity pPlateEntity) {
+                if (pPlayer.isCrouching() ||
+                    pPlateEntity.isEmpty()
+                ) {
+                    NetworkHooks.openScreen(
+                            (ServerPlayer)pPlayer,
+                            pPlateEntity,
+                            pPos);
+                } else attemptEat(pPlateEntity, pPlayer);
+            }
+        }
+
+        return InteractionResult.sidedSuccess(pLevel.isClientSide());
+    }
+
+    private void attemptEat(PlateBlockBlockEntity pEntity, Player pPlayer) {
+        pPlayer.sendSystemMessage(Component.literal("attempt eat"));
+
+        //
+        //
+    }
+
+    public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {
+        if (Config.fragilePlates && !pLevel.isClientSide()) {
+            if (pEntity instanceof Player player) {
+                player.sendSystemMessage(Component.literal("stepped on plate"));
+            }
+            // deserialize food ???
+            // drop food if any ???
+            // destroy
+        }
     }
 }
