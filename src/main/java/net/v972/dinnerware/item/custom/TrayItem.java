@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.v972.dinnerware.Config;
 import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.item.ModItems;
+import net.v972.dinnerware.sound.ModSounds;
 
 import java.util.List;
 import java.util.Optional;
@@ -211,12 +212,12 @@ public class TrayItem extends Item {
     }
 
     private void playRemoveOneSound(Entity pEntity) {
-        pEntity.playSound(SoundEvents.BUNDLE_REMOVE_ONE,
+        pEntity.playSound(SoundEvents.BUNDLE_REMOVE_ONE, //ModSounds.TRAY_METAL_UNLOAD.get(),
                 0.8F, 0.8F + pEntity.level().getRandom().nextFloat() * 0.4F);
     }
 
     private void playInsertSound(Entity pEntity) {
-        pEntity.playSound(SoundEvents.BUNDLE_INSERT,
+        pEntity.playSound(SoundEvents.BUNDLE_INSERT, //ModSounds.TRAY_METAL_LOAD.get(),
                 0.8F, 0.8F + pEntity.level().getRandom().nextFloat() * 0.4F);
     }
 

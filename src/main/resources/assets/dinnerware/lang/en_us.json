@@ -2,9 +2,12 @@
   "item.dinnerware.dinnerware_icon": "Dinnerware Icon",
   "item.dinnerware.tray": "Tray",
 
-  "block.dinnerware.plate_block": "Plate Block",
+  "item.dinnerware.tray.fullness": "%s/%s Plates",
+
+  "block.dinnerware.plate_block": "Dinner Plate",
 
   "creativetab.dinnerware_tab": "Dinnerware",
 
-  "item.dinnerware.tray.fullness": "%s/%s Plates"
+  "sounds.dinnerware.tray_metal_load": "Item placed on Tray",
+  "sounds.dinnerware.tray_metal_unload": "Item taken off Tray"
 }

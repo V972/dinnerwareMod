@@ -1,0 +1,14 @@
+{
+  "tray_metal_load" : {
+    "subtitles": "sounds.dinnerware.tray_metal_load",
+    "sounds": [
+      "dinnerware:tray_metal_load"
+    ]
+  },
+  "tray_metal_unload": {
+    "subtitles": "sounds.dinnerware.tray_metal_unload",
+    "sounds": [
+      "dinnerware:tray_metal_unload"
+    ]
+  }
+}
