@@ -1,33 +1,52 @@
 package net.v972.dinnerware.block.custom;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
+import net.v972.dinnerware.Config;
 import org.jetbrains.annotations.Nullable;
 
-public class PlateBlock extends BaseEntityBlock {
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
+    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+
     public static VoxelShape SHAPE = Block.box(3, 0, 3, 13, 2, 13);
 
     public PlateBlock(Properties pProperties) {
         super(pProperties);
+        registerDefaultState(
+            stateDefinition.any()
+                .setValue(FACING, Direction.NORTH)
+                .setValue(WATERLOGGED, Boolean.valueOf(false))
+        );
+    }
+
+    public void destroy(LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
+        // deserialize food
+        // drop food if any
     }
 
     @Override
@@ -40,11 +59,43 @@ public class PlateBlock extends BaseEntityBlock {
         return RenderShape.MODEL;
     }
 
-// WIP
-//////////////////////////////////////////////////////////////
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
+        pBuilder.add(FACING, WATERLOGGED);
+    }
+
+    public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {
+        if (Config.fragilePlates && !pLevel.isClientSide()) {
+            // deserialize food ???
+            // drop food if any ???
+            // destroy
+        }
+    }
+
+    @Override
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext pContext) {
+        BlockPos blockpos = pContext.getClickedPos();
+        FluidState fluidstate = pContext.getLevel().getFluidState(blockpos);
+        return defaultBlockState()
+            .setValue(FACING, pContext.getHorizontalDirection().getOpposite())
+            .setValue(WATERLOGGED, Boolean.valueOf(fluidstate.getType() == Fluids.WATER));
+    }
+
+    public FluidState getFluidState(BlockState pState) {
+        return pState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(pState);
+    }
+
+    public boolean isPathfindable(BlockState pState, BlockGetter pLevel, BlockPos pPos, PathComputationType pType) {
+        return false;
+    }
+
+
+    public BlockState rotate(BlockState pState, Rotation pRot) {
+        return pState.setValue(FACING, pRot.rotate(pState.getValue(FACING)));
+    }
+
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return null;
     }
-//////////////////////////////////////////////////////////////
 }
