@@ -2,8 +2,12 @@ package net.v972.dinnerware.block.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -43,29 +47,6 @@ public class PlateBlockBlockEntity extends BaseContainerBlockEntity {
     public void onLoad() {
         super.onLoad();
         lazyItemHandler = LazyOptional.of(() -> itemHandler);
-    }
-
-    @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @NotNull Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER && !this.remove) {
-            if (lazyItemHandler == null)
-                lazyItemHandler = LazyOptional.of(this::createHandler);
-            return lazyItemHandler.cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    private net.minecraftforge.items.IItemHandlerModifiable createHandler() {
-        return new InvWrapper(this);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        if (this.lazyItemHandler != null) {
-            this.lazyItemHandler.invalidate();
-            this.lazyItemHandler = null;
-        }
     }
 
     @Override
@@ -145,7 +126,52 @@ public class PlateBlockBlockEntity extends BaseContainerBlockEntity {
     }
 
     @Override
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @NotNull Direction side) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER && !this.remove) {
+            if (lazyItemHandler == null)
+                lazyItemHandler = LazyOptional.of(this::createHandler);
+            return lazyItemHandler.cast();
+        }
+        return super.getCapability(cap, side);
+    }
+
+    private net.minecraftforge.items.IItemHandlerModifiable createHandler() {
+        return new InvWrapper(this);
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        if (this.lazyItemHandler != null) {
+            this.lazyItemHandler.invalidate();
+            this.lazyItemHandler = null;
+        }
+    }
+
+    public ItemStack getRenderStack(int pSlot) {
+        if (pSlot < 0 || pSlot > 2) {
+            return ItemStack.EMPTY;
+        }
+        return itemHandler.getStackInSlot(pSlot);
+    }
+
+    public NonNullList<ItemStack> getRenderStacks() {
+        NonNullList<ItemStack> result = NonNullList.withSize(itemHandler.getSlots(), ItemStack.EMPTY);
+
+        for(int i = 0; i < itemHandler.getSlots(); i++) {
+            result.set(i, itemHandler.getStackInSlot(i));
+        }
+
+        return result;
+    }
+
+    @Override
     public CompoundTag getUpdateTag() {
         return saveWithoutMetadata();
+    }
+
+    @Override
+    public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 }
