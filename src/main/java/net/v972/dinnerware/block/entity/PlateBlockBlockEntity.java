@@ -101,6 +101,10 @@ public class PlateBlockBlockEntity extends BaseContainerBlockEntity {
         return itemHandler.extractItem(pIndex, pCount, false);
     }
 
+    public ItemStack removeItem(int pIndex) {
+        return  removeItem(pIndex, 1);
+    }
+
     @Override
     public ItemStack removeItemNoUpdate(int pIndex) {
         ItemStack itemInSlot = itemHandler.getStackInSlot(pIndex);

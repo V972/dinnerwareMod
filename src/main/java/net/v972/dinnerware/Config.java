@@ -28,6 +28,14 @@ public class Config
             )
             .define("fragilePlates", false);
 
+    private static final ForgeConfigSpec.BooleanValue ALLOW_OVEREATING = BUILDER
+            .comment(
+                    " If set to true, allow player to keep eating off the plate,\n" +
+                    " even if they're not hungry. Food buffs/debuffs are still applied.\n" +
+                    "Default: false"
+            )
+            .define("allowOvereating", false);
+
 //    public static final ForgeConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
 //            .comment("What you want the introduction message to be for the magic number")
 //            .define("magicNumberIntroduction", "The magic number is... ");
@@ -41,6 +49,8 @@ public class Config
 
     public static int trayPlatePileMaxSize;
     public static boolean fragilePlates;
+    public static boolean allowOverEating;
+    // rightToLeft
 //    public static String magicNumberIntroduction;
 //    public static Set<Item> items;
 
@@ -54,6 +64,7 @@ public class Config
     {
         trayPlatePileMaxSize = TRAY_PLATE_PILE_MAX_SIZE.get();
         fragilePlates = FRAGILE_PLATES.get();
+        allowOverEating = ALLOW_OVEREATING.get();
 //        magicNumberIntroduction = MAGIC_NUMBER_INTRODUCTION.get();
 //
 //        // convert the list of strings into a set of items

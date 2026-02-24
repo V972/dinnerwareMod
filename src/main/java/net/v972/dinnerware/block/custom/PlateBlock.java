@@ -1,23 +1,33 @@
 package net.v972.dinnerware.block.custom;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.pathfinder.PathComputationType;
@@ -28,6 +38,10 @@ import net.minecraftforge.network.NetworkHooks;
 import net.v972.dinnerware.Config;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.OptionalInt;
+import java.util.stream.IntStream;
 
 public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
@@ -44,6 +58,17 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         );
     }
 
+    @Override
+    public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pCurrentPos, BlockPos pNeighborPos) {
+        return pDirection == Direction.DOWN && !this.canSurvive(pState, pLevel, pCurrentPos)
+                ? Blocks.AIR.defaultBlockState()
+                : super.updateShape(pState, pDirection, pNeighborState, pLevel, pCurrentPos, pNeighborPos);
+    }
+
+    @Override
+    public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
+        return !pLevel.isEmptyBlock(pPos.below());
+    }
 
     @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
@@ -111,18 +136,47 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
                             (ServerPlayer)pPlayer,
                             pPlateEntity,
                             pPos);
-                } else attemptEat(pPlateEntity, pPlayer);
+
+                } else return attemptEat(pLevel, pPos, pPlateEntity, pPlayer);
             }
         }
 
         return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }
 
-    private void attemptEat(PlateBlockBlockEntity pEntity, Player pPlayer) {
-        pPlayer.sendSystemMessage(Component.literal("attempt eat"));
+    private InteractionResult attemptEat(LevelAccessor pLevel, BlockPos pPos, PlateBlockBlockEntity pEntity, Player pPlayer) {
+        if (!pPlayer.canEat(Config.allowOverEating)) {
+            return InteractionResult.PASS;
+        } else {
+            NonNullList<ItemStack> items = pEntity.getRenderStacks();
+            OptionalInt firstNonEmptySlotOptional = IntStream.range(0, items.size())
+                    .filter(i -> !items.get(i).isEmpty())
+                    .findFirst();
 
-        //
-        //
+            if (firstNonEmptySlotOptional.isPresent()) {
+                int firstNonEmptySlot = firstNonEmptySlotOptional.getAsInt();
+
+                FoodProperties foodProperties = items.get(firstNonEmptySlot).getFoodProperties(pPlayer);
+                if (foodProperties != null) {
+                    pPlayer.getFoodData().eat(foodProperties.getNutrition(), foodProperties.getSaturationModifier());
+                    List<Pair<MobEffectInstance, Float>> foodEffects = foodProperties.getEffects();
+                    if (!foodEffects.isEmpty()) {
+                        for (Pair<MobEffectInstance, Float> effect : foodEffects) {
+                            pPlayer.sendSystemMessage(Component.literal(effect.toString()));
+                            // roll for probability
+                            // if proked, apply
+                        }
+                    }
+                    pLevel.gameEvent(pPlayer, GameEvent.EAT, pPos);
+                    pLevel.playSound((Player)null, pPos, SoundEvents.GENERIC_EAT, SoundSource.BLOCKS,
+                            1.0F, 0.8F + pLevel.getRandom().nextFloat() * 0.4F);
+
+                    pEntity.removeItem(firstNonEmptySlot);
+                }
+            }
+
+            return InteractionResult.SUCCESS;
+        }
     }
 
     public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {
