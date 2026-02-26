@@ -20,7 +20,7 @@ public class Config
 
     private static final ForgeConfigSpec.BooleanValue ONLY_FOOD_ON_PLATE = BUILDER
             .comment(
-                    " If true, only food items & items inside \"dinnerware:additional_food\" tag are allowed to be placed on plates. \n" +
+                    "\n If true, only food items & items inside \"dinnerware:additional_food\" tag are allowed to be placed on plates. \n" +
                     " Otherwise, anything will fit. Rendering mileage may vary. \n" +
                     "Default: true"
             )
@@ -28,7 +28,7 @@ public class Config
 
     private static final ForgeConfigSpec.IntValue TRAY_PLATE_PILE_MAX_SIZE = BUILDER
             .comment(
-                    " Max number of plates that can be carried on a tray.\n" +
+                    "\n Max number of plates that can be carried on a tray.\n" +
                     " Set 0 for infinite amount. \n" +
                     "Default: 8"
             )
@@ -36,7 +36,7 @@ public class Config
 
     private static final ForgeConfigSpec.BooleanValue FRAGILE_PLATES = BUILDER
             .comment(
-                    " If set to true, plates become fragile, i.e. break under various circumstances. \n" +
+                    "\n If set to true, plates become fragile, i.e. break under various circumstances. \n" +
                     " Like walking on them. \n" +
                     "Default: false"
             )
@@ -44,7 +44,7 @@ public class Config
 
     private static final ForgeConfigSpec.BooleanValue RIGHT_TO_LEFT = BUILDER
             .comment(
-                    " If set to true, the bottom right slot becomes the main one. \n" +
+                    "\n If set to true, the bottom right slot becomes the main one. \n" +
                     " The plate is basically gets mirrored. \n" +
                     " Be careful when changing this with already existing plates in the world. \n" +
                     "Default: false"

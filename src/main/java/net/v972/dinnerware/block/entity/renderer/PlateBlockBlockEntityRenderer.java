@@ -33,7 +33,7 @@ public class PlateBlockBlockEntityRenderer implements BlockEntityRenderer<PlateB
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
         Direction facing = pBlockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
-        NonNullList<ItemStack> stacks = pBlockEntity.getRenderStacks();
+        NonNullList<ItemStack> stacks = pBlockEntity.getItems();
 
         positionItems(
                 pBlockEntity, pPoseStack,
@@ -122,7 +122,7 @@ public class PlateBlockBlockEntityRenderer implements BlockEntityRenderer<PlateB
 
         boolean rtl = Config.rightToLeft;
 
-        for (int pSlot = 0; pSlot < pBlockEntity.getContainerSize(); pSlot++) {
+        for (int pSlot = 0; pSlot < pBlockEntity.getInventorySize(); pSlot++) {
             float yLevel = switch (pSlot) {
                 case 0 -> rtl ? 0.07f : 0.045f;
                 case 1 -> rtl ? 0.045f : 0.07f;

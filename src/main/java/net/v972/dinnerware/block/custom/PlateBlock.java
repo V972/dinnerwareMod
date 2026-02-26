@@ -3,15 +3,16 @@ package net.v972.dinnerware.block.custom;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SuspiciousStewItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -105,13 +106,12 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         return new PlateBlockBlockEntity(pPos, pState);
     }
 
-
     @Override
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (pState.getBlock() != pNewState.getBlock()) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-            if (blockEntity instanceof PlateBlockBlockEntity) {
-                Containers.dropContents(pLevel, pPos, (Container)blockEntity);
+            if (blockEntity instanceof PlateBlockBlockEntity plateEntity) {
+                plateEntity.dropContents();
             }
         }
 
@@ -142,16 +142,35 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         if (!pPlayer.canEat(Config.allowOverEating)) {
             return InteractionResult.PASS;
         } else {
-            NonNullList<ItemStack> items = pEntity.getRenderStacks();
+            NonNullList<ItemStack> items = pEntity.getItems();
             OptionalInt firstNonEmptySlotOptional = IntStream.range(0, items.size())
                     .filter(i -> !items.get(i).isEmpty())
                     .findFirst();
 
             if (firstNonEmptySlotOptional.isPresent()) {
                 int firstNonEmptySlot = firstNonEmptySlotOptional.getAsInt();
-                ItemStack itemStack = items.get(firstNonEmptySlot);
+                ItemStack itemStack = items.get(firstNonEmptySlot).copy();
 
                 if (itemStack.getFoodProperties(pPlayer) != null) {
+                    if (!pPlayer.isCreative()) {
+                        if ((itemStack.getItem() instanceof BowlFoodItem) ||
+                            (itemStack.getItem() instanceof SuspiciousStewItem)) {
+
+                            Containers.dropItemStack(pLevel,
+                                    pPos.getX(),
+                                    pPos.getY(),
+                                    pPos.getZ(),
+                                    new ItemStack(Items.BOWL));
+                        } else {
+                            if (itemStack.hasCraftingRemainingItem()) {
+                                Containers.dropItemStack(pLevel,
+                                        pPos.getX(),
+                                        pPos.getY(),
+                                        pPos.getZ(),
+                                        itemStack.getCraftingRemainingItem());
+                            }
+                        }
+                    }
                     itemStack.finishUsingItem(pLevel, pPlayer);
                     pLevel.gameEvent(pPlayer, GameEvent.EAT, pPos);
                     pEntity.removeItem(firstNonEmptySlot);
