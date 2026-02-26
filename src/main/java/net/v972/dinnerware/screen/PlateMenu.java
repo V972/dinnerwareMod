@@ -11,6 +11,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.SlotItemHandler;
 import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
+import net.v972.dinnerware.Config;
 
 public class PlateMenu extends AbstractContainerMenu {
     public final PlateBlockBlockEntity blockEntity;
@@ -32,11 +33,20 @@ public class PlateMenu extends AbstractContainerMenu {
         addPlayerHotbar(pInv);
 
         this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iItemHandler -> {
-            //    2
-            //
-            // 1     0
-            this.addSlot(new SlotItemHandler(iItemHandler, 0, 100, 49));
-            this.addSlot(new SlotItemHandler(iItemHandler, 1, 60, 49));
+            if (Config.rightToLeft) {
+                //    2
+                //
+                // 1     0
+                this.addSlot(new SlotItemHandler(iItemHandler, 0, 100, 49));
+                this.addSlot(new SlotItemHandler(iItemHandler, 1, 60, 49));
+            } else {
+                //    2
+                //
+                // 0     1
+                this.addSlot(new SlotItemHandler(iItemHandler, 0, 60, 49));
+                this.addSlot(new SlotItemHandler(iItemHandler, 1, 100, 49));
+            }
+
             this.addSlot(new SlotItemHandler(iItemHandler, 2, 80, 31));
         });
     }

@@ -41,7 +41,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.OptionalInt;
+import java.util.random.RandomGeneratorFactory;
 import java.util.stream.IntStream;
+import java.util.random.RandomGenerator;
 
 public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
@@ -161,10 +163,12 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
                     pPlayer.getFoodData().eat(foodProperties.getNutrition(), foodProperties.getSaturationModifier());
                     List<Pair<MobEffectInstance, Float>> foodEffects = foodProperties.getEffects();
                     if (!foodEffects.isEmpty()) {
+                        float roll = (float)Math.random();
                         for (Pair<MobEffectInstance, Float> effect : foodEffects) {
-                            pPlayer.sendSystemMessage(Component.literal(effect.toString()));
-                            // roll for probability
-                            // if proked, apply
+                            if (effect.getSecond() == 1.0f ||
+                                effect.getSecond() <= roll) {
+                                pPlayer.addEffect(effect.getFirst());
+                            }
                         }
                     }
                     pLevel.gameEvent(pPlayer, GameEvent.EAT, pPos);
