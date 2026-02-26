@@ -22,7 +22,7 @@ public class Config
             .comment(
                     " If true, only food items & items inside \"dinnerware:additional_food\" tag are allowed to be placed on plates. \n" +
                     " Otherwise, anything will fit. Rendering mileage may vary. \n" +
-                    "Default: false"
+                    "Default: true"
             )
             .define("onlyFoodOnPlate", true);
 
