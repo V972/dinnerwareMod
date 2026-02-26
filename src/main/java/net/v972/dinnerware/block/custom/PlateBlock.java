@@ -162,14 +162,11 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         }
     }
 
-    public void stepOn(Level pLevel, BlockPos pPos, BlockState pState, Entity pEntity) {
-        if (Config.fragilePlates && !pLevel.isClientSide()) {
-            if (pEntity instanceof Player player) {
-                player.sendSystemMessage(Component.literal("stepped on plate"));
-            }
-            // deserialize food ???
-            // drop food if any ???
-            // destroy
-        }
+    @Override
+    public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity) {
+        if (!pLevel.isClientSide && Config.fragilePlates) {
+            pLevel.destroyBlock(pPos, true);
+            pLevel.gameEvent(pEntity, GameEvent.BLOCK_DESTROY, pPos);
+        } else super.entityInside(pState, pLevel, pPos, pEntity);
     }
 }

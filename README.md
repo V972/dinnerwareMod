@@ -61,7 +61,7 @@ Fabric port is uncertain, but not of the picture. We'll see.
           - [X] Even if all items will be allowed, only food will be eaten;
           - [X] Food effects are applied, good and bad;
           - [X] Over-eating can be enabled, allowing to continue eating even with full hunger;
-    - [ ] Can be fragile if enabled in the config. Don't walk on them.
+    - [X] Can be fragile if enabled in the config. Don't walk on them.
 - [ ] Tray items:
   - [ ] Can be made of vanilla wood types as well as iron and gold
   - [ ] Custom animation when holding it;

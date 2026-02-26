@@ -37,7 +37,6 @@ public class ModBlocks {
                     .instabreak()
                     .sound(SoundType.STONE)
                     .noOcclusion()
-                    .dynamicShape()
             ));
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
