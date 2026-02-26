@@ -21,7 +21,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import net.v972.dinnerware.Config;
 import net.v972.dinnerware.screen.PlateMenu;
+import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,6 +36,13 @@ public class PlateBlockBlockEntity extends BaseContainerBlockEntity {
             if(!level.isClientSide()) {
                 level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
             }
+        }
+
+        @Override
+        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+            return Config.onlyFoodOnPlate
+                ? checkCanPlaceItemOnPlate(stack)
+                : super.isItemValid(slot, stack);
         }
     };
 
@@ -177,5 +186,19 @@ public class PlateBlockBlockEntity extends BaseContainerBlockEntity {
     @Override
     public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public boolean canPlaceItem(int pIndex, ItemStack pStack) {
+        return Config.onlyFoodOnPlate
+            ? checkCanPlaceItemOnPlate(pStack)
+            : super.canPlaceItem(pIndex, pStack);
+    }
+
+    private boolean checkCanPlaceItemOnPlate(ItemStack pStack) {
+        return
+                !Config.onlyFoodOnPlate ||
+                pStack.isEdible() ||
+                pStack.is(ModTags.Items.ADDITIONAL_FOOD);
     }
 }

@@ -37,29 +37,33 @@ Pictures WIP
 
 ## Customization
 
-WIP, something tag-based
+By default, only edible items are allowed on plates. This can be disabled to allow any item/block on the plate.  
+If you want to add a few items that are edible, but not compatible by default, they should be added to the `dinnerware:additional_food` tag provided by the mod.  
+Note that adding items to this tag does not guarantee they'll be able to be eaten as that still relies on FoodProperties to be present in item.
 
-## Loader / Versions
+## Loaders / Versions
 
 Forge 1.20.1 for now.  
 When the mod is feature-complete I will be looking into forward porting it to 1.21.X...dunno which one of the gorillion sub versions, probably .11  
 As well as back-poring to Forge 1.18.2. Yes, really.  
-With fabric port uncertain, but not of the picture. We'll see.
+Fabric port is uncertain, but not of the picture. We'll see.
 
 ## Progress
 
-- [ ] Plate blocks made of vanilla wood types as well as iron and gold;
+- [ ] Plate blocks:
+  - [ ] Can be made out of vanilla wood types, quartz as well as iron and gold;  
   - [X] Can be placed on any block, but break w/o support;
   - [X] Has 3 slots: Main dish, Side dish and Extra dish;
   - [X] GUI can be opened by right-clicking on empty one or by shift-right-clicking on any;
-  - [ ] Food (or if configured, anything) can be placed on them and will be rendered on the plate:
+  - [X] Food (or if configured, anything) can be placed on them and will be rendered on the plate:
       - [X] 4 possible configurations depending on which slots have items;
       - [X] Food can be eaten by right-click;
-          - [ ] Even if all items will be allowed, only food will be eaten;
+          - [X] Even if all items will be allowed, only food will be eaten;
           - [X] Food effects are applied, good and bad;
           - [X] Over-eating can be enabled, allowing to continue eating even with full hunger;
     - [ ] Can be fragile if enabled in the config. Don't walk on them.
-- [ ] Tray items made of vanilla wood types as well as iron and gold;
+- [ ] Tray items:
+  - [ ] Can be made of vanilla wood types as well as iron and gold
   - [ ] Custom animation when holding it;
   - [X] Act like bundles for plates and placeable food;
   - [ ] Placed plates and food can be right-clicked to be picked up;

@@ -19,7 +19,7 @@ public class ModTags {
     }
 
     public static class Items {
-
+        public static final TagKey<Item> ADDITIONAL_FOOD = tag("additional_food");
 
         private static TagKey<Item> tag(String name) {
             return ItemTags.create(new ResourceLocation(DinnerwareMod.MOD_ID, name));
