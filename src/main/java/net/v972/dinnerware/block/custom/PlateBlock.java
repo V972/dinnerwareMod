@@ -1,21 +1,16 @@
 package net.v972.dinnerware.block.custom;
 
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -39,11 +34,8 @@ import net.v972.dinnerware.Config;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.OptionalInt;
-import java.util.random.RandomGeneratorFactory;
 import java.util.stream.IntStream;
-import java.util.random.RandomGenerator;
 
 public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
@@ -146,7 +138,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }
 
-    private InteractionResult attemptEat(LevelAccessor pLevel, BlockPos pPos, PlateBlockBlockEntity pEntity, Player pPlayer) {
+    private InteractionResult attemptEat(Level pLevel, BlockPos pPos, PlateBlockBlockEntity pEntity, Player pPlayer) {
         if (!pPlayer.canEat(Config.allowOverEating)) {
             return InteractionResult.PASS;
         } else {
@@ -157,24 +149,11 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
 
             if (firstNonEmptySlotOptional.isPresent()) {
                 int firstNonEmptySlot = firstNonEmptySlotOptional.getAsInt();
+                ItemStack itemStack = items.get(firstNonEmptySlot);
 
-                FoodProperties foodProperties = items.get(firstNonEmptySlot).getFoodProperties(pPlayer);
-                if (foodProperties != null) {
-                    pPlayer.getFoodData().eat(foodProperties.getNutrition(), foodProperties.getSaturationModifier());
-                    List<Pair<MobEffectInstance, Float>> foodEffects = foodProperties.getEffects();
-                    if (!foodEffects.isEmpty()) {
-                        float roll = (float)Math.random();
-                        for (Pair<MobEffectInstance, Float> effect : foodEffects) {
-                            if (effect.getSecond() == 1.0f ||
-                                effect.getSecond() <= roll) {
-                                pPlayer.addEffect(effect.getFirst());
-                            }
-                        }
-                    }
+                if (itemStack.getFoodProperties(pPlayer) != null) {
+                    itemStack.finishUsingItem(pLevel, pPlayer);
                     pLevel.gameEvent(pPlayer, GameEvent.EAT, pPos);
-                    pLevel.playSound((Player)null, pPos, SoundEvents.GENERIC_EAT, SoundSource.BLOCKS,
-                            1.0F, 0.8F + pLevel.getRandom().nextFloat() * 0.4F);
-
                     pEntity.removeItem(firstNonEmptySlot);
                 }
             }
