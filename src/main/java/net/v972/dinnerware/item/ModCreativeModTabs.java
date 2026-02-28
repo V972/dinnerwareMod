@@ -19,7 +19,6 @@ public class ModCreativeModTabs {
                     .icon(() -> new ItemStack(ModItems.ICON.get()))
                     .title(Component.translatable("creativetab.dinnerware_tab"))
                     .displayItems((pParameters, pOutput) -> {
-                        pOutput.accept(ModItems.ICON.get());
                         pOutput.accept(ModItems.TRAY.get());
 
                         pOutput.accept(ModBlocks.PLATE_BLOCK.get());

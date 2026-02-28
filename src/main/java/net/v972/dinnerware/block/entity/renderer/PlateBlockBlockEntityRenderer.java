@@ -33,7 +33,7 @@ public class PlateBlockBlockEntityRenderer implements BlockEntityRenderer<PlateB
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
         Direction facing = pBlockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
-        NonNullList<ItemStack> stacks = pBlockEntity.getItems();
+        NonNullList<ItemStack> stacks = pBlockEntity.getInventoryItems();
 
         positionItems(
                 pBlockEntity, pPoseStack,

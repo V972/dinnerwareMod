@@ -35,9 +35,9 @@ public class ModBlocks {
                     .isViewBlocking((state, level, pos) -> false)
                     .pushReaction(PushReaction.DESTROY)
                     .instabreak()
-                    .sound(SoundType.STONE)
                     .noOcclusion()
-            ));
+                    .sound(SoundType.STONE)
+    ));
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);

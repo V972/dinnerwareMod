@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -14,9 +15,11 @@ import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SuspiciousStewItem;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -25,34 +28,24 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.v972.dinnerware.Config;
+import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.screen.PlateMenu;
 import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.Nonnull;
+
 public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, Nameable {
+
+    public static final String ITEMS_TAG = "Inventory";
+    public static int SLOT_COUNT = 3;
 
     @Nullable
     private Component name;
 
-    private final ItemStackHandler itemHandler = new ItemStackHandler(3) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            setChanged();
-            if(!level.isClientSide()) {
-                level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
-            }
-        }
-
-        @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return Config.onlyFoodOnPlate
-                ? canPlaceItemOnPlate(stack)
-                : super.isItemValid(slot, stack);
-        }
-    };
-
-    private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
+    private final ItemStackHandler items = createItemHandler();
+    private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> items);
 
     public PlateBlockBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.PLATE_BLOCK_BE.get(), pPos, pBlockState);
@@ -60,29 +53,38 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
 
     // ========================================
 
+    @NotNull
     @Override
-    public void onLoad() {
-        super.onLoad();
-        lazyItemHandler = LazyOptional.of(() -> itemHandler);
-    }
-
-    @Override
-    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @NotNull Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER && !this.remove) {
-            if (lazyItemHandler == null || !lazyItemHandler.isPresent())
-                lazyItemHandler = LazyOptional.of(() -> itemHandler);
-            return lazyItemHandler.cast();
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER) {
+            return itemHandler.cast();
+        } else {
+            return super.getCapability(cap, side);
         }
-        return super.getCapability(cap, side);
     }
 
     @Override
     public void invalidateCaps() {
         super.invalidateCaps();
-        if (this.lazyItemHandler != null) {
-            this.lazyItemHandler.invalidate();
-            this.lazyItemHandler = null;
-        }
+        itemHandler.invalidate();
+    }
+
+    @Nonnull
+    private ItemStackHandler createItemHandler() {
+        return new ItemStackHandler(SLOT_COUNT) {
+            @Override
+            protected void onContentsChanged(int slot) {
+                setChanged();
+                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+            }
+
+            @Override
+            public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+                return Config.onlyFoodOnPlate
+                        ? canPlaceItemOnPlate(stack)
+                        : super.isItemValid(slot, stack);
+            }
+        };
     }
 
     // ========================================
@@ -101,31 +103,62 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     @Override
     public void load(CompoundTag pTag) {
         super.load(pTag);
-        if (pTag.contains("CustomName", 8)) {
-            this.name = Component.Serializer.fromJson(pTag.getString("CustomName"));
-        }
-        itemHandler.deserializeNBT(pTag.getCompound("inventory"));
+        loadClientData(pTag);
     }
 
     @Override
     protected void saveAdditional(CompoundTag pTag) {
         super.saveAdditional(pTag);
-        pTag.put("inventory", itemHandler.serializeNBT());
-        if (this.name != null) {
-            pTag.putString("CustomName", Component.Serializer.toJson(this.name));
-        }
+        saveClientData(pTag);
     }
 
     // ========================================
 
     @Override
     public CompoundTag getUpdateTag() {
-        return saveWithoutMetadata();
+        CompoundTag pTag = super.getUpdateTag();
+        saveClientData(pTag);
+        return pTag;
     }
+
+    @Override
+    public void handleUpdateTag(CompoundTag pTag) {
+        if (pTag != null) {
+            loadClientData(pTag);
+        }
+    }
+
+    // ========================================
 
     @Override
     public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        CompoundTag tag = pkt.getTag();
+        if (tag != null) {
+            loadClientData(tag);
+        }
+    }
+
+    // ========================================
+
+    private void saveClientData(CompoundTag pTag) {
+        pTag.put(ITEMS_TAG, items.serializeNBT());
+        if (this.name != null) {
+            pTag.putString("CustomName", Component.Serializer.toJson(this.name));
+        }
+    }
+
+    private void loadClientData(CompoundTag pTag) {
+        if (pTag.contains("CustomName", 8)) {
+            this.name = Component.Serializer.fromJson(pTag.getString("CustomName"));
+        }
+        if (pTag.contains(ITEMS_TAG)) {
+            items.deserializeNBT(pTag.getCompound(ITEMS_TAG));
+        }
     }
 
     // ========================================
@@ -145,7 +178,7 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
         return this.name;
     }
 
-    public void setCustomName(Component pName) {
+    public void setCustomName(@Nullable Component pName) {
         this.name = pName;
     }
 
@@ -155,31 +188,53 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
 
     // ========================================
 
+    public void fromItem(ItemStack pItem) {
+        CompoundTag pTag = pItem.getTag();
+        loadClientData(pTag);
+    }
+
+    public ItemStack getItem() {
+        ItemStack itemstack = new ItemStack(ModBlocks.PLATE_BLOCK.get());
+        if (!this.isEmpty()) {
+            CompoundTag compoundtag = new CompoundTag();
+            compoundtag.put(ITEMS_TAG, items.serializeNBT());
+            BlockItem.setBlockEntityData(itemstack, this.getType(), compoundtag);
+        }
+
+        if (this.name != null) {
+            itemstack.setHoverName(this.name);
+        }
+
+        return itemstack;
+    }
+
+    // ========================================
+
     public int getInventorySize() {
-        return this.itemHandler.getSlots();
+        return this.items.getSlots();
     }
 
     public boolean isEmpty() {
-        for(int i = 0; i < itemHandler.getSlots(); i++) {
-            ItemStack itemStack = itemHandler.getStackInSlot(i);
+        for(int i = 0; i < items.getSlots(); i++) {
+            ItemStack itemStack = items.getStackInSlot(i);
             if (itemStack != ItemStack.EMPTY) return false;
         }
 
         return true;
     }
 
-    public NonNullList<ItemStack> getItems() {
-        NonNullList<ItemStack> result = NonNullList.withSize(itemHandler.getSlots(), ItemStack.EMPTY);
+    public NonNullList<ItemStack> getInventoryItems() {
+        NonNullList<ItemStack> result = NonNullList.withSize(items.getSlots(), ItemStack.EMPTY);
 
-        for(int i = 0; i < itemHandler.getSlots(); i++) {
-            result.set(i, itemHandler.getStackInSlot(i));
+        for(int i = 0; i < items.getSlots(); i++) {
+            result.set(i, items.getStackInSlot(i));
         }
 
         return result;
     }
 
     public ItemStack removeItem(int pIndex, int pCount) {
-        return itemHandler.extractItem(pIndex, pCount, false);
+        return items.extractItem(pIndex, pCount, false);
     }
 
     public ItemStack removeItem(int pIndex) {
@@ -187,13 +242,13 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     }
 
     public void clearContent() {
-        for(int i = 0; i < itemHandler.getSlots(); i++) {
-            itemHandler.setStackInSlot(i, ItemStack.EMPTY);
+        for(int i = 0; i < items.getSlots(); i++) {
+            items.setStackInSlot(i, ItemStack.EMPTY);
         }
     }
 
     public void dropContents() {
-        Containers.dropContents(this.getLevel(), getBlockPos(), getItems());
+        Containers.dropContents(this.getLevel(), getBlockPos(), getInventoryItems());
         this.clearContent();
     }
 

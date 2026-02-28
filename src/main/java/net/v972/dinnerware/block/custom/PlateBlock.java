@@ -8,6 +8,7 @@ import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.ItemStack;
@@ -32,13 +33,14 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 import net.v972.dinnerware.Config;
+import net.v972.dinnerware.block.entity.ModBlockEntities;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
-public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
+public class PlateBlock extends BaseEntityBlock implements EntityBlock, SimpleWaterloggedBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
@@ -119,6 +121,27 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     }
 
     @Override
+    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
+        if (pLevel.isClientSide) {
+            pLevel.getBlockEntity(pPos, ModBlockEntities.PLATE_BLOCK_BE.get()).ifPresent((be) -> {
+                be.fromItem(pStack);
+            });
+        } else if (pStack.hasCustomHoverName()) {
+            pLevel.getBlockEntity(pPos, ModBlockEntities.PLATE_BLOCK_BE.get()).ifPresent((be) -> {
+                be.setCustomName(pStack.getHoverName());
+            });
+        }
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(BlockGetter pLevel, BlockPos pPos, BlockState pState) {
+        BlockEntity blockentity = pLevel.getBlockEntity(pPos);
+        return blockentity instanceof PlateBlockBlockEntity plateBE
+                ? plateBE.getItem()
+                : super.getCloneItemStack(pLevel, pPos, pState);
+    }
+
+    @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide()) {
             BlockEntity bEntity = pLevel.getBlockEntity(pPos);
@@ -142,7 +165,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         if (!pPlayer.canEat(Config.allowOverEating)) {
             return InteractionResult.PASS;
         } else {
-            NonNullList<ItemStack> items = pEntity.getItems();
+            NonNullList<ItemStack> items = pEntity.getInventoryItems();
             OptionalInt firstNonEmptySlotOptional = IntStream.range(0, items.size())
                     .filter(i -> !items.get(i).isEmpty())
                     .findFirst();
