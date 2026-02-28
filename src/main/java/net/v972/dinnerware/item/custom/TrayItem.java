@@ -26,8 +26,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.v972.dinnerware.Config;
 import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.item.ModItems;
-import net.v972.dinnerware.sound.ModSounds;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -68,7 +68,7 @@ public class TrayItem extends Item {
             }
             ItemStack itemstack = player.getItemInHand(pContext.getHand());
 
-            if (block == ModBlocks.PLATE_BLOCK.get()) {
+            if (Arrays.stream(ModBlocks.getKnownBlocksArray()).anyMatch(b -> b.equals(block))) {
                 if (canLoadPlate(itemstack)) {
                     player.sendSystemMessage(Component.literal("Clicked plate; Loading"));
                     // serialize food info
@@ -109,7 +109,7 @@ public class TrayItem extends Item {
         //
         // TODO: Add Farmer's Delight Compat for Feasts
         //
-        return pStack.is(ModBlocks.PLATE_BLOCK.get().asItem());
+        return Arrays.stream(ModBlocks.getKnownBlocksArray()).anyMatch(b -> pStack.is(b.asItem()));
     }
 
     // ===== Bundle Copy-paste =====

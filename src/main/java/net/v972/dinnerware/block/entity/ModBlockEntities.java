@@ -14,9 +14,8 @@ public class ModBlockEntities {
 
     public static final RegistryObject<BlockEntityType<PlateBlockBlockEntity>> PLATE_BLOCK_BE =
         BLOCK_ENTITIES.register(
-            "plate_block_be",
-            () -> BlockEntityType.Builder.of(PlateBlockBlockEntity::new,
-                ModBlocks.PLATE_BLOCK.get()).build(null));
+            "plate_block",
+            () -> BlockEntityType.Builder.of(PlateBlockBlockEntity::new, ModBlocks.getKnownBlocksArray()).build(null));
 
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);

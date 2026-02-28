@@ -1,5 +1,6 @@
 package net.v972.dinnerware.item;
 
+import net.minecraft.world.level.block.Block;
 import net.v972.dinnerware.DinnerwareMod;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -15,16 +16,17 @@ public class ModCreativeModTabs {
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, DinnerwareMod.MOD_ID);
 
     public static final RegistryObject<CreativeModeTab> DINNERWARE_TAB = CREATIVE_MODE_TABS.register("dinnerware_tab",
-            () -> CreativeModeTab.builder()
-                    .icon(() -> new ItemStack(ModItems.ICON.get()))
-                    .title(Component.translatable("creativetab.dinnerware_tab"))
-                    .displayItems((pParameters, pOutput) -> {
-                        pOutput.accept(ModItems.TRAY.get());
+        () -> CreativeModeTab.builder()
+            .icon(() -> new ItemStack(ModItems.ICON.get()))
+            .title(Component.translatable("creativetab.dinnerware_tab"))
+            .displayItems((pParameters, pOutput) -> {
+                for(Block block : ModBlocks.getKnownBlocks()) {
+                    pOutput.accept(block);
+                }
 
-                        pOutput.accept(ModBlocks.PLATE_BLOCK.get());
-
-                    })
-                    .build());
+                pOutput.accept(ModItems.TRAY.get());
+            })
+            .build());
 
 
     public static void register(IEventBus eventBus) {

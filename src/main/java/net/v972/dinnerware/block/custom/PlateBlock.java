@@ -3,6 +3,7 @@ package net.v972.dinnerware.block.custom;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SuspiciousStewItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -27,6 +29,7 @@ import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -35,24 +38,54 @@ import net.minecraftforge.network.NetworkHooks;
 import net.v972.dinnerware.Config;
 import net.v972.dinnerware.block.entity.ModBlockEntities;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.OptionalInt;
 import java.util.stream.IntStream;
 
-public class PlateBlock extends BaseEntityBlock implements EntityBlock, SimpleWaterloggedBlock {
+public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public static VoxelShape SHAPE = Block.box(3, 0, 3, 13, 2, 13);
 
-    public PlateBlock(Properties pProperties) {
+    //public final ResourceLocation MODEL;
+    public final Block MATERIAL;
+    public final Ingredient CRAFTING_MATERIAL;
+    public final int CRAFTING_AMOUNT;
+
+    public PlateBlock(
+            @NotNull Block pMaterial,
+            @NotNull Ingredient pCraftMaterial,
+            int pCraftingAmount,
+            //@NotNull ResourceLocation pModel,
+            Properties pProperties) {
         super(pProperties);
+        this.MATERIAL = pMaterial;
+        this.CRAFTING_MATERIAL = pCraftMaterial;
+        this.CRAFTING_AMOUNT = pCraftingAmount;
+        //this.MODEL = pModel;
         registerDefaultState(
             stateDefinition.any()
                 .setValue(FACING, Direction.NORTH)
                 .setValue(WATERLOGGED, Boolean.valueOf(false))
         );
+    }
+
+    @Override
+    public SoundType getSoundType(BlockState pState) {
+        return MATERIAL.getSoundType(pState);
+    }
+
+    @Override
+    public SoundType getSoundType(BlockState state, LevelReader level, BlockPos pos, @Nullable Entity entity) {
+        return MATERIAL.getSoundType(state, level, pos, entity);
+    }
+
+    @Override
+    public MapColor getMapColor(BlockState state, BlockGetter level, BlockPos pos, MapColor defaultColor) {
+        return MATERIAL.getMapColor(state, level, pos, defaultColor);
     }
 
     @Override

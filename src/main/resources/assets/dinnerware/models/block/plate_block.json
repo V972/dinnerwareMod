@@ -1,10 +1,4 @@
 {
-	"format_version": "1.9.0",
-	"credit": "Made with Blockbench",
-	"textures": {
-		"0": "block/quartz_block_top",
-		"particle": "block/quartz_block_top"
-	},
 	"elements": [
 		{
 			"from": [5, 0.5, 4],

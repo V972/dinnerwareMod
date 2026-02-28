@@ -101,8 +101,9 @@ public class PlateMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player pPlayer) {
+
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
-                pPlayer, ModBlocks.PLATE_BLOCK.get());
+                pPlayer, blockEntity.getBlock(level));
     }
 
     private void addPlayerInventory(Inventory playerInventory) {

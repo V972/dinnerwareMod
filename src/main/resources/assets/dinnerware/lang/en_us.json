@@ -1,12 +1,30 @@
 {
-  "item.dinnerware.dinnerware_icon": "Dinnerware Icon",
-  "item.dinnerware.tray": "Tray",
+  "block.dinnerware.quartz_plate_block": "Quartz Dinner Plate",
 
-  "item.dinnerware.tray.fullness": "%s/%s Plates",
+  "block.dinnerware.iron_plate_block": "Iron Dinner Plate",
+  "block.dinnerware.gold_plate_block": "Gold Dinner Plate",
 
-  "block.dinnerware.plate_block": "Dinner Plate",
+  "block.dinnerware.diamond_plate_block": "Diamond Dinner Plate",
+
+  "block.dinnerware.oak_plate_block": "Oak Dinner Plate",
+  "block.dinnerware.birch_plate_block": "Birch Dinner Plate",
+  "block.dinnerware.spruce_plate_block": "Spruce Dinner Plate",
+  "block.dinnerware.jungle_plate_block": "Jungle Dinner Plate",
+  "block.dinnerware.acacia_plate_block": "Acacia Dinner Plate",
+  "block.dinnerware.dark_oak_plate_block": "Dark Oak Dinner Plate",
+  "block.dinnerware.cherry_plate_block": "Cherry Dinner Plate",
+  "block.dinnerware.mangrove_plate_block": "Mangrove Dinner Plate",
+  "block.dinnerware.bamboo_plate_block": "Bamboo Dinner Plate",
+
+  "block.dinnerware.crimson_plate_block": "Crimson Dinner Plate",
+  "block.dinnerware.warped_plate_block": "Warped Dinner Plate",
 
   "creativetab.dinnerware_tab": "Dinnerware",
+
+  "item.dinnerware.dinnerware_icon": "Dinnerware Icon",
+  "item.dinnerware.tray": "Tray WIP",
+
+  "item.dinnerware.tray.fullness": "%s/%s Plates",
 
   "sounds.dinnerware.tray_metal_load": "Item placed on Tray",
   "sounds.dinnerware.tray_metal_unload": "Item taken off Tray"

@@ -19,6 +19,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SuspiciousStewItem;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,7 +29,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.v972.dinnerware.Config;
-import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.screen.PlateMenu;
 import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
@@ -146,6 +146,8 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     // ========================================
 
     private void saveClientData(CompoundTag pTag) {
+        if (pTag == null)
+            pTag = new CompoundTag();
         pTag.put(ITEMS_TAG, items.serializeNBT());
         if (this.name != null) {
             pTag.putString("CustomName", Component.Serializer.toJson(this.name));
@@ -153,11 +155,13 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     }
 
     private void loadClientData(CompoundTag pTag) {
-        if (pTag.contains("CustomName", 8)) {
-            this.name = Component.Serializer.fromJson(pTag.getString("CustomName"));
-        }
-        if (pTag.contains(ITEMS_TAG)) {
-            items.deserializeNBT(pTag.getCompound(ITEMS_TAG));
+        if (pTag != null) {
+            if (pTag.contains("CustomName", 8)) {
+                this.name = Component.Serializer.fromJson(pTag.getString("CustomName"));
+            }
+            if (pTag.contains(ITEMS_TAG)) {
+                items.deserializeNBT(pTag.getCompound(ITEMS_TAG));
+            }
         }
     }
 
@@ -194,7 +198,7 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     }
 
     public ItemStack getItem() {
-        ItemStack itemstack = new ItemStack(ModBlocks.PLATE_BLOCK.get());
+        ItemStack itemstack = new ItemStack(getBlock());
         if (!this.isEmpty()) {
             CompoundTag compoundtag = new CompoundTag();
             compoundtag.put(ITEMS_TAG, items.serializeNBT());
@@ -261,5 +265,15 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
                     !(pStack.getItem() instanceof SuspiciousStewItem)
                 ) ||
                 pStack.is(ModTags.Items.ADDITIONAL_FOOD);
+    }
+
+    // ========================================
+
+    public Block getBlock(Level pLevel) {
+        return pLevel.getBlockState(getBlockPos()).getBlock();
+    }
+
+    public Block getBlock() {
+        return level.getBlockState(getBlockPos()).getBlock();
     }
 }

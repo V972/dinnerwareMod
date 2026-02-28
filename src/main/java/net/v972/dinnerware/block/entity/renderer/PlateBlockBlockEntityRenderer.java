@@ -29,46 +29,40 @@ public class PlateBlockBlockEntityRenderer implements BlockEntityRenderer<PlateB
     }
 
     @Override
-    public void render(PlateBlockBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+    public void render(PlateBlockBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack,
+                       MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+        positionItems(pBlockEntity, pPoseStack, pBuffer);
+    }
+
+
+    private void positionItems(PlateBlockBlockEntity pBlockEntity, PoseStack pPoseStack, MultiBufferSource pBuffer) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
         Direction facing = pBlockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
         NonNullList<ItemStack> stacks = pBlockEntity.getInventoryItems();
 
-        positionItems(
-                pBlockEntity, pPoseStack,
-                itemRenderer, pBuffer,
-                stacks, facing
-        );
-    }
-
-
-    private void positionItems(PlateBlockBlockEntity pBlockEntity, PoseStack pPoseStack,
-                               ItemRenderer pItemRenderer, MultiBufferSource pBuffer,
-                               NonNullList<ItemStack> pStacks, Direction facing) {
-
-        int nonEmptyCount = (int) pStacks.stream().filter(item -> !item.isEmpty()).count();
+        int nonEmptyCount = (int) stacks.stream().filter(item -> !item.isEmpty()).count();
         switch (nonEmptyCount) {
             case 1 -> {
-                int firstNonEmptySlot = IntStream.range(0, pStacks.size())
-                    .filter(i -> !pStacks.get(i).isEmpty())
+                int firstNonEmptySlot = IntStream.range(0, stacks.size())
+                    .filter(i -> !stacks.get(i).isEmpty())
                     .findFirst().getAsInt();
                 renderItem(
                     pBlockEntity, pPoseStack,
-                    pItemRenderer, pBuffer,
-                    pStacks.get(firstNonEmptySlot), facing, 0.045f,
+                    itemRenderer, pBuffer,
+                    stacks.get(firstNonEmptySlot), facing, 0.045f,
                     (PoseStack p) -> {}, 1
                 );
             }
             case 2 -> positionTwoItems(
                     pBlockEntity, pPoseStack,
-                    pItemRenderer, pBuffer,
-                    pStacks, facing
+                    itemRenderer, pBuffer,
+                    stacks, facing
             );
             case 3 -> positionThreeItems(
                     pBlockEntity, pPoseStack,
-                    pItemRenderer, pBuffer,
-                    pStacks, facing
+                    itemRenderer, pBuffer,
+                    stacks, facing
             );
         }
     }
