@@ -20,6 +20,7 @@ public class ModBlockTagGenerator extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
-
+        this.tag(BlockTags.GUARDED_BY_PIGLINS)
+                .add(ModBlocks.PLATE_BLOCK_GOLD.get());
     }
 }

@@ -16,12 +16,7 @@ import net.minecraftforge.registries.RegistryObject;
 import net.v972.dinnerware.DinnerwareMod;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.item.ModItems;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 import java.util.function.Supplier;
 
 
@@ -43,28 +38,28 @@ public class ModBlocks {
             () -> new PlateBlock(Blocks.DIAMOND_BLOCK, Ingredient.of(Tags.Items.GEMS_DIAMOND), 1, getDefaultPlateProperties()));
 
     public static final RegistryObject<Block> PLATE_BLOCK_OAK = registerBlock("oak_plate_block",
-            () -> new PlateBlock(Blocks.STRIPPED_OAK_LOG, Ingredient.of(Items.STRIPPED_OAK_LOG), 3, getDefaultPlateProperties()));
+            () -> new PlateBlock(Blocks.STRIPPED_OAK_LOG, Ingredient.of(Items.STRIPPED_OAK_LOG), 6, getDefaultPlateProperties()));
     public static final RegistryObject<Block> PLATE_BLOCK_BIRCH = registerBlock("birch_plate_block",
-            () -> new PlateBlock(Blocks.STRIPPED_BIRCH_LOG, Ingredient.of(Items.STRIPPED_BIRCH_LOG), 3, getDefaultPlateProperties()));
+            () -> new PlateBlock(Blocks.STRIPPED_BIRCH_LOG, Ingredient.of(Items.STRIPPED_BIRCH_LOG), 6, getDefaultPlateProperties()));
     public static final RegistryObject<Block> PLATE_BLOCK_SPRUCE = registerBlock("spruce_plate_block",
-            () -> new PlateBlock(Blocks.STRIPPED_SPRUCE_LOG, Ingredient.of(Items.STRIPPED_SPRUCE_LOG), 3, getDefaultPlateProperties()));
+            () -> new PlateBlock(Blocks.STRIPPED_SPRUCE_LOG, Ingredient.of(Items.STRIPPED_SPRUCE_LOG), 6, getDefaultPlateProperties()));
     public static final RegistryObject<Block> PLATE_BLOCK_JUNGLE = registerBlock("jungle_plate_block",
-            () -> new PlateBlock(Blocks.STRIPPED_JUNGLE_LOG, Ingredient.of(Items.STRIPPED_JUNGLE_LOG), 3, getDefaultPlateProperties()));
+            () -> new PlateBlock(Blocks.STRIPPED_JUNGLE_LOG, Ingredient.of(Items.STRIPPED_JUNGLE_LOG), 6, getDefaultPlateProperties()));
     public static final RegistryObject<Block> PLATE_BLOCK_ACACIA = registerBlock("acacia_plate_block",
-            () -> new PlateBlock(Blocks.STRIPPED_ACACIA_LOG, Ingredient.of(Items.STRIPPED_ACACIA_LOG), 3, getDefaultPlateProperties()));
+            () -> new PlateBlock(Blocks.STRIPPED_ACACIA_LOG, Ingredient.of(Items.STRIPPED_ACACIA_LOG), 6, getDefaultPlateProperties()));
     public static final RegistryObject<Block> PLATE_BLOCK_DARK_OAK = registerBlock("dark_oak_plate_block",
-            () -> new PlateBlock(Blocks.STRIPPED_DARK_OAK_LOG, Ingredient.of(Items.STRIPPED_DARK_OAK_LOG), 3, getDefaultPlateProperties()));
+            () -> new PlateBlock(Blocks.STRIPPED_DARK_OAK_LOG, Ingredient.of(Items.STRIPPED_DARK_OAK_LOG), 6, getDefaultPlateProperties()));
     public static final RegistryObject<Block> PLATE_BLOCK_CHERRY = registerBlock("cherry_plate_block",
-            () -> new PlateBlock(Blocks.STRIPPED_CHERRY_LOG, Ingredient.of(Items.STRIPPED_CHERRY_LOG), 3, getDefaultPlateProperties()));
+            () -> new PlateBlock(Blocks.STRIPPED_CHERRY_LOG, Ingredient.of(Items.STRIPPED_CHERRY_LOG), 6, getDefaultPlateProperties()));
     public static final RegistryObject<Block> PLATE_BLOCK_MANGROVE = registerBlock("mangrove_plate_block",
-            () -> new PlateBlock(Blocks.STRIPPED_MANGROVE_LOG, Ingredient.of(Items.STRIPPED_MANGROVE_LOG), 3, getDefaultPlateProperties()));
+            () -> new PlateBlock(Blocks.STRIPPED_MANGROVE_LOG, Ingredient.of(Items.STRIPPED_MANGROVE_LOG), 6, getDefaultPlateProperties()));
     public static final RegistryObject<Block> PLATE_BLOCK_BAMBOO = registerBlock("bamboo_plate_block",
-            () -> new PlateBlock(Blocks.STRIPPED_BAMBOO_BLOCK, Ingredient.of(Items.STRIPPED_BAMBOO_BLOCK), 3, getDefaultPlateProperties()));
+            () -> new PlateBlock(Blocks.STRIPPED_BAMBOO_BLOCK, Ingredient.of(Items.STRIPPED_BAMBOO_BLOCK), 6, getDefaultPlateProperties()));
 
     public static final RegistryObject<Block> PLATE_BLOCK_CRIMSON = registerBlock("crimson_plate_block",
-            () -> new PlateBlock(Blocks.CRIMSON_STEM, Ingredient.of(Items.CRIMSON_STEM), 3, getDefaultPlateProperties()));
+            () -> new PlateBlock(Blocks.CRIMSON_STEM, Ingredient.of(Items.CRIMSON_STEM), 6, getDefaultPlateProperties()));
     public static final RegistryObject<Block> PLATE_BLOCK_WARPED = registerBlock("warped_plate_block",
-            () -> new PlateBlock(Blocks.WARPED_STEM, Ingredient.of(Items.WARPED_STEM), 3, getDefaultPlateProperties()));
+            () -> new PlateBlock(Blocks.WARPED_STEM, Ingredient.of(Items.WARPED_STEM), 6, getDefaultPlateProperties()));
 
 //    public static final RegistryObject<Block> PLATE_BLOCK = registerBlock("plate_block",
 //            () -> new PlateBlock(Blocks.STONE, Ingredient.of(), 1, getDefaultPlateProperties()));

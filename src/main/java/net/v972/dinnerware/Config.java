@@ -10,9 +10,17 @@ public class Config
 {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
+    private static final ForgeConfigSpec.IntValue MAX_PLATE_STACK_SIZE = BUILDER
+            .comment(
+                    "\n Maximum amount of items one slot of a plate can hold. \n" +
+                    " Does not override item's max stack size.\n " +
+                    "Default: 16; Min: 1; Max: 64"
+            )
+            .defineInRange("maxPlateStackSize", 16, 1, 64);
+
     private static final ForgeConfigSpec.BooleanValue ALLOW_OVEREATING = BUILDER
             .comment(
-                    " If set to true, allow player to keep eating off the plate, even if they're not hungry. \n" +
+                    "\n If set to true, allow player to keep eating off the plate, even if they're not hungry. \n" +
                     " Food buffs/debuffs are still applied.\n" +
                     "Default: false"
             )
@@ -25,14 +33,6 @@ public class Config
                     "Default: true"
             )
             .define("onlyFoodOnPlate", true);
-
-    private static final ForgeConfigSpec.IntValue TRAY_PLATE_PILE_MAX_SIZE = BUILDER
-            .comment(
-                    "\n Max number of plates that can be carried on a tray.\n" +
-                    " Set 0 for infinite amount. \n" +
-                    "Default: 8"
-            )
-            .defineInRange("trayPlatePileMaxSize", 8, 0, Integer.MAX_VALUE);
 
     private static final ForgeConfigSpec.BooleanValue FRAGILE_PLATES = BUILDER
             .comment(
@@ -51,6 +51,14 @@ public class Config
             )
             .define("rightToLeft", false);
 
+//    private static final ForgeConfigSpec.IntValue TRAY_PLATE_PILE_MAX_SIZE = BUILDER
+//            .comment(
+//                    "\n Max number of plates that can be carried on a tray.\n" +
+//                            " Set 0 for infinite amount. \n" +
+//                            "Default: 8"
+//            )
+//            .defineInRange("trayPlatePileMaxSize", 8, 0, Integer.MAX_VALUE);
+
 //    public static final ForgeConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
 //            .comment("What you want the introduction message to be for the magic number")
 //            .define("magicNumberIntroduction", "The magic number is... ");
@@ -61,11 +69,12 @@ public class Config
 
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
+    public static int maxPlateStackSize;
     public static boolean allowOverEating;
     public static boolean onlyFoodOnPlate;
-    public static int trayPlatePileMaxSize;
     public static boolean fragilePlates;
     public static boolean rightToLeft;
+    //public static int trayPlatePileMaxSize;
 
 //    public static String magicNumberIntroduction;
 //    public static Set<Item> items;
@@ -77,11 +86,12 @@ public class Config
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event)
     {
+        maxPlateStackSize = MAX_PLATE_STACK_SIZE.get();
         allowOverEating = ALLOW_OVEREATING.get();
         onlyFoodOnPlate = ONLY_FOOD_ON_PLATE.get();
-        trayPlatePileMaxSize = TRAY_PLATE_PILE_MAX_SIZE.get();
         fragilePlates = FRAGILE_PLATES.get();
         rightToLeft = RIGHT_TO_LEFT.get();
+        //trayPlatePileMaxSize = TRAY_PLATE_PILE_MAX_SIZE.get();
 
 //        magicNumberIntroduction = MAGIC_NUMBER_INTRODUCTION.get();
 //        // convert the list of strings into a set of items

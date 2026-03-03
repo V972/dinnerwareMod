@@ -131,6 +131,7 @@ public class TrayItem extends Item {
             itemstack.getItem().canFitInsideContainerItems() &&
             canLoadItem(itemstack)
         ) {
+            //int i = (Config.trayPlatePileMaxSize - getContentWeight(pStack)) / getWeight(itemstack);
             int i = (64 - getContentWeight(pStack)) / getWeight(itemstack);
             int j = add(pStack, pSlot.safeTake(itemstack.getCount(), i, pPlayer));
             if (j > 0) {
@@ -152,10 +153,10 @@ public class TrayItem extends Item {
                     pAccess.set(itemStack);
                 });
             } else {
-                int i = add(pStack, pOther);
-                if (i > 0) {
+                int leftOver = add(pStack, pOther);
+                if (leftOver > 0) {
                     this.playInsertSound(pPlayer);
-                    pOther.shrink(i);
+                    pOther.shrink(leftOver);
                 }
             }
 
@@ -168,16 +169,19 @@ public class TrayItem extends Item {
     // -----------------------------
 
     public static float getFullnessDisplay(ItemStack pStack) {
-        if (Config.trayPlatePileMaxSize == 0) return 0F;
-        return (float)getContentWeight(pStack) / (float)Config.trayPlatePileMaxSize;
+        //if (Config.trayPlatePileMaxSize == 0) return 0F;
+        return (float)getContentWeight(pStack) / 64f;//(float)Config.trayPlatePileMaxSize;
     }
 
     public boolean isBarVisible(ItemStack pStack) {
-        return Config.trayPlatePileMaxSize > 0 && getContentWeight(pStack) > 0;
+        return
+                //Config.trayPlatePileMaxSize > 0 &&
+                getContentWeight(pStack) > 0;
     }
 
     public int getBarWidth(ItemStack pStack) {
-        return Math.min(1 + 12 * getContentWeight(pStack) / (Config.trayPlatePileMaxSize == 0 ? 1 : Config.trayPlatePileMaxSize), 13);
+        return Math.min(1 + 12 * getContentWeight(pStack) / 64, 13);
+        //return Math.min(1 + 12 * getContentWeight(pStack) / (Config.trayPlatePileMaxSize == 0 ? 1 : Config.trayPlatePileMaxSize), 13);
     }
 
     public int getBarColor(ItemStack pStack) {
@@ -189,7 +193,7 @@ public class TrayItem extends Item {
     }
 
     public void appendHoverText(ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        String maxFullness = Config.trayPlatePileMaxSize == 0 ? "INFINITY" : String.valueOf(Config.trayPlatePileMaxSize);
+        String maxFullness = "64";//Config.trayPlatePileMaxSize == 0 ? "INFINITY" : String.valueOf(Config.trayPlatePileMaxSize);
         pTooltipComponents.add(
                 Component.translatable("item.dinnerware.tray.fullness",
                         getContentWeight(pStack), maxFullness)
@@ -201,11 +205,9 @@ public class TrayItem extends Item {
             }
             ListTag listtag = compoundtag.getList(TAG_ITEMS, 10);
             for(int i = 0; i < listtag.size(); ++i) {
-                CompoundTag compoundtag1 = listtag.getCompound(i);
-                ItemStack itemstack = ItemStack.of(compoundtag1);
-                pTooltipComponents.add(
-                    Component.literal("[").append(itemstack.getDisplayName()).append("]")
-                );
+                CompoundTag itemTag = listtag.getCompound(i);
+                ItemStack itemstack = ItemStack.of(itemTag);
+                pTooltipComponents.add(itemstack.getDisplayName());
             }
 
         }
@@ -224,10 +226,9 @@ public class TrayItem extends Item {
     // -----------------------------
 
     private static int add(ItemStack pTrayStack, ItemStack pInsertedStack) {
-        if (
-                !pInsertedStack.isEmpty() &&
-                pInsertedStack.getItem().canFitInsideContainerItems() &&
-                canLoadItem(pInsertedStack)
+        if (!pInsertedStack.isEmpty() &&
+            pInsertedStack.getItem().canFitInsideContainerItems() &&
+            canLoadItem(pInsertedStack)
         ) {
             CompoundTag compoundtag = pTrayStack.getOrCreateTag();
             if (!compoundtag.contains(TAG_ITEMS)) {
@@ -236,6 +237,7 @@ public class TrayItem extends Item {
 
             int i = getContentWeight(pTrayStack);
             int j = getWeight(pInsertedStack);
+            //int k = Math.min(pInsertedStack.getCount(), (Config.trayPlatePileMaxSize - i) / j);
             int k = Math.min(pInsertedStack.getCount(), (64 - i) / j);
             if (k == 0) {
                 return 0;
@@ -273,8 +275,8 @@ public class TrayItem extends Item {
                 return Optional.empty();
             } else {
                 int i = 0;
-                CompoundTag compoundtag1 = listtag.getCompound(0);
-                ItemStack itemstack = ItemStack.of(compoundtag1);
+                CompoundTag itemTag = listtag.getCompound(0);
+                ItemStack itemstack = ItemStack.of(itemTag);
                 listtag.remove(0);
                 if (listtag.isEmpty()) {
                     pStack.removeTagKey(TAG_ITEMS);
@@ -292,9 +294,9 @@ public class TrayItem extends Item {
                     .stream()
                     .filter(CompoundTag.class::isInstance)
                     .map(CompoundTag.class::cast)
-                    .filter((tag) -> {
-                        return ItemStack.isSameItemSameTags(ItemStack.of(tag), pStack);
-                    }).findFirst();
+                    .filter((tag) ->
+                            ItemStack.isSameItemSameTags(ItemStack.of(tag), pStack)
+                    ).findFirst();
     }
 
     private static Stream<ItemStack> getContents(ItemStack pStack) {
@@ -308,9 +310,8 @@ public class TrayItem extends Item {
     }
 
     private static int getContentWeight(ItemStack pStack) {
-        return getContents(pStack).mapToInt((itemStack) -> {
-            return getWeight(itemStack) * itemStack.getCount();
-        }).sum();
+        return getContents(pStack).mapToInt((itemStack) ->
+                getWeight(itemStack) * itemStack.getCount()).sum();
     }
 
     private static int getWeight(ItemStack pStack) {
@@ -320,10 +321,11 @@ public class TrayItem extends Item {
             if ((pStack.is(Items.BEEHIVE) || pStack.is(Items.BEE_NEST)) && pStack.hasTag()) {
                 CompoundTag compoundtag = BlockItem.getBlockEntityData(pStack);
                 if (compoundtag != null && !compoundtag.getList("Bees", 10).isEmpty()) {
-                    return 64;
+                    return 64;//Config.trayPlatePileMaxSize;
                 }
             }
 
+            //return Config.trayPlatePileMaxSize / pStack.getMaxStackSize();
             return 64 / pStack.getMaxStackSize();
         }
     }

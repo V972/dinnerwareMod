@@ -14,6 +14,7 @@ import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.v972.dinnerware.block.custom.PlateBlock;
+import net.v972.dinnerware.util.DinnerwareHelper;
 import org.jetbrains.annotations.NotNull;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
@@ -33,7 +34,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
             ResourceLocation finalTexture = getFinalTexture(materialBlockName, plateBlock);
 
             ModelFile model = models()
-                    .getBuilder(getBlockId(block))
+                    .getBuilder(DinnerwareHelper.getBlockId(block))
                     .parent(models().getExistingFile(modLoc("plate_block")))
                     .texture("0", finalTexture)
                     .texture("particle", finalTexture);
@@ -61,10 +62,5 @@ public class ModBlockStateProvider extends BlockStateProvider {
                         ? materialTextureTop
                         : materialTexture;
         return finalTexture;
-    }
-
-    private static @NotNull String getBlockId(Block block) {
-        String[] pathComponents = block.getDescriptionId().split("\\.");
-        return pathComponents[pathComponents.length-1];
     }
 }

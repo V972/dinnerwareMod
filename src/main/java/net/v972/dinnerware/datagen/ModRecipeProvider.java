@@ -12,6 +12,7 @@ import net.v972.dinnerware.item.ModItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
+import net.v972.dinnerware.util.DinnerwareHelper;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -31,7 +32,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .pattern(" M ")
                 .define('M', plateBlock.CRAFTING_MATERIAL)
                 .unlockedBy(
-                    "has_" + plateBlock.getDescriptionId() + "_ingredients",
+                    "has_" + DinnerwareHelper.getBlockId(plateBlock) + "_ingredients",
                     InventoryChangeTrigger.TriggerInstance.hasItems(
                         Arrays.stream(plateBlock.CRAFTING_MATERIAL.getItems())
                             .map(itemStack -> itemStack.getItem())
