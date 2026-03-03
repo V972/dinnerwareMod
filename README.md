@@ -11,7 +11,8 @@ Maybe wash too.
   - Can be made of: 
     - vanilla wood types; 
     - iron, gold, diamond and quartz;
-    - terracotta of all colors (WIP);
+    - terracotta of all colors (both by dyeing plain one and crafting directly out of colored blocks);
+    - a few other materials ;)
   - Can be placed on any block, but break w/o support;
   - Has 3 slots: Main dish, Side dish and Extra dish; 
   - GUI can be opened by right-clicking on empty one or by shift-right-clicking on any;
@@ -56,10 +57,11 @@ Fabric port is uncertain, but not of the picture. We'll see.
 ## Progress
 
 - [X] Plate blocks:
-  - [ ] Different materials:
+  - [X] Different materials:
     - [X] vanilla wood types;
     - [X] iron, gold, diamond and quartz;
-    - [ ] terracotta of all colors;
+    - [X] terracotta of all colors;
+    - [X] a few other materials;
   - [X] Can be placed on any block, but break w/o support;
   - [X] Has 3 slots: Main dish, Side dish and Extra dish;
   - [X] GUI can be opened by right-clicking on empty one or by shift-right-clicking on any;

@@ -6,6 +6,8 @@
 
   "block.dinnerware.diamond_plate_block": "Diamond Dinner Plate",
 
+  "block.dinnerware.obsidian_plate_block": "Obsidian Dinner Plate",
+
   "block.dinnerware.oak_plate_block": "Oak Dinner Plate",
   "block.dinnerware.birch_plate_block": "Birch Dinner Plate",
   "block.dinnerware.spruce_plate_block": "Spruce Dinner Plate",
@@ -18,6 +20,27 @@
 
   "block.dinnerware.crimson_plate_block": "Crimson Dinner Plate",
   "block.dinnerware.warped_plate_block": "Warped Dinner Plate",
+
+  "block.dinnerware.terracotta_plate_block": "Terracotta Dinner Plate",
+
+  "block.dinnerware.white_terracotta_plate_block": "White Terracotta Dinner Plate",
+  "block.dinnerware.orange_terracotta_plate_block": "Orange Terracotta Dinner Plate",
+  "block.dinnerware.magenta_terracotta_plate_block": "Magenta Terracotta Dinner Plate",
+  "block.dinnerware.light_blue_terracotta_plate_block": "Light Blue Terracotta Dinner Plate",
+  "block.dinnerware.yellow_terracotta_plate_block": "Yellow Terracotta Dinner Plate",
+  "block.dinnerware.lime_terracotta_plate_block": "Lime Terracotta Dinner Plate",
+  "block.dinnerware.pink_terracotta_plate_block": "Pink Terracotta Dinner Plate",
+  "block.dinnerware.gray_terracotta_plate_block": "Gray Terracotta Dinner Plate",
+  "block.dinnerware.light_gray_terracotta_plate_block": "Light Gray Terracotta Dinner Plate",
+  "block.dinnerware.cyan_terracotta_plate_block": "Cyan Terracotta Dinner Plate",
+  "block.dinnerware.purple_terracotta_plate_block": "Purple Terracotta Dinner Plate",
+  "block.dinnerware.blue_terracotta_plate_block": "Blue Terracotta Dinner Plate",
+  "block.dinnerware.brown_terracotta_plate_block": "Brown Terracotta Dinner Plate",
+  "block.dinnerware.green_terracotta_plate_block": "Green Terracotta Dinner Plate",
+  "block.dinnerware.red_terracotta_plate_block": "Red Terracotta Dinner Plate",
+  "block.dinnerware.black_terracotta_plate_block": "Black Terracotta Dinner Plate",
+
+  "block.dinnerware.bedrock_plate_block": "Bedrock Dinner Plate",
 
   "creativetab.dinnerware_tab": "Dinnerware",
 
