@@ -15,7 +15,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
     @Override
     protected void generate() {
         for(Block block : ModBlocks.getKnownBlocks()) {
-            this.add(block, this::createNameableBlockEntityTable);
+            this.add(block, noDrop());
         }
     }
 

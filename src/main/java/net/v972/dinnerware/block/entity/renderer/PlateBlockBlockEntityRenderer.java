@@ -21,7 +21,6 @@ import net.v972.dinnerware.Config;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 
 import java.util.function.Consumer;
-import java.util.stream.IntStream;
 
 public class PlateBlockBlockEntityRenderer implements BlockEntityRenderer<PlateBlockBlockEntity> {
     public PlateBlockBlockEntityRenderer(BlockEntityRendererProvider.Context pContext) {
@@ -39,18 +38,16 @@ public class PlateBlockBlockEntityRenderer implements BlockEntityRenderer<PlateB
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
         Direction facing = pBlockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
-        NonNullList<ItemStack> stacks = pBlockEntity.getInventoryItems();
+        NonNullList<ItemStack> stacks = pBlockEntity.getInventoryStacks();
 
-        int nonEmptyCount = (int) stacks.stream().filter(item -> !item.isEmpty()).count();
+        int nonEmptyCount = pBlockEntity.getNonEmptySlotsCount();
         switch (nonEmptyCount) {
             case 1 -> {
-                int firstNonEmptySlot = IntStream.range(0, stacks.size())
-                    .filter(i -> !stacks.get(i).isEmpty())
-                    .findFirst().getAsInt();
+                int firstNonEmptySlot = pBlockEntity.getFirstNonEmptySlot().getAsInt();
                 renderItem(
                     pBlockEntity, pPoseStack,
                     itemRenderer, pBuffer,
-                    stacks.get(firstNonEmptySlot), facing, 0.045f,
+                    pBlockEntity.getStackInSlot(firstNonEmptySlot), facing, 0.045f,
                     (PoseStack p) -> {}, 1
                 );
             }

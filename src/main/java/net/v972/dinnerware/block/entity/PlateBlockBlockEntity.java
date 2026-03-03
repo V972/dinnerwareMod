@@ -35,6 +35,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.OptionalInt;
+import java.util.stream.IntStream;
 
 public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, Nameable {
 
@@ -75,7 +77,8 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
             @Override
             protected void onContentsChanged(int slot) {
                 setChanged();
-                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+                if (level == null) System.out.println("Level is null in onContentsChanged() for slot " + slot);
+                else level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
             }
 
             @Override
@@ -83,6 +86,11 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
                 return Config.onlyFoodOnPlate
                         ? canPlaceItemOnPlate(stack)
                         : super.isItemValid(slot, stack);
+            }
+
+            @Override
+            public int getSlotLimit(int slot) {
+                return Config.maxPlateStackSize;
             }
         };
     }
@@ -198,8 +206,12 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     }
 
     public ItemStack getItem() {
+        return this.getItem(true);
+    }
+
+    public ItemStack getItem(boolean pWithContent) {
         ItemStack itemstack = new ItemStack(getBlock());
-        if (!this.isEmpty()) {
+        if (!this.isEmpty() && pWithContent) {
             CompoundTag compoundtag = new CompoundTag();
             compoundtag.put(ITEMS_TAG, items.serializeNBT());
             BlockItem.setBlockEntityData(itemstack, this.getType(), compoundtag);
@@ -220,29 +232,47 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
 
     public boolean isEmpty() {
         for(int i = 0; i < items.getSlots(); i++) {
-            ItemStack itemStack = items.getStackInSlot(i);
-            if (itemStack != ItemStack.EMPTY) return false;
+            if (!items.getStackInSlot(i).isEmpty()) return false;
         }
 
         return true;
     }
 
-    public NonNullList<ItemStack> getInventoryItems() {
+    public int getNonEmptySlotsCount() {
+        return (int)IntStream
+                .range(0, SLOT_COUNT)
+                .filter(i -> !items.getStackInSlot(i).isEmpty())
+                .count();
+    }
+
+    public OptionalInt getFirstNonEmptySlot() {
+        return IntStream.range(0, SLOT_COUNT)
+                .filter(i -> !items.getStackInSlot(i).isEmpty())
+                .findFirst();
+    }
+
+    ///  Returns **a copy** of the item stacks in all slots
+    public NonNullList<ItemStack> getInventoryStacks() {
         NonNullList<ItemStack> result = NonNullList.withSize(items.getSlots(), ItemStack.EMPTY);
 
         for(int i = 0; i < items.getSlots(); i++) {
-            result.set(i, items.getStackInSlot(i));
+            result.set(i, items.getStackInSlot(i).copy());
         }
 
         return result;
     }
 
-    public ItemStack removeItem(int pIndex, int pCount) {
-        return items.extractItem(pIndex, pCount, false);
+    ///  Returns **a copy** of the item stack in the slot
+    public ItemStack getStackInSlot(int pSlot) {
+        return items.getStackInSlot(pSlot).copy();
     }
 
-    public ItemStack removeItem(int pIndex) {
-        return removeItem(pIndex, 1);
+    public ItemStack extractItem(int pIndex) {
+        return extractItem(pIndex, 1);
+    }
+
+    public ItemStack extractItem(int pIndex, int pCount) {
+        return items.extractItem(pIndex, pCount, false);
     }
 
     public void clearContent() {
@@ -252,19 +282,19 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     }
 
     public void dropContents() {
-        Containers.dropContents(this.getLevel(), getBlockPos(), getInventoryItems());
+        Containers.dropContents(this.getLevel(), getBlockPos(), getInventoryStacks());
         this.clearContent();
     }
 
     private boolean canPlaceItemOnPlate(ItemStack pStack) {
         return
-                !Config.onlyFoodOnPlate ||
-                (
-                    pStack.isEdible() &&
-                    !(pStack.getItem() instanceof BowlFoodItem) &&
-                    !(pStack.getItem() instanceof SuspiciousStewItem)
-                ) ||
-                pStack.is(ModTags.Items.ADDITIONAL_FOOD);
+            !Config.onlyFoodOnPlate ||
+            (
+                pStack.isEdible() &&
+                !(pStack.getItem() instanceof BowlFoodItem) &&
+                !(pStack.getItem() instanceof SuspiciousStewItem)
+            ) ||
+            pStack.is(ModTags.Items.ADDITIONAL_FOOD);
     }
 
     // ========================================
@@ -276,4 +306,14 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     public Block getBlock() {
         return level.getBlockState(getBlockPos()).getBlock();
     }
+
+    // ========================================
+
+    private boolean removedByPlayer = false;
+    public void setRemovedByPlayer() { removedByPlayer = true; }
+    public boolean getRemovedByPlayer() { return removedByPlayer; }
+
+    private ItemStack blockItemToDropOnCustomRemove = ItemStack.EMPTY;
+    public void saveBlockItemToDrop() { blockItemToDropOnCustomRemove = new ItemStack(getBlock()); }
+    public ItemStack getBlockItemToDropOnCustomRemove() { return blockItemToDropOnCustomRemove; }
 }

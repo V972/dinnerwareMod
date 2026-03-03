@@ -3,18 +3,20 @@ package net.v972.dinnerware.block.custom;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BowlFoodItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.SuspiciousStewItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.BlockGetter;
@@ -41,8 +43,8 @@ import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.OptionalInt;
-import java.util.stream.IntStream;
 
 public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
@@ -50,7 +52,6 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
 
     public static VoxelShape SHAPE = Block.box(3, 0, 3, 13, 2, 13);
 
-    //public final ResourceLocation MODEL;
     public final Block MATERIAL;
     public final Ingredient CRAFTING_MATERIAL;
     public final int CRAFTING_AMOUNT;
@@ -59,13 +60,11 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
             @NotNull Block pMaterial,
             @NotNull Ingredient pCraftMaterial,
             int pCraftingAmount,
-            //@NotNull ResourceLocation pModel,
             Properties pProperties) {
         super(pProperties);
         this.MATERIAL = pMaterial;
         this.CRAFTING_MATERIAL = pCraftMaterial;
         this.CRAFTING_AMOUNT = pCraftingAmount;
-        //this.MODEL = pModel;
         registerDefaultState(
             stateDefinition.any()
                 .setValue(FACING, Direction.NORTH)
@@ -142,35 +141,35 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     }
 
     @Override
-    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-        if (pState.getBlock() != pNewState.getBlock()) {
-            BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-            if (blockEntity instanceof PlateBlockBlockEntity plateEntity) {
-                plateEntity.dropContents();
-            }
-        }
-
-        super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
-    }
-
-    @Override
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
         if (pLevel.isClientSide) {
             pLevel.getBlockEntity(pPos, ModBlockEntities.PLATE_BLOCK_BE.get()).ifPresent((be) -> {
                 be.fromItem(pStack);
             });
         } else if (pStack.hasCustomHoverName()) {
-            pLevel.getBlockEntity(pPos, ModBlockEntities.PLATE_BLOCK_BE.get()).ifPresent((be) -> {
-                be.setCustomName(pStack.getHoverName());
-            });
+            BlockEntity blockentity = pLevel.getBlockEntity(pPos);
+            if (blockentity instanceof PlateBlockBlockEntity plateBlockBlockEntity) {
+                plateBlockBlockEntity.setCustomName(pStack.getHoverName());
+            }
         }
+    }
+
+    @Override
+    public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
+        BlockEntity blockentity = pLevel.getBlockEntity(pPos);
+        if (blockentity instanceof PlateBlockBlockEntity pPlateBlockEntity &&
+            !pLevel.isClientSide()) {
+            pPlateBlockEntity.saveBlockItemToDrop();
+        }
+
+        super.onPlace(pState, pLevel, pPos, pOldState, pIsMoving);
     }
 
     @Override
     public ItemStack getCloneItemStack(BlockGetter pLevel, BlockPos pPos, BlockState pState) {
         BlockEntity blockentity = pLevel.getBlockEntity(pPos);
         return blockentity instanceof PlateBlockBlockEntity plateBE
-                ? plateBE.getItem()
+                ? plateBE.getItem(!plateBE.isEmpty())
                 : super.getCloneItemStack(pLevel, pPos, pState);
     }
 
@@ -198,14 +197,10 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         if (!pPlayer.canEat(Config.allowOverEating)) {
             return InteractionResult.PASS;
         } else {
-            NonNullList<ItemStack> items = pEntity.getInventoryItems();
-            OptionalInt firstNonEmptySlotOptional = IntStream.range(0, items.size())
-                    .filter(i -> !items.get(i).isEmpty())
-                    .findFirst();
-
+            OptionalInt firstNonEmptySlotOptional = pEntity.getFirstNonEmptySlot();
             if (firstNonEmptySlotOptional.isPresent()) {
                 int firstNonEmptySlot = firstNonEmptySlotOptional.getAsInt();
-                ItemStack itemStack = items.get(firstNonEmptySlot).copy();
+                ItemStack itemStack = pEntity.getStackInSlot(firstNonEmptySlot);
 
                 if (itemStack.getFoodProperties(pPlayer) != null) {
                     if (!pPlayer.isCreative()) {
@@ -229,7 +224,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
                     }
                     itemStack.finishUsingItem(pLevel, pPlayer);
                     pLevel.gameEvent(pPlayer, GameEvent.EAT, pPos);
-                    pEntity.removeItem(firstNonEmptySlot);
+                    pEntity.extractItem(firstNonEmptySlot);
                 }
             }
 
@@ -240,8 +235,105 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     @Override
     public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity) {
         if (!pLevel.isClientSide && Config.fragilePlates) {
-            pLevel.destroyBlock(pPos, true);
+            BlockEntity blockentity = pLevel.getBlockEntity(pPos);
+            if (blockentity instanceof PlateBlockBlockEntity pPlateBlockEntity &&
+                this.processBlockDrop(pLevel, pPos, pPlateBlockEntity, pEntity, true)) {
+                pLevel.destroyBlock(pPos, true);
+            }
+
             pLevel.gameEvent(pEntity, GameEvent.BLOCK_DESTROY, pPos);
         } else super.entityInside(pState, pLevel, pPos, pEntity);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
+        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
+        CompoundTag compoundtag = BlockItem.getBlockEntityData(pStack);
+        if (compoundtag != null && compoundtag.contains(PlateBlockBlockEntity.ITEMS_TAG)) {
+            compoundtag = compoundtag.getCompound(PlateBlockBlockEntity.ITEMS_TAG);
+            if (compoundtag.contains("Items", Tag.TAG_LIST)) {
+                NonNullList<ItemStack> nonnulllist = NonNullList.withSize(3, ItemStack.EMPTY);
+                ContainerHelper.loadAllItems(compoundtag, nonnulllist);
+                for(ItemStack itemstack : nonnulllist) {
+                    if (itemstack.isEmpty()) continue;
+                    MutableComponent mutablecomponent = itemstack.getHoverName().copy();
+                    mutablecomponent.append(" x").append(String.valueOf(itemstack.getCount()));
+                    pTooltip.add(mutablecomponent);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+        BlockEntity blockentity = pLevel.getBlockEntity(pPos);
+        if (blockentity instanceof PlateBlockBlockEntity pPlateBlockEntity) {
+            if (pPlateBlockEntity.getRemovedByPlayer()) {
+                super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
+                return;
+            }
+            if (!pLevel.isClientSide) {
+                processBlockDrop(pLevel, pPos, pPlateBlockEntity, null, true, true);
+                super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
+            }
+        }
+    }
+
+    @Override
+    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+        BlockEntity blockentity = level.getBlockEntity(pos);
+        if (blockentity instanceof PlateBlockBlockEntity pPlateBlockEntity && !level.isClientSide) {
+            processBlockDrop(level, pos, pPlateBlockEntity, player, false);
+            pPlateBlockEntity.setRemovedByPlayer();
+        }
+
+        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
+    }
+
+    private boolean processBlockDrop(Level pLevel, BlockPos pPos,
+                                     PlateBlockBlockEntity pPlateBlockEntity,
+                                     Entity pEntity, boolean pNeverKeep) {
+        return processBlockDrop(pLevel, pPos, pPlateBlockEntity, pEntity, pNeverKeep, false);
+    }
+
+    private boolean processBlockDrop(Level pLevel, BlockPos pPos,
+                                     PlateBlockBlockEntity pPlateBlockEntity,
+                                     Entity pEntity, boolean pNeverKeep,
+                                     boolean pIgnoreEntity) {
+        if (!pIgnoreEntity && !(pEntity instanceof Player)) return false;
+        Player pPlayer = pIgnoreEntity ? null : (Player)pEntity;
+
+        boolean plateEmpty = pPlateBlockEntity.isEmpty();
+        boolean dropBlock =
+                pIgnoreEntity ||
+                !pPlayer.isCreative() ||
+                (!plateEmpty && pPlayer.isCrouching());
+        boolean keepItems =
+                !pNeverKeep && !pIgnoreEntity &&
+                dropBlock && pPlayer.isCrouching();
+        boolean dropItems =
+                (!keepItems && !plateEmpty);
+
+        if (dropBlock) {
+            ItemStack itemstack = pIgnoreEntity
+                ? pPlateBlockEntity.getBlockItemToDropOnCustomRemove()
+                : pPlateBlockEntity.getItem(keepItems);
+            if (pPlateBlockEntity.hasCustomName()) {
+                itemstack.setHoverName(pPlateBlockEntity.getCustomName());
+            }
+
+            ItemEntity itementity = new ItemEntity(pLevel,
+                    (double)pPos.getX() + 0.5D,
+                    (double)pPos.getY() + 0.25D,
+                    (double)pPos.getZ() + 0.5D,
+                    itemstack);
+            itementity.setDefaultPickUpDelay();
+            pLevel.addFreshEntity(itementity);
+        }
+        if (dropItems) {
+            pPlateBlockEntity.dropContents();
+        }
+
+        return true;
     }
 }

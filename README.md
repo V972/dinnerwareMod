@@ -7,7 +7,11 @@ Maybe wash too.
 
 ## Features
 
-- Plate blocks made of vanilla wood types as well as iron and gold;
+- Plate block
+  - Can be made of: 
+    - vanilla wood types; 
+    - iron, gold, diamond and quartz;
+    - terracotta of all colors (WIP);
   - Can be placed on any block, but break w/o support;
   - Has 3 slots: Main dish, Side dish and Extra dish; 
   - GUI can be opened by right-clicking on empty one or by shift-right-clicking on any;
@@ -19,6 +23,7 @@ Maybe wash too.
       - Over-eating can be enabled, allowing to continue eating even with full hunger;
   - Additional food items can be added to the `dinnerware:additional_food`;
   - Can be fragile if enabled in the config. Don't walk on them.
+  - When croutch-broken, keep their content inside can be placed back. 
 - Shelved for now ~~Tray items made of vanilla wood types as well as iron and gold;~~
   - ~~Custom animation _(or rather, lack thereof)_ when holding it;~~ 
   - ~~Act like bundles for plates and placeable food;~~
@@ -32,8 +37,7 @@ Maybe wash too.
 
 Pictures WIP
 
-Bowl recipe out of plate material;  
-"Item-material" (ingots/gems/quarts/etc.) produce 1 plate while "Block-materials" produce 6 plates.  
+Bowl recipe out of plate material. "Item-material" (ingots/gems/quarts/etc.) produce 1 plate while "Block-materials" produce 6 plates.  
 
 ## Customization
 
@@ -46,12 +50,16 @@ Note that adding items to this tag does not guarantee they'll be able to be eate
 Forge 1.20.1 for now.  
 When the mod is feature-complete I will be looking into forward porting it to 1.21.X...dunno which one of the gorillion sub versions, probably .11  
 As well as back-poring to Forge 1.18.2. Yes, really.  
+
 Fabric port is uncertain, but not of the picture. We'll see.
 
 ## Progress
 
 - [X] Plate blocks:
-  - [X] Can be made out of vanilla wood types, quartz as well as iron and gold;  
+  - [ ] Different materials:
+    - [X] vanilla wood types;
+    - [X] iron, gold, diamond and quartz;
+    - [ ] terracotta of all colors;
   - [X] Can be placed on any block, but break w/o support;
   - [X] Has 3 slots: Main dish, Side dish and Extra dish;
   - [X] GUI can be opened by right-clicking on empty one or by shift-right-clicking on any;
@@ -61,7 +69,12 @@ Fabric port is uncertain, but not of the picture. We'll see.
           - [X] Even if all items will be allowed, only food will be eaten;
           - [X] Food effects are applied, good and bad;
           - [X] Over-eating can be enabled, allowing to continue eating even with full hunger;
-    - [X] Can be fragile if enabled in the config. Don't walk on them.
+  - [X] Can be fragile if enabled in the config. Don't walk on them.
+  - [ ] When croutch-broken, keep their content inside can be placed back.
+    - [X] Keep content
+    - [X] Restore when placed back
+    - [X] Show in tooltip
+    - [ ] Render food in item
 - [ ] ~~Tray items:~~ Shelved for now...
   - [ ] ~~Can be made of vanilla wood types as well as iron and gold~~
   - [ ] ~~Custom animation when holding it;~~

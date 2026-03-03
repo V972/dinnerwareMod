@@ -91,7 +91,6 @@ public class ModBlocks {
                 .isViewBlocking((state, level, pos) -> false)
                 .pushReaction(PushReaction.DESTROY)
                 .instabreak()
-                //.noOcclusion()
         ;
     }
 
