@@ -17,7 +17,7 @@ public class ModSounds {
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(
-                new ResourceLocation(DinnerwareMod.MOD_ID, name)
+                ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, name)
         ));
     }
 

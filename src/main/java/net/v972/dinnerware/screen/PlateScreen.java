@@ -10,8 +10,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.v972.dinnerware.DinnerwareMod;
 
 public class PlateScreen extends AbstractContainerScreen<PlateMenu> {
-    private static final ResourceLocation TEXTURE =
-            new ResourceLocation(DinnerwareMod.MOD_ID, "textures/gui/plate_block_gui.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(
+            DinnerwareMod.MOD_ID, "textures/gui/plate_block_gui.png");
 
     public PlateScreen(PlateMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);

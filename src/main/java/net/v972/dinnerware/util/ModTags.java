@@ -14,7 +14,7 @@ public class ModTags {
 
 
         private static TagKey<Block> tag(String name) {
-            return BlockTags.create(new ResourceLocation(DinnerwareMod.MOD_ID, name));
+            return BlockTags.create(ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, name));
         }
     }
 
@@ -22,7 +22,7 @@ public class ModTags {
         public static final TagKey<Item> ADDITIONAL_FOOD = tag("additional_food");
 
         private static TagKey<Item> tag(String name) {
-            return ItemTags.create(new ResourceLocation(DinnerwareMod.MOD_ID, name));
+            return ItemTags.create(ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, name));
         }
     }
 }
