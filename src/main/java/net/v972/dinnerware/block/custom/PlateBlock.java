@@ -96,7 +96,8 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
 
     @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
-        return !pLevel.isEmptyBlock(pPos.below());
+        return  this.MATERIAL == Blocks.BEDROCK ||
+                !pLevel.isEmptyBlock(pPos.below());
     }
 
     @Override
