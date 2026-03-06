@@ -24,7 +24,7 @@ Maybe wash too.
       - Over-eating can be enabled, allowing to continue eating even with full hunger;
   - Additional food items can be added to the `dinnerware:additional_food`;
   - Can be fragile if enabled in the config. Don't walk on them.
-  - When croutch-broken, keep their content inside can be placed back. 
+  - Shelved for now ~~When croutch-broken, keep their content inside can be placed back.~~ 
 - Shelved for now ~~Tray items made of vanilla wood types as well as iron and gold;~~
   - ~~Custom animation _(or rather, lack thereof)_ when holding it;~~ 
   - ~~Act like bundles for plates and placeable food;~~
@@ -72,11 +72,11 @@ Fabric port is uncertain, but not of the picture. We'll see.
           - [X] Food effects are applied, good and bad;
           - [X] Over-eating can be enabled, allowing to continue eating even with full hunger;
   - [X] Can be fragile if enabled in the config. Don't walk on them.
-  - [ ] When croutch-broken, keep their content inside can be placed back.
-    - [X] Keep content
-    - [X] Restore when placed back
+  - [ ] Shelved for now ~~When croutch-broken, keep their content inside can be placed back.~~
+    - [ ] ~~Keep content~~
+    - [ ] ~~Restore when placed back~~
     - [X] Show in tooltip
-    - [ ] Render food in item
+    - [ ] ~~Render food in item~~
 - [ ] ~~Tray items:~~ Shelved for now...
   - [ ] ~~Can be made of vanilla wood types as well as iron and gold~~
   - [ ] ~~Custom animation when holding it;~~
