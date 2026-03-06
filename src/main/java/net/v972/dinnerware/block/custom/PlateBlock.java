@@ -142,35 +142,35 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     }
 
     @Override
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+        if (pState.getBlock() != pNewState.getBlock()) {
+            BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+            if (blockEntity instanceof PlateBlockBlockEntity plateEntity) {
+                plateEntity.dropContents();
+            }
+        }
+
+        super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
+    }
+
+    @Override
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
         if (pLevel.isClientSide) {
             pLevel.getBlockEntity(pPos, ModBlockEntities.PLATE_BLOCK_BE.get()).ifPresent((be) -> {
                 be.fromItem(pStack);
             });
         } else if (pStack.hasCustomHoverName()) {
-            BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-            if (blockentity instanceof PlateBlockBlockEntity plateBlockBlockEntity) {
-                plateBlockBlockEntity.setCustomName(pStack.getHoverName());
-            }
+            pLevel.getBlockEntity(pPos, ModBlockEntities.PLATE_BLOCK_BE.get()).ifPresent((be) -> {
+                be.setCustomName(pStack.getHoverName());
+            });
         }
-    }
-
-    @Override
-    public void onPlace(BlockState pState, Level pLevel, BlockPos pPos, BlockState pOldState, boolean pIsMoving) {
-        BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-        if (blockentity instanceof PlateBlockBlockEntity pPlateBlockEntity &&
-            !pLevel.isClientSide()) {
-            pPlateBlockEntity.saveBlockItemToDrop();
-        }
-
-        super.onPlace(pState, pLevel, pPos, pOldState, pIsMoving);
     }
 
     @Override
     public ItemStack getCloneItemStack(BlockGetter pLevel, BlockPos pPos, BlockState pState) {
         BlockEntity blockentity = pLevel.getBlockEntity(pPos);
         return blockentity instanceof PlateBlockBlockEntity plateBE
-                ? plateBE.getItem(!plateBE.isEmpty())
+                ? plateBE.getItem()
                 : super.getCloneItemStack(pLevel, pPos, pState);
     }
 
@@ -236,12 +236,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     @Override
     public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity) {
         if (!pLevel.isClientSide && Config.fragilePlates) {
-            BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-            if (blockentity instanceof PlateBlockBlockEntity pPlateBlockEntity &&
-                this.processBlockDrop(pLevel, pPos, pPlateBlockEntity, pEntity, true)) {
-                pLevel.destroyBlock(pPos, true);
-            }
-
+            pLevel.destroyBlock(pPos, true);
             pLevel.gameEvent(pEntity, GameEvent.BLOCK_DESTROY, pPos);
         } else super.entityInside(pState, pLevel, pPos, pEntity);
     }
@@ -263,78 +258,5 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
                 }
             }
         }
-    }
-
-    @Override
-    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-        BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-        if (blockentity instanceof PlateBlockBlockEntity pPlateBlockEntity) {
-            if (pPlateBlockEntity.getRemovedByPlayer()) {
-                super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
-                return;
-            }
-            if (!pLevel.isClientSide) {
-                processBlockDrop(pLevel, pPos, pPlateBlockEntity, null, true, true);
-                super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
-            }
-        }
-    }
-
-    @Override
-    public boolean onDestroyedByPlayer(BlockState state, Level level, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
-        BlockEntity blockentity = level.getBlockEntity(pos);
-        if (blockentity instanceof PlateBlockBlockEntity pPlateBlockEntity && !level.isClientSide) {
-            processBlockDrop(level, pos, pPlateBlockEntity, player, false);
-            pPlateBlockEntity.setRemovedByPlayer();
-        }
-
-        return super.onDestroyedByPlayer(state, level, pos, player, willHarvest, fluid);
-    }
-
-    private boolean processBlockDrop(Level pLevel, BlockPos pPos,
-                                     PlateBlockBlockEntity pPlateBlockEntity,
-                                     Entity pEntity, boolean pNeverKeep) {
-        return processBlockDrop(pLevel, pPos, pPlateBlockEntity, pEntity, pNeverKeep, false);
-    }
-
-    private boolean processBlockDrop(Level pLevel, BlockPos pPos,
-                                     PlateBlockBlockEntity pPlateBlockEntity,
-                                     Entity pEntity, boolean pNeverKeep,
-                                     boolean pIgnoreEntity) {
-        if (!pIgnoreEntity && !(pEntity instanceof Player)) return false;
-        Player pPlayer = pIgnoreEntity ? null : (Player)pEntity;
-
-        boolean plateEmpty = pPlateBlockEntity.isEmpty();
-        boolean dropBlock =
-                pIgnoreEntity ||
-                !pPlayer.isCreative() ||
-                (!plateEmpty && pPlayer.isCrouching());
-        boolean keepItems =
-                !pNeverKeep && !pIgnoreEntity &&
-                dropBlock && pPlayer.isCrouching();
-        boolean dropItems =
-                (!keepItems && !plateEmpty);
-
-        if (dropBlock) {
-            ItemStack itemstack = pIgnoreEntity
-                ? pPlateBlockEntity.getBlockItemToDropOnCustomRemove()
-                : pPlateBlockEntity.getItem(keepItems);
-            if (pPlateBlockEntity.hasCustomName()) {
-                itemstack.setHoverName(pPlateBlockEntity.getCustomName());
-            }
-
-            ItemEntity itementity = new ItemEntity(pLevel,
-                    (double)pPos.getX() + 0.5D,
-                    (double)pPos.getY() + 0.25D,
-                    (double)pPos.getZ() + 0.5D,
-                    itemstack);
-            itementity.setDefaultPickUpDelay();
-            pLevel.addFreshEntity(itementity);
-        }
-        if (dropItems) {
-            pPlateBlockEntity.dropContents();
-        }
-
-        return true;
     }
 }

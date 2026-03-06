@@ -21,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SuspiciousStewItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -209,7 +210,7 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
         return this.getItem(true);
     }
 
-    public ItemStack getItem(boolean pWithContent) {
+    private ItemStack getItem(boolean pWithContent) {
         ItemStack itemstack = new ItemStack(getBlock());
         if (!this.isEmpty() && pWithContent) {
             CompoundTag compoundtag = new CompoundTag();
@@ -304,16 +305,10 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     }
 
     public Block getBlock() {
-        return level.getBlockState(getBlockPos()).getBlock();
+        if (level == null) return Blocks.AIR;
+        return this.getBlock(level);
     }
 
     // ========================================
 
-    private boolean removedByPlayer = false;
-    public void setRemovedByPlayer() { removedByPlayer = true; }
-    public boolean getRemovedByPlayer() { return removedByPlayer; }
-
-    private ItemStack blockItemToDropOnCustomRemove = ItemStack.EMPTY;
-    public void saveBlockItemToDrop() { blockItemToDropOnCustomRemove = new ItemStack(getBlock()); }
-    public ItemStack getBlockItemToDropOnCustomRemove() { return blockItemToDropOnCustomRemove; }
 }
