@@ -1,5 +1,5 @@
 
-<p style="text-align:center">
+<p align="center">
   <img alt="Logo" src="./docs/images/logo.png?raw=true">
 </p>
 
@@ -17,7 +17,7 @@ Plates can be made out of:
   - terracotta of all colors (both by dyeing plain one and crafting directly out of colored blocks);
   - a few other materials ;)
 
-<p style="text-align:center">
+<p align="center">
   <img alt="All the plates" width="750" src="./docs/images/all-the-plates-0.7.4.png?raw=true">
 </p>
 
@@ -28,7 +28,7 @@ Each slot can hold up to 16 items (can be changed in the config), but it doesn't
 
 The placed food is rendered on the plate depending on what slots are filled (4 configurations total).
 
-<p style="text-align:center">
+<p align="center">
   <img alt="Plate GUI" width="750" src="./docs/images/plate-gui.png?raw=true">
   <img alt="Display options" width="750" src="./docs/images/slots-and-facing.png?raw=true">
 </p>
@@ -37,14 +37,14 @@ Right-click the plate to eat the food off of it. The food is eaten in queue fash
 Any effects it has will be applied to the player, good OR bad. In theory any custom logic from the mods should also work, provided it's encapsulated in the `finishUsingItem()` method.  
 By default, the player can only eat until they're full, but over-eating can be enabled in the config.  
 
-<p style="text-align:center">
+<p align="center">
   <img alt="Food Effects" width="750" src="./docs/images/food-effects.png?raw=true">
 </p>
 
 By default, only edible items can be places on the plates. This too can be disabled in the config, allowing to place anything on any plate.  
 See [Customization](#customization) for details.  
 
-<p style="text-align:center">
+<p align="center">
   <img alt="Gems on the Plate" width="750" src="./docs/images/plate-of-gems.png?raw=true">
 </p>
 
