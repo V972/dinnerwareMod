@@ -1,6 +1,7 @@
 
 <p align="center">
-  <img alt="Logo" src="./docs/images/logo.png?raw=true">
+  <img alt="Logo" src="./docs/images/logo.png?raw=true"><br>
+  <img alt="Logo" width="400" src="./src/main/resources/icon.png?raw=true">
 </p>
 
 
@@ -11,11 +12,10 @@ Place, display and eat.
 Maybe wash too.  
 
 Plates can be made out of: 
-- Can be made of:
-  - vanilla wood types;
-  - iron, gold, diamond and quartz;
-  - terracotta of all colors (both by dyeing plain one and crafting directly out of colored blocks);
-  - a few other materials ;)
+- vanilla wood types;
+- iron, gold, diamond and quartz;
+- terracotta of all colors (both by dyeing plain one and crafting directly out of colored blocks);
+- a few other materials ;)
 
 <p align="center">
   <img alt="All the plates" width="750" src="./docs/images/all-the-plates-0.7.4.png?raw=true">
@@ -29,7 +29,7 @@ Each slot can hold up to 16 items (can be changed in the config), but it doesn't
 The placed food is rendered on the plate depending on what slots are filled (4 configurations total).
 
 <p align="center">
-  <img alt="Plate GUI" width="750" src="./docs/images/plate-gui.png?raw=true">
+  <img alt="Plate GUI" width="750" src="./docs/images/plate-gui.png?raw=true"><br>
   <img alt="Display options" width="750" src="./docs/images/slots-and-facing.png?raw=true">
 </p>
 

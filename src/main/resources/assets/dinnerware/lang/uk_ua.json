@@ -1,0 +1,54 @@
+{
+  "block.dinnerware.quartz_plate_block": "Кварцова тарілка",
+
+  "block.dinnerware.iron_plate_block": "Залізна тарілка",
+  "block.dinnerware.gold_plate_block": "Золота тарілка",
+
+  "block.dinnerware.diamond_plate_block": "Діамантова тарілка",
+
+  "block.dinnerware.obsidian_plate_block": "Обсидіанова тарілка",
+
+  "block.dinnerware.oak_plate_block": "Дубова тарілка",
+  "block.dinnerware.birch_plate_block": "Березова тарілка",
+  "block.dinnerware.spruce_plate_block": "Смерекова тарілка",
+  "block.dinnerware.jungle_plate_block": "Тропічна тарілка",
+  "block.dinnerware.acacia_plate_block": "Акацієва тарілка",
+  "block.dinnerware.dark_oak_plate_block": "Темно-дубова тарілка",
+  "block.dinnerware.cherry_plate_block": "Вишнева тарілка",
+  "block.dinnerware.mangrove_plate_block": "Мангрова тарілка",
+  "block.dinnerware.bamboo_plate_block": "Бамбукова тарілка",
+
+  "block.dinnerware.crimson_plate_block": "Багряна тарілка",
+  "block.dinnerware.warped_plate_block": "Химерна тарілка",
+
+  "block.dinnerware.terracotta_plate_block": "Керамічна тарілка",
+
+  "block.dinnerware.white_terracotta_plate_block": "Біла керамічна тарілка",
+  "block.dinnerware.orange_terracotta_plate_block": "Помаранчева керамічна тарілка",
+  "block.dinnerware.magenta_terracotta_plate_block": "Пурпурова керамічна тарілка",
+  "block.dinnerware.light_blue_terracotta_plate_block": "Блакитна керамічна тарілка",
+  "block.dinnerware.yellow_terracotta_plate_block": "Жовта керамічна тарілка",
+  "block.dinnerware.lime_terracotta_plate_block": "Лаймова керамічна тарілка",
+  "block.dinnerware.pink_terracotta_plate_block": "Рожева керамічна тарілка",
+  "block.dinnerware.gray_terracotta_plate_block": "Сіра керамічна тарілка",
+  "block.dinnerware.light_gray_terracotta_plate_block": "Світло-сіра керамічна тарілка",
+  "block.dinnerware.cyan_terracotta_plate_block": "Бірюзова керамічна тарілка",
+  "block.dinnerware.purple_terracotta_plate_block": "Фіолетова керамічна тарілка",
+  "block.dinnerware.blue_terracotta_plate_block": "Синя керамічна тарілка",
+  "block.dinnerware.brown_terracotta_plate_block": "Коричнева керамічна тарілка",
+  "block.dinnerware.green_terracotta_plate_block": "Зелена керамічна тарілка",
+  "block.dinnerware.red_terracotta_plate_block": "Червона керамічна тарілка",
+  "block.dinnerware.black_terracotta_plate_block": "Чорна керамічна тарілка",
+
+  "block.dinnerware.bedrock_plate_block": "Тарілка з корінної породи",
+
+  "creativetab.dinnerware_tab": "Dinnerware",
+
+  "item.dinnerware.dinnerware_icon": "Значок моду Dinnerware",
+  "item.dinnerware.tray": "Піднос [У РОЗРОБЦІ]",
+
+  "item.dinnerware.tray.fullness": "%s/%s тарілок",
+
+  "sounds.dinnerware.tray_metal_load": "Предмет покладено на піднос",
+  "sounds.dinnerware.tray_metal_unload": "Предмет взято з підносу"
+}

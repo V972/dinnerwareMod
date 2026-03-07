@@ -1,0 +1,54 @@
+{
+  "block.dinnerware.quartz_plate_block": "Кварцевая тарелка",
+
+  "block.dinnerware.iron_plate_block": "Железная тарелка",
+  "block.dinnerware.gold_plate_block": "Золотая тарелка",
+
+  "block.dinnerware.diamond_plate_block": "Алмазная тарелка",
+
+  "block.dinnerware.obsidian_plate_block": "Обсидиановая тарелка",
+
+  "block.dinnerware.oak_plate_block": "Дубовая тарелка",
+  "block.dinnerware.birch_plate_block": "Берёзовая тарелка",
+  "block.dinnerware.spruce_plate_block": "Еловая тарелка",
+  "block.dinnerware.jungle_plate_block": "Тропическая тарелка",
+  "block.dinnerware.acacia_plate_block": "Акациевая тарелка",
+  "block.dinnerware.dark_oak_plate_block": "Тарелка из тёмного дуба",
+  "block.dinnerware.cherry_plate_block": "Вишнёвая тарелка",
+  "block.dinnerware.mangrove_plate_block": "Мангровая тарелка",
+  "block.dinnerware.bamboo_plate_block": "Бамбуковая тарелка",
+
+  "block.dinnerware.crimson_plate_block": "Багровая тарелка",
+  "block.dinnerware.warped_plate_block": "Искажённая тарелка",
+
+  "block.dinnerware.terracotta_plate_block": "Керамическая тарелка",
+
+  "block.dinnerware.white_terracotta_plate_block": "Белая керамическая тарелка",
+  "block.dinnerware.orange_terracotta_plate_block": "Оранжевая керамическая тарелка",
+  "block.dinnerware.magenta_terracotta_plate_block": "Пурпурная керамическая тарелка",
+  "block.dinnerware.light_blue_terracotta_plate_block": "Голубая керамическая тарелка",
+  "block.dinnerware.yellow_terracotta_plate_block": "Жёлтая керамическая тарелка",
+  "block.dinnerware.lime_terracotta_plate_block": "Лаймовая керамическая тарелка",
+  "block.dinnerware.pink_terracotta_plate_block": "Розовая керамическая тарелка",
+  "block.dinnerware.gray_terracotta_plate_block": "Серая керамическая тарелка",
+  "block.dinnerware.light_gray_terracotta_plate_block": "Светло-серая керамическая тарелка",
+  "block.dinnerware.cyan_terracotta_plate_block": "Бирюзовая керамическая тарелка",
+  "block.dinnerware.purple_terracotta_plate_block": "Фиолетовая керамическая тарелка",
+  "block.dinnerware.blue_terracotta_plate_block": "Синяя керамическая тарелка",
+  "block.dinnerware.brown_terracotta_plate_block": "Коричневая керамическая тарелка",
+  "block.dinnerware.green_terracotta_plate_block": "Зелёная керамическая тарелка",
+  "block.dinnerware.red_terracotta_plate_block": "Красная керамическая тарелка",
+  "block.dinnerware.black_terracotta_plate_block": "Чёрная керамическая тарелка",
+
+  "block.dinnerware.bedrock_plate_block": "Тарелка из Бедрока",
+
+  "creativetab.dinnerware_tab": "Dinnerware",
+
+  "item.dinnerware.dinnerware_icon": "Иконка мода Dinnerware",
+  "item.dinnerware.tray": "Поднос [В РАЗРАБОТКЕ]",
+
+  "item.dinnerware.tray.fullness": "%s/%s тарелок",
+
+  "sounds.dinnerware.tray_metal_load": "Предмет положен на поднос",
+  "sounds.dinnerware.tray_metal_unload": "Предмет взят с подноса"
+}
