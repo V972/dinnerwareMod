@@ -1,6 +1,8 @@
 # Dinnerware Mod
 ### for Forge 1.20.1
 
+![Logo](./docs/images/logo.png?raw=true)
+
 Adds various dinnerware to the game.  
 Place, display and eat.  
 Maybe wash too.  
@@ -36,9 +38,54 @@ Maybe wash too.
 
 ### Recipes
 
-Pictures WIP
+All plates are crafted with the "bowl" recipe out of plate material.  
+"Item-material" (ingots/gems/quarts/etc.) produce 1 plate while "Block-materials" produce 6 plates.  
+Additionally, colored plates (like terracotta ones) can be crafted by coloring the base item.  
 
-Bowl recipe out of plate material. "Item-material" (ingots/gems/quarts/etc.) produce 1 plate while "Block-materials" produce 6 plates.  
+<table>
+<tr>
+
+<td>
+
+![Item Material Craft](./docs/images/info/crafts-item.png?raw=true)</td>
+
+<td>
+
+![Block Material Craft](./docs/images/info/crafts-block.png?raw=true)</td>
+
+<td>
+
+![Colored Craft](./docs/images/info/crafts-block-color.png?raw=true)</td>
+</tr>
+
+</table>  
+
+## Images
+
+![Dining Room](./docs/images/dining-room.png?raw=true)
+
+## Resourcepack support
+
+Blocks and items reference vanilla textures so whatever resourcepack you install will be applied to the plates as well.  
+
+<details><summary>Barebones</summary>  
+
+![Barebones](./docs/images/textures/textures-barebones.png?raw=true)
+
+</details>
+
+<details><summary>Ashen 16x</summary>  
+
+![Ashen 16x](./docs/images/textures/textures-ashen.png?raw=true)
+
+</details>
+
+<details><summary>Default HD 128x</summary>  
+
+![Default HD 128x](./docs/images/textures/textures-default-hd-128x.png?raw=true)
+
+</details>
+
 
 ## Customization
 
@@ -48,13 +95,15 @@ Note that adding items to this tag does not guarantee they'll be able to be eate
 
 ## Loaders / Versions
 
-Forge 1.20.1 for now.  
+Forge 1.20.1 for now. `Forge 47.4.16+` to be precise.  
 When the mod is feature-complete I will be looking into forward porting it to 1.21.X...dunno which one of the gorillion sub versions, probably .11  
 As well as back-poring to Forge 1.18.2. Yes, really.  
 
 Fabric port is uncertain, but not of the picture. We'll see.
 
 ## Progress
+
+<details><summary>Click to expand</summary>
 
 - [X] Plate blocks:
   - [X] Different materials:
@@ -66,11 +115,11 @@ Fabric port is uncertain, but not of the picture. We'll see.
   - [X] Has 3 slots: Main dish, Side dish and Extra dish;
   - [X] GUI can be opened by right-clicking on empty one or by shift-right-clicking on any;
   - [X] Food (or if configured, anything) can be placed on them and will be rendered on the plate:
-      - [X] 4 possible configurations depending on which slots have items;
-      - [X] Food can be eaten by right-click;
-          - [X] Even if all items will be allowed, only food will be eaten;
-          - [X] Food effects are applied, good and bad;
-          - [X] Over-eating can be enabled, allowing to continue eating even with full hunger;
+    - [X] 4 possible configurations depending on which slots have items;
+    - [X] Food can be eaten by right-click;
+      - [X] Even if all items will be allowed, only food will be eaten;
+      - [X] Food effects are applied, good and bad;
+      - [X] Over-eating can be enabled, allowing to continue eating even with full hunger;
   - [X] Can be fragile if enabled in the config. Don't walk on them.
   - [ ] Shelved for now ~~When croutch-broken, keep their content inside can be placed back.~~
     - [ ] ~~Keep content~~
@@ -86,6 +135,8 @@ Fabric port is uncertain, but not of the picture. We'll see.
   - [X] ~~Same can be done straight from the inventory, just like w/ a bundle;~~
   - [ ] ~~Empty plates can be stacked, but only one plate w/ food/placeable food is allowed and only on top;~~
   - [ ] ~~Maximum stack height can be configured in the config;~~
+
+</details>
 
 ## Credits
 

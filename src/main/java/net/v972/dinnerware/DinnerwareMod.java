@@ -56,8 +56,7 @@ public class DinnerwareMod
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES)
-            event.accept(ModItems.TRAY);
+
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
