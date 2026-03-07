@@ -62,7 +62,11 @@ Additionally, colored plates (like terracotta ones) can be crafted by coloring t
 
 ## Images
 
-![Dining Room](./docs/images/dining-room.png?raw=true)
+![All the plates](./docs/images/all-the-plates-0.7.4.png?raw=true)
+
+![Display options](./docs/images/slots-and-facing.png?raw=true)
+
+![Dining Room](./docs/images/dining-room.png?raw=true)  
 
 ## Resourcepack support
 
