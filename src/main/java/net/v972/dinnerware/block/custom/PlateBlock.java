@@ -195,42 +195,44 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     }
 
     private InteractionResult attemptEat(Level pLevel, BlockPos pPos, PlateBlockBlockEntity pEntity, Player pPlayer) {
-        if (!pPlayer.canEat(Config.allowOverEating)) {
+        OptionalInt firstNonEmptySlotOptional = pEntity.getFirstNonEmptySlot();
+        if (firstNonEmptySlotOptional.isEmpty())
             return InteractionResult.PASS;
-        } else {
-            OptionalInt firstNonEmptySlotOptional = pEntity.getFirstNonEmptySlot();
-            if (firstNonEmptySlotOptional.isPresent()) {
-                int firstNonEmptySlot = firstNonEmptySlotOptional.getAsInt();
-                ItemStack itemStack = pEntity.getStackInSlot(firstNonEmptySlot);
 
-                if (itemStack.getFoodProperties(pPlayer) != null) {
-                    if (!pPlayer.isCreative()) {
-                        if ((itemStack.getItem() instanceof BowlFoodItem) ||
-                            (itemStack.getItem() instanceof SuspiciousStewItem)) {
+        ItemStack itemStack = pEntity.getStackInSlot(firstNonEmptySlotOptional.getAsInt());
+        boolean isFood = itemStack.getFoodProperties(pPlayer) != null;
+        boolean isFoodAndCanAlwaysBeEaten = isFood && itemStack.getFoodProperties(pPlayer).canAlwaysEat();
 
-                            Containers.dropItemStack(pLevel,
-                                    pPos.getX(),
-                                    pPos.getY(),
-                                    pPos.getZ(),
-                                    new ItemStack(Items.BOWL));
-                        } else {
-                            if (itemStack.hasCraftingRemainingItem()) {
-                                Containers.dropItemStack(pLevel,
-                                        pPos.getX(),
-                                        pPos.getY(),
-                                        pPos.getZ(),
-                                        itemStack.getCraftingRemainingItem());
-                            }
-                        }
-                    }
-                    itemStack.finishUsingItem(pLevel, pPlayer);
-                    pLevel.gameEvent(pPlayer, GameEvent.EAT, pPos);
-                    pEntity.extractItem(firstNonEmptySlot);
+        if (isFoodAndCanAlwaysBeEaten ||
+            (pPlayer.canEat(Config.allowOverEating) && isFood)
+        ) {
+
+            if ((itemStack.getItem() instanceof BowlFoodItem) ||
+                (itemStack.getItem() instanceof SuspiciousStewItem)) {
+
+                Containers.dropItemStack(pLevel,
+                        pPos.getX(),
+                        pPos.getY(),
+                        pPos.getZ(),
+                        new ItemStack(Items.BOWL));
+            } else {
+                if (itemStack.hasCraftingRemainingItem()) {
+                    Containers.dropItemStack(pLevel,
+                            pPos.getX(),
+                            pPos.getY(),
+                            pPos.getZ(),
+                            itemStack.getCraftingRemainingItem());
                 }
             }
 
+            itemStack.finishUsingItem(pLevel, pPlayer);
+            pLevel.gameEvent(pPlayer, GameEvent.EAT, pPos);
+            pEntity.extractItem(firstNonEmptySlotOptional.getAsInt());
+
             return InteractionResult.SUCCESS;
         }
+
+        return InteractionResult.PASS;
     }
 
     @Override
