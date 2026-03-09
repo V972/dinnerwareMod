@@ -22,23 +22,35 @@ public class DinnerwareHelper {
 
     public static ModelFile getPlateModelWithMaterial(PlateBlock plateBlock, BlockModelProvider models) {
         ResourceLocation materialBlockName = ForgeRegistries.BLOCKS.getKey(plateBlock.MATERIAL);
-        ResourceLocation finalTexture = getFinalTexture(materialBlockName, plateBlock);
+
+        boolean isColumn =
+                plateBlock.MATERIAL.getDescriptionId().equals(Blocks.QUARTZ_BLOCK.getDescriptionId()) ||
+                plateBlock.MATERIAL instanceof RotatedPillarBlock;
+
+        ResourceLocation finalTexture = getFinalTexture(materialBlockName, isColumn);
+
+        ResourceLocation parentModelLoc =
+                ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID,
+                        plateBlock.MATERIAL instanceof RotatedPillarBlock &&
+                        !plateBlock.MATERIAL.getDescriptionId().equals(Blocks.QUARTZ_BLOCK.getDescriptionId())
+                            ? "plate_block_column"
+                            : "plate_block"
+                );
 
         return models
                 .getBuilder(DinnerwareHelper.getBlockId(plateBlock))
-                .parent(models.getExistingFile(ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, "plate_block")))
+                .parent(models.getExistingFile(parentModelLoc))
                 .texture("0", finalTexture)
                 .texture("particle", finalTexture);
     }
 
-    private static @NotNull ResourceLocation getFinalTexture(ResourceLocation materialBlockName, PlateBlock plateBlock) {
+    private static @NotNull ResourceLocation getFinalTexture(ResourceLocation materialBlockName, boolean isColumn) {
         ResourceLocation materialTexture = ResourceLocation.fromNamespaceAndPath(materialBlockName.getNamespace(),
                 ModelProvider.BLOCK_FOLDER + "/" + materialBlockName.getPath());
         ResourceLocation materialTextureTop = materialTexture.withSuffix("_top");
 
-        return plateBlock.MATERIAL.getDescriptionId().equals(Blocks.QUARTZ_BLOCK.getDescriptionId()) ||
-                plateBlock.MATERIAL instanceof RotatedPillarBlock
-                ? materialTextureTop
-                : materialTexture;
+        return isColumn
+            ? materialTextureTop
+            : materialTexture;
     }
 }
