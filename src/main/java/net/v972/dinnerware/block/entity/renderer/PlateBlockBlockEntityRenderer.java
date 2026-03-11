@@ -43,7 +43,7 @@ public class PlateBlockBlockEntityRenderer implements BlockEntityRenderer<PlateB
         int nonEmptyCount = pBlockEntity.getNonEmptySlotsCount();
         switch (nonEmptyCount) {
             case 1 -> {
-                int firstNonEmptySlot = pBlockEntity.getFirstNonEmptySlot().getAsInt();
+                int firstNonEmptySlot = pBlockEntity.getFirstNonEmptySlot().orElse(-1);
                 renderItem(
                     pBlockEntity, pPoseStack,
                     itemRenderer, pBuffer,
@@ -93,16 +93,16 @@ public class PlateBlockBlockEntityRenderer implements BlockEntityRenderer<PlateB
             renderItem(
                     pBlockEntity, pPoseStack,
                     pItemRenderer, pBuffer,
-                    mainDish, facing, rtl ? 0.07f : 0.045f,
-                    (PoseStack p) -> positionMainDish(p, false), 0
+                    mainDish, facing, 0.045f,
+                    (PoseStack p) -> positionMainDish(p, false, rtl), 0
             );
 
             ItemStack sideDish = pStacks.get(1);
             renderItem(
                     pBlockEntity, pPoseStack,
                     pItemRenderer, pBuffer,
-                    sideDish, facing, rtl ? 0.045f : 0.07f,
-                    (PoseStack p) -> positionSideDish(p, false), 1
+                    sideDish, facing, 0.07f,
+                    (PoseStack p) -> positionSideDish(p, false, rtl), 1
             );
         }
     }
@@ -115,21 +115,14 @@ public class PlateBlockBlockEntityRenderer implements BlockEntityRenderer<PlateB
 
         for (int pSlot = 0; pSlot < pBlockEntity.getInventorySize(); pSlot++) {
             float yLevel = switch (pSlot) {
-                case 0 -> rtl ? 0.07f : 0.045f;
-                case 1 -> rtl ? 0.045f : 0.07f;
+                case 1 -> 0.07f;
                 case 2 -> 0.085f;
                 default -> 0.045f;
             };
 
             Consumer<PoseStack> precisePositioner = switch (pSlot) {
-                case 0 -> (PoseStack p) -> {
-                    if (rtl) positionSideDish(p, true);
-                    else positionMainDish(p, true);
-                };
-                case 1 -> (PoseStack p) -> {
-                    if (rtl) positionMainDish(p, true);
-                    else positionSideDish(p, true);
-                };
+                case 0 -> (PoseStack p) -> positionMainDish(p, true, rtl);
+                case 1 -> (PoseStack p) -> positionSideDish(p, true, rtl);
                 case 2 -> this::positionExtraDish;
                 default -> (PoseStack p) -> {};
             };
@@ -176,24 +169,38 @@ public class PlateBlockBlockEntityRenderer implements BlockEntityRenderer<PlateB
         pPoseStack.popPose();
     }
 
-    private void positionSideDish(PoseStack pPoseStack, boolean lower) {
+    private void positionSideDish(PoseStack pPoseStack, boolean lower, boolean mirrored) {
         // Move to plate edge
-        pPoseStack.translate(-0.15f, lower ? -0.05f : 0f, -0.01f);
+        pPoseStack.translate(
+            mirrored ? 0.15f : -0.15f,
+            lower ? -0.05f : 0f, -0.01f);
 
         // Rotate
-        pPoseStack.mulPose(Axis.ZN.rotationDegrees(30));
+        pPoseStack.mulPose(
+            mirrored
+                ? Axis.ZP.rotationDegrees(300)
+                : Axis.ZN.rotationDegrees(30)
+        );
 
         // Tilt against plate edge
-        pPoseStack.mulPose(Axis.YN.rotationDegrees(15));
-        pPoseStack.mulPose(Axis.XP.rotationDegrees(15));
+        if (mirrored) {
+            pPoseStack.mulPose(Axis.YP.rotationDegrees(15));
+            pPoseStack.mulPose(Axis.XN.rotationDegrees(15));
+        } else {
+            pPoseStack.mulPose(Axis.YN.rotationDegrees(15));
+            pPoseStack.mulPose(Axis.XP.rotationDegrees(15));
+        }
     }
 
-    private void positionMainDish(PoseStack pPoseStack, boolean lower) {
+    private void positionMainDish(PoseStack pPoseStack, boolean lower, boolean mirrored) {
         // Move to plate edge
-        pPoseStack.translate(0.05f, lower ? -0.05f : 0f, -0.01f);
+        pPoseStack.translate(
+            mirrored ? -0.075f : 0.05f,
+            lower ? -0.05f : 0f, -0.01f);
 
         // Rotate
-        pPoseStack.mulPose(Axis.ZP.rotationDegrees(90));
+        if (!mirrored)
+            pPoseStack.mulPose(Axis.ZP.rotationDegrees(90));
 
         // Tilt against plate edge
         pPoseStack.mulPose(Axis.YN.rotationDegrees(10));
