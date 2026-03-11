@@ -15,6 +15,7 @@ import net.minecraft.world.Nameable;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.ItemStack;
@@ -42,16 +43,38 @@ import java.util.stream.IntStream;
 public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, Nameable {
 
     public static final String ITEMS_TAG = "Inventory";
-    public static int SLOT_COUNT = 3;
+    public static final int SLOT_COUNT = 3;
 
     @Nullable
     private Component name;
 
+    private int eatingAttemptClicks;
+    private int roundRobinCurrentSlot;
+
     private final ItemStackHandler items = createItemHandler();
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> items);
 
+    protected final ContainerData containerData;
+
     public PlateBlockBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.PLATE_BLOCK_BE.get(), pPos, pBlockState);
+        eatingAttemptClicks = 0;
+        roundRobinCurrentSlot = 0;
+        this.containerData = new ContainerData() {
+            @Override
+            public int get(int pIndex) {
+                if (pIndex == 0) return roundRobinCurrentSlot;
+                return -1;
+            }
+
+            @Override
+            public void set(int pIndex, int pValue) {
+                if (pIndex == 0) roundRobinCurrentSlot = pValue;
+            }
+
+            @Override
+            public int getCount() {  return 1; }
+        };
     }
 
     // ========================================
@@ -100,11 +123,11 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new PlateMenu(pContainerId, pPlayerInventory, this, null);
+        return new PlateMenu(pContainerId, pPlayerInventory, this, this.containerData);
     }
 
     protected AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory) {
-        return new PlateMenu(pContainerId, pInventory, this, null);
+        return new PlateMenu(pContainerId, pInventory, this, this.containerData);
     }
 
     // ========================================
@@ -296,6 +319,62 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
                 !(pStack.getItem() instanceof SuspiciousStewItem)
             ) ||
             pStack.is(ModTags.Items.ADDITIONAL_FOOD);
+    }
+
+    // ========================================
+
+    private int advanceRoundRobinEatingSlot() {
+        int newSlot = (roundRobinCurrentSlot + 1) % 3;
+
+        if (items.getStackInSlot(newSlot).isEmpty()) {
+            newSlot = (newSlot + 1) % 3;
+        } else return newSlot;
+
+        if (items.getStackInSlot(newSlot).isEmpty()) {
+            newSlot = (newSlot + 1) % 3;
+        } else return newSlot;
+
+        if (items.getStackInSlot(newSlot).isEmpty()) {
+            return 0;
+        }
+
+        return newSlot;
+    }
+
+    public int getRoundRobinCurrentEatingSlot() {
+        return roundRobinCurrentSlot;
+    }
+
+    public int getEatingAttemptClicks() { return eatingAttemptClicks; }
+
+    public int eatingAttemptClick() {
+        eatingAttemptClicks++;
+        this.roundRobinCurrentSlot = this.advanceRoundRobinEatingSlot();
+        return eatingAttemptClicks;
+    }
+
+    /// 1 - one item in any slot;
+    /// 2 - main and side dish slots;
+    /// 3 - all slots;
+    /// 4 - main dish slot and extra dish slot;
+    /// 5 - side dish slot and extra dish slot;
+    public int getSlotStacksPositions() {
+        int result = this.getNonEmptySlotsCount();
+
+        if (result == 2 && !items.getStackInSlot(2).isEmpty()) {
+            result *= 2; // 4
+
+            if (!items.getStackInSlot(1).isEmpty())
+                result += 1; // 5
+        }
+
+        return result;
+    }
+
+    public void eatFromSlot(int pSlot) {
+        this.extractItem(pSlot);
+        if (Config.eatingMode == Config.EATING_MODES.ROUND_ROBIN)
+            eatingAttemptClick();
     }
 
     // ========================================

@@ -15,18 +15,21 @@ import net.v972.dinnerware.Config;
 public class PlateMenu extends AbstractContainerMenu {
     public final PlateBlockBlockEntity blockEntity;
     private final Level level;
+    private final ContainerData data;
 
     public PlateMenu(int pContainerId, Inventory pInv, FriendlyByteBuf pExtraData) {
-        this(pContainerId, pInv, pInv.player.level().getBlockEntity(pExtraData.readBlockPos()), null);
+        this(pContainerId, pInv, pInv.player.level().getBlockEntity(pExtraData.readBlockPos()),
+                new SimpleContainerData(1));
     }
 
-    public PlateMenu(int pContainerId, Inventory pInv, BlockEntity pBlockEntity, ContainerData data)
+    public PlateMenu(int pContainerId, Inventory pInv, BlockEntity pBlockEntity, ContainerData pData)
     {
         super(ModMenuTypes.PLATE_MENU.get(), pContainerId);
 
-        checkContainerSize(pInv, 3);
+        checkContainerSize(pInv, PlateBlockBlockEntity.SLOT_COUNT);
         blockEntity = ((PlateBlockBlockEntity)pBlockEntity);
         this.level = pInv.player.level();
+        this.data = pData;
 
         addPlayerInventory(pInv);
         addPlayerHotbar(pInv);
@@ -48,6 +51,8 @@ public class PlateMenu extends AbstractContainerMenu {
 
             this.addSlot(new SlotItemHandler(iItemHandler, 2, 80, 31));
         });
+
+        addDataSlots(data);
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
@@ -102,6 +107,10 @@ public class PlateMenu extends AbstractContainerMenu {
     public boolean stillValid(Player pPlayer) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
                 pPlayer, blockEntity.getBlock(level));
+    }
+
+    public int getRoundRobinSelectedSlot() {
+        return this.data.get(0);
     }
 
     private void addPlayerInventory(Inventory playerInventory) {

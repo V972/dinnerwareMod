@@ -14,7 +14,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -34,6 +33,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
@@ -50,7 +50,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    public static VoxelShape SHAPE = Block.box(3, 0, 3, 13, 2, 13);
+    public static VoxelShape SHAPE = Block.box(3, 0, 3, 13, 1.5, 13);
 
     public final Block MATERIAL;
     public final Ingredient CRAFTING_MATERIAL;
@@ -187,28 +187,34 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
                             pPlateEntity,
                             pPos);
 
-                } else return attemptEat(pLevel, pPos, pPlateEntity, pPlayer);
+                } else return attemptEat(pLevel, pPos, pHit, pPlateEntity, pPlayer);
             }
         }
 
         return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }
 
-    private InteractionResult attemptEat(Level pLevel, BlockPos pPos, PlateBlockBlockEntity pEntity, Player pPlayer) {
-        OptionalInt firstNonEmptySlotOptional = pEntity.getFirstNonEmptySlot();
-        if (firstNonEmptySlotOptional.isEmpty())
-            return InteractionResult.PASS;
+    private InteractionResult attemptEat(Level pLevel, BlockPos pPos, BlockHitResult pHit, PlateBlockBlockEntity pEntity, Player pPlayer) {
+        int slotToEat = switch (Config.eatingMode) {
+            case QUEUE -> getSlotToEatQueue(pEntity);
+            case ROUND_ROBIN -> getSlotToEatRoundRobin(pEntity);
+            case AIMING -> getSlotToEatAim(pHit, pEntity, pPlayer);
+        };
 
-        ItemStack itemStack = pEntity.getStackInSlot(firstNonEmptySlotOptional.getAsInt());
+        if (slotToEat == -1) return InteractionResult.PASS;
+
+        ItemStack itemStack = pEntity.getStackInSlot(slotToEat);
+        if (itemStack.isEmpty() || itemStack == ItemStack.EMPTY) return InteractionResult.PASS;
+
         boolean isFood = itemStack.getFoodProperties(pPlayer) != null;
         boolean isFoodAndCanAlwaysBeEaten = isFood && itemStack.getFoodProperties(pPlayer).canAlwaysEat();
 
         if (isFoodAndCanAlwaysBeEaten ||
-            (pPlayer.canEat(Config.allowOverEating) && isFood)
+                (pPlayer.canEat(Config.allowOverEating) && isFood)
         ) {
 
             if ((itemStack.getItem() instanceof BowlFoodItem) ||
-                (itemStack.getItem() instanceof SuspiciousStewItem)) {
+                    (itemStack.getItem() instanceof SuspiciousStewItem)) {
 
                 Containers.dropItemStack(pLevel,
                         pPos.getX(),
@@ -227,13 +233,91 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
 
             itemStack.finishUsingItem(pLevel, pPlayer);
             pLevel.gameEvent(pPlayer, GameEvent.EAT, pPos);
-            pEntity.extractItem(firstNonEmptySlotOptional.getAsInt());
+            pEntity.eatFromSlot(slotToEat);
 
             return InteractionResult.SUCCESS;
         }
 
+        if (Config.eatingMode == Config.EATING_MODES.ROUND_ROBIN)
+            pEntity.eatingAttemptClick();
+
         return InteractionResult.PASS;
     }
+
+    private int getSlotToEatQueue(PlateBlockBlockEntity pEntity) {
+        OptionalInt firstNonEmptySlotOptional = pEntity.getFirstNonEmptySlot();
+        if (firstNonEmptySlotOptional.isEmpty())
+            return -1;
+        return firstNonEmptySlotOptional.getAsInt();
+    }
+
+    private int getSlotToEatRoundRobin(PlateBlockBlockEntity pEntity) {
+        return pEntity.getRoundRobinCurrentEatingSlot();
+    }
+
+    private int getSlotToEatAim(BlockHitResult pHit, PlateBlockBlockEntity pEntity, Player pPlayer) {
+        int slotsPositions = pEntity.getSlotStacksPositions();
+        Direction dir = pHit.getDirection();
+        if (dir == Direction.UP) {
+
+            Vec3 loc = pHit.getLocation();
+            double x_fr = Math.abs(loc.x) % 1;
+            double z_fr = Math.abs(loc.z) % 1;
+
+            switch (slotsPositions) {
+                case 1:
+                    // center
+                    if (!isInRange(x_fr, 0.32, 0.68) || !isInRange(z_fr, 0.32, 0.68)) return -1;
+                    OptionalInt slot = pEntity.getFirstNonEmptySlot();
+                    return slot.isPresent() ? slot.getAsInt() : -1;
+                case 2:
+                    if (Config.rightToLeft) {
+                        // main dish slot
+                        if (isInRange(x_fr, 0.46, 0.74) && isInRange(z_fr, 0.32, 0.65)) return 0;
+                        // side dish slot
+                        if (isInRange(x_fr, 0.26, 0.46) && isInRange(z_fr, 0.32, 0.65)) return 1;
+                    } else {
+                        // main dish slot
+                        if (isInRange(x_fr, 0.26, 0.54) && isInRange(z_fr, 0.32, 0.65)) return 0;
+                        // side dish slot
+                        if (isInRange(x_fr, 0.54, 0.74) && isInRange(z_fr, 0.32, 0.65)) return 1;
+                    }
+                    return -1;
+                case 3:
+                    if (Config.rightToLeft) {
+                        // main dish slot
+                        if (isInRange(x_fr, 0.46, 0.74) && isInRange(z_fr, 0.24, 0.57)) return 0;
+                        // side dish slot
+                        if (isInRange(x_fr, 0.26, 0.46) && isInRange(z_fr, 0.24, 0.57)) return 1;
+                    } else {
+                        // main dish slot
+                        if (isInRange(x_fr, 0.26, 0.54) && isInRange(z_fr, 0.24, 0.57)) return 0;
+                        // side dish slot
+                        if (isInRange(x_fr, 0.54, 0.74) && isInRange(z_fr, 0.24, 0.57)) return 1;
+                    }
+                    // extra dish slot
+                    if (isInRange(x_fr, 0.26, 0.74) && isInRange(z_fr, 0.60, 0.78)) return 2;
+                    return -1;
+                case 4:
+                    // main dish slot
+                    if (isInRange(x_fr, 0.32, 0.68) && isInRange(z_fr, 0.32, 0.68)) return 0;
+                    // extra dish slot
+                    if (isInRange(x_fr, 0.26, 0.74) && isInRange(z_fr, 0.60, 0.78)) return 2;
+                    return -1;
+                case 5:
+                    // side dish slot
+                    if (isInRange(x_fr, 0.32, 0.68) && isInRange(z_fr, 0.32, 0.68)) return 1;
+                    // extra dish slot
+                    if (isInRange(x_fr, 0.26, 0.74) && isInRange(z_fr, 0.60, 0.78)) return 2;
+                    return -1;
+                default: return -1;
+            }
+        }
+
+        return -1;
+    }
+
+    private boolean isInRange(double x, double min, double max) { return x >= min && x <= max; }
 
     @Override
     public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity) {
