@@ -59,13 +59,13 @@ public class Config
     private static final ForgeConfigSpec.EnumValue<EATING_MODES> EATING_MODE = BUILDER
             .comment(
                     "\n" +
-                    "The fashion in which the food will be eaten off of a plate. \n" +
+                    "The mode in which the food will be eaten off of a plate. \n" +
                     " QUEUE:       all the food is eaten in the Main dish slot first, then in Side dish slot, then in Extra dish slot; \n" +
                     " ROUND_ROBIN: each new right-click will take the food from the new slot. Clicks with no food eaten still count; \n" +
-                    " AIMING:      the food is eaten depending on where and crosshair is aimed at he time of right-click; \n" +
-                    "Default: QUEUE"
+                    " AIMING:      the food is eaten depending on where and crosshair is aimed at the time of right-click; \n" +
+                    "Default: AIMING"
             )
-            .defineEnum("eatingMode", EATING_MODES.QUEUE);
+            .defineEnum("eatingMode", EATING_MODES.AIMING);
 
 //    private static final ForgeConfigSpec.IntValue TRAY_PLATE_PILE_MAX_SIZE = BUILDER
 //            .comment(

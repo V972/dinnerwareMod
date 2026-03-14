@@ -1,0 +1,75 @@
+{
+"block.dinnerware.quartz_plate_block": "Kwarcowy talerz",
+
+"block.dinnerware.iron_plate_block": "Żelazny talerz",
+"block.dinnerware.gold_plate_block": "Złoty talerz",
+
+"block.dinnerware.diamond_plate_block": "Diamentowy talerz",
+
+"block.dinnerware.obsidian_plate_block": "Obsydianowy talerz",
+"block.dinnerware.polished_blackstone_plate_block": "Talerz z polerowanego czernitu",
+"block.dinnerware.purpur_plate_block": "Purpurowy talerz",
+"block.dinnerware.chiseled_quartz_plate_block": "Rzeźbiony kwarcowy talerz",
+"block.dinnerware.chiseled_nether_bricks_plate_block": "Talerz z rzeźbionych cegieł netherowych",
+
+"block.dinnerware.oak_plate_block": "Dębowy talerz",
+"block.dinnerware.birch_plate_block": "Brzozowy talerz",
+"block.dinnerware.spruce_plate_block": "Świerkowy talerz",
+"block.dinnerware.jungle_plate_block": "Tropikalny talerz",
+"block.dinnerware.acacia_plate_block": "Akacjowy talerz",
+"block.dinnerware.dark_oak_plate_block": "Ciemnodębowy talerz",
+"block.dinnerware.cherry_plate_block": "Wiśniowy talerz",
+"block.dinnerware.mangrove_plate_block": "Namorzynowy talerz",
+"block.dinnerware.bamboo_plate_block": "Bambusowy talerz",
+
+"block.dinnerware.crimson_plate_block": "Szkarłatny talerz",
+"block.dinnerware.warped_plate_block": "Spaczony talerz",
+
+"block.dinnerware.terracotta_plate_block": "Terakotowy talerz",
+
+"block.dinnerware.white_terracotta_plate_block": "Biały terakotowy talerz",
+"block.dinnerware.orange_terracotta_plate_block": "Pomarańczowy terakotowy talerz",
+"block.dinnerware.magenta_terracotta_plate_block": "Purpurowy terakotowy talerz",
+"block.dinnerware.light_blue_terracotta_plate_block": "Jasnoniebieski terakotowy talerz",
+"block.dinnerware.yellow_terracotta_plate_block": "Żółty terakotowy talerz",
+"block.dinnerware.lime_terracotta_plate_block": "Jasnozielony terakotowy talerz",
+"block.dinnerware.pink_terracotta_plate_block": "Różowy terakotowy talerz",
+"block.dinnerware.gray_terracotta_plate_block": "Szary terakotowy talerz",
+"block.dinnerware.light_gray_terracotta_plate_block": "Jasnoszary terakotowy talerz",
+"block.dinnerware.cyan_terracotta_plate_block": "Błękitny terakotowy talerz",
+"block.dinnerware.purple_terracotta_plate_block": "Fioletowy terakotowy talerz",
+"block.dinnerware.blue_terracotta_plate_block": "Niebieski terakotowy talerz",
+"block.dinnerware.brown_terracotta_plate_block": "Brązowy terakotowy talerz",
+"block.dinnerware.green_terracotta_plate_block": "Zielony terakotowy talerz",
+"block.dinnerware.red_terracotta_plate_block": "Czerwony terakotowy talerz",
+"block.dinnerware.black_terracotta_plate_block": "Czarny terakotowy talerz",
+
+"block.dinnerware.white_concrete_plate_block": "Biały betonowy talerz",
+"block.dinnerware.orange_concrete_plate_block": "Pomarańczowy betonowy talerz",
+"block.dinnerware.magenta_concrete_plate_block": "Purpurowy betonowy talerz",
+"block.dinnerware.light_blue_concrete_plate_block": "Jasnoniebieski betonowy talerz",
+"block.dinnerware.yellow_concrete_plate_block": "Żółty betonowy talerz",
+"block.dinnerware.lime_concrete_plate_block": "Jasnozielony betonowy talerz",
+"block.dinnerware.pink_concrete_plate_block": "Różowy betonowy talerz",
+"block.dinnerware.gray_concrete_plate_block": "Szary betonowy talerz",
+"block.dinnerware.light_gray_concrete_plate_block": "Jasnoszary betonowy talerz",
+"block.dinnerware.cyan_concrete_plate_block": "Błękitny betonowy talerz",
+"block.dinnerware.purple_concrete_plate_block": "Fioletowy betonowy talerz",
+"block.dinnerware.blue_concrete_plate_block": "Niebieski betonowy talerz",
+"block.dinnerware.brown_concrete_plate_block": "Brązowy betonowy talerz",
+"block.dinnerware.green_concrete_plate_block": "Zielony betonowy talerz",
+"block.dinnerware.red_concrete_plate_block": "Czerwony betonowy talerz",
+"block.dinnerware.black_concrete_plate_block": "Czarny betonowy talerz",
+
+"block.dinnerware.bedrock_plate_block": "Talerz ze skały macierzystej",
+
+  "creativetab.dinnerware_tab": "Dinnerware",
+
+  "item.dinnerware.dinnerware_icon": "Dinnerware Icon",
+  "item.dinnerware.tray": "Taca WIP",
+
+  "item.dinnerware.tray.fullness": "%s/%s Talerzy",
+
+  "sounds.dinnerware.tray_metal_load": "Przedmiot umieszczony na tacy",
+  "sounds.dinnerware.tray_metal_unload": "Przedmiot zdjęty z tacy"
+}
