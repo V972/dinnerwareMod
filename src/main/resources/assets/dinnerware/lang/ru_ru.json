@@ -7,6 +7,10 @@
   "block.dinnerware.diamond_plate_block": "Алмазная тарелка",
 
   "block.dinnerware.obsidian_plate_block": "Обсидиановая тарелка",
+  "block.dinnerware.polished_blackstone_plate_block": "Тарелка из полированного чернита",
+  "block.dinnerware.purpur_plate_block": "Пурпуровая тарелка",
+  "block.dinnerware.chiseled_quartz_plate_block": "Резная кварцевая терелка",
+  "block.dinnerware.chiseled_nether_bricks_plate_block": "Тарелка из незерского киприча",
 
   "block.dinnerware.oak_plate_block": "Дубовая тарелка",
   "block.dinnerware.birch_plate_block": "Берёзовая тарелка",
@@ -39,6 +43,23 @@
   "block.dinnerware.green_terracotta_plate_block": "Зелёная керамическая тарелка",
   "block.dinnerware.red_terracotta_plate_block": "Красная керамическая тарелка",
   "block.dinnerware.black_terracotta_plate_block": "Чёрная керамическая тарелка",
+
+  "block.dinnerware.white_concrete_plate_block": "Белая бетонная тарелка",
+  "block.dinnerware.orange_concrete_plate_block": "Оранжевая бетонная тарелка",
+  "block.dinnerware.magenta_concrete_plate_block": "Пурпурная бетонная тарелка",
+  "block.dinnerware.light_blue_concrete_plate_block": "Голубая бетонная тарелка",
+  "block.dinnerware.yellow_concrete_plate_block": "Жёлтая бетонная тарелка",
+  "block.dinnerware.lime_concrete_plate_block": "Лаймовая бетонная тарелка",
+  "block.dinnerware.pink_concrete_plate_block": "Розовая бетонная тарелка",
+  "block.dinnerware.gray_concrete_plate_block": "Серая бетонная тарелка",
+  "block.dinnerware.light_gray_concrete_plate_block": "Светло-серая бетонная тарелка",
+  "block.dinnerware.cyan_concrete_plate_block": "Бирюзовая бетонная тарелка",
+  "block.dinnerware.purple_concrete_plate_block": "Фиолетовая бетонная тарелка",
+  "block.dinnerware.blue_concrete_plate_block": "Синяя бетонная тарелка",
+  "block.dinnerware.brown_concrete_plate_block": "Коричневая бетонная тарелка",
+  "block.dinnerware.green_concrete_plate_block": "Зелёная бетонная тарелка",
+  "block.dinnerware.red_concrete_plate_block": "Красная бетонная тарелка",
+  "block.dinnerware.black_concrete_plate_block": "Чёрная бетонная тарелка",
 
   "block.dinnerware.bedrock_plate_block": "Тарелка из Бедрока",
 

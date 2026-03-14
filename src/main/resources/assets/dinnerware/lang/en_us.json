@@ -7,6 +7,10 @@
   "block.dinnerware.diamond_plate_block": "Diamond Plate",
 
   "block.dinnerware.obsidian_plate_block": "Obsidian Plate",
+  "block.dinnerware.polished_blackstone_plate_block": "Polished Blackstone Plate",
+  "block.dinnerware.purpur_plate_block": "Purpur Plate",
+  "block.dinnerware.chiseled_quartz_plate_block": "Chiseled Quartz Plate",
+  "block.dinnerware.chiseled_nether_bricks_plate_block": "Nether Bricks Plate",
 
   "block.dinnerware.oak_plate_block": "Oak Plate",
   "block.dinnerware.birch_plate_block": "Birch Plate",
@@ -39,6 +43,23 @@
   "block.dinnerware.green_terracotta_plate_block": "Green Terracotta Plate",
   "block.dinnerware.red_terracotta_plate_block": "Red Terracotta Plate",
   "block.dinnerware.black_terracotta_plate_block": "Black Terracotta Plate",
+
+  "block.dinnerware.white_concrete_plate_block": "White Concrete Plate",
+  "block.dinnerware.orange_concrete_plate_block": "Orange Concrete Plate",
+  "block.dinnerware.magenta_concrete_plate_block": "Magenta Concrete Plate",
+  "block.dinnerware.light_blue_concrete_plate_block": "Light Blue Concrete Plate",
+  "block.dinnerware.yellow_concrete_plate_block": "Yellow Concrete Plate",
+  "block.dinnerware.lime_concrete_plate_block": "Lime Concrete Plate",
+  "block.dinnerware.pink_concrete_plate_block": "Pink Concrete Plate",
+  "block.dinnerware.gray_concrete_plate_block": "Gray Concrete Plate",
+  "block.dinnerware.light_gray_concrete_plate_block": "Light Gray Concrete Plate",
+  "block.dinnerware.cyan_concrete_plate_block": "Cyan Concrete Plate",
+  "block.dinnerware.purple_concrete_plate_block": "Purple Concrete Plate",
+  "block.dinnerware.blue_concrete_plate_block": "Blue Concrete Plate",
+  "block.dinnerware.brown_concrete_plate_block": "Brown Concrete Plate",
+  "block.dinnerware.green_concrete_plate_block": "Green Concrete Plate",
+  "block.dinnerware.red_concrete_plate_block": "Red Concrete Plate",
+  "block.dinnerware.black_concrete_plate_block": "Black Concrete Plate",
 
   "block.dinnerware.bedrock_plate_block": "Bedrock Plate",
 
