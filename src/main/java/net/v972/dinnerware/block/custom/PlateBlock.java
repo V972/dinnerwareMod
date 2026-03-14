@@ -1,5 +1,6 @@
 package net.v972.dinnerware.block.custom;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -33,13 +34,13 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 import net.v972.dinnerware.Config;
 import net.v972.dinnerware.block.entity.ModBlockEntities;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
+import net.v972.dinnerware.util.DinnerwareHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,7 +69,30 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         registerDefaultState(
             stateDefinition.any()
                 .setValue(FACING, Direction.NORTH)
-                .setValue(WATERLOGGED, Boolean.valueOf(false))
+                .setValue(WATERLOGGED, Boolean.FALSE)
+        );
+    }
+
+    public PlateBlock(
+            @NotNull Block pMaterial,
+            int pCraftingAmount,
+            Properties pProperties) {
+        this(
+                pMaterial,
+                Ingredient.of(pMaterial.asItem()),
+                pCraftingAmount,
+                pProperties
+        );
+    }
+
+    public PlateBlock(
+            @NotNull Block pMaterial,
+            Properties pProperties) {
+        this(
+                pMaterial,
+                Ingredient.of(pMaterial.asItem()),
+                6,
+                pProperties
         );
     }
 
@@ -167,11 +191,30 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     }
 
     @Override
-    public ItemStack getCloneItemStack(BlockGetter pLevel, BlockPos pPos, BlockState pState) {
-        BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-        return blockentity instanceof PlateBlockBlockEntity plateBE
-                ? plateBE.getItem()
-                : super.getCloneItemStack(pLevel, pPos, pState);
+    public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity) {
+        if (!pLevel.isClientSide && Config.fragilePlates) {
+            pLevel.destroyBlock(pPos, true);
+            pLevel.gameEvent(pEntity, GameEvent.BLOCK_DESTROY, pPos);
+        } else super.entityInside(pState, pLevel, pPos, pEntity);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
+        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
+        CompoundTag compoundtag = BlockItem.getBlockEntityData(pStack);
+        if (compoundtag != null && compoundtag.contains(PlateBlockBlockEntity.ITEMS_TAG)) {
+            compoundtag = compoundtag.getCompound(PlateBlockBlockEntity.ITEMS_TAG);
+            if (compoundtag.contains("Items", Tag.TAG_LIST)) {
+                NonNullList<ItemStack> nonnulllist = NonNullList.withSize(3, ItemStack.EMPTY);
+                ContainerHelper.loadAllItems(compoundtag, nonnulllist);
+                for(ItemStack itemstack : nonnulllist) {
+                    if (itemstack.isEmpty()) continue;
+                    MutableComponent mutablecomponent = itemstack.getHoverName().copy();
+                    mutablecomponent.append(" x").append(String.valueOf(itemstack.getCount()));
+                    pTooltip.add(mutablecomponent);
+                }
+            }
+        }
     }
 
     @Override
@@ -198,8 +241,18 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         int slotToEat = switch (Config.eatingMode) {
             case QUEUE -> getSlotToEatQueue(pEntity);
             case ROUND_ROBIN -> getSlotToEatRoundRobin(pEntity);
-            case AIMING -> getSlotToEatAim(pHit, pEntity, pPlayer);
+            case AIMING -> getSlotToEatAim(pHit, pEntity, pLevel.getBlockState(pPos)
+                    //, pPlayer
+            );
         };
+
+        ///////////////////////////////////
+        // net.minecraft.world.phys.Vec3 loc = pHit.getLocation();
+        // double x_fr = fraction3Places(loc.x);
+        // double z_fr = fraction3Places(loc.z);
+        // pPlayer.sendSystemMessage(Component.literal("slot " + slotToEat + " | x: " + x_fr + ", z: " + z_fr));
+        // slotToEat = -1;
+        ///////////////////////////////////
 
         if (slotToEat == -1) return InteractionResult.PASS;
 
@@ -255,60 +308,78 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         return pEntity.getRoundRobinCurrentEatingSlot();
     }
 
-    private int getSlotToEatAim(BlockHitResult pHit, PlateBlockBlockEntity pEntity, Player pPlayer) {
+    private int getSlotToEatAim(BlockHitResult pHit, PlateBlockBlockEntity pEntity, BlockState pBlockState
+            //, Player pPlayer
+    ) {
         int slotsPositions = pEntity.getSlotStacksPositions();
-        Direction dir = pHit.getDirection();
-        if (dir == Direction.UP) {
+        Direction plateDir = pBlockState.getValue(HorizontalDirectionalBlock.FACING);
 
-            Vec3 loc = pHit.getLocation();
-            double x_fr = Math.abs(loc.x) % 1;
-            double z_fr = Math.abs(loc.z) % 1;
+        if (pHit.getDirection() == Direction.UP) {
+            Pair<Double, Double> blockHitLoc = DinnerwareHelper.getBlockHitPos(pHit, plateDir);
+            double hor = blockHitLoc.getFirst();
+            double vert = blockHitLoc.getSecond();
+
+            ///////////////////////////////////
+            //pPlayer.sendSystemMessage(Component.literal("\nhor: " + hor + ", vert: " + vert));
+            ///////////////////////////////////
+
+            //
+            // 0.26f--˅-------------˅ horizontal gap from plate edge
+            //       ├┴────────────┴┤_
+            //       │              │  <-- 0.57(1)f-0.78f extra dish height
+            //       │              ├-
+            //       │              │
+            //       │              │_
+            //       └─────────┬────┼- <-- 0.24f (+0.08f when no extra dish) vertical gap from plate edge
+            //                    ^
+            //                    └-- 0.2f side dish length
+            //
 
             switch (slotsPositions) {
                 case 1:
                     // center
-                    if (!isInRange(x_fr, 0.32, 0.68) || !isInRange(z_fr, 0.32, 0.68)) return -1;
+                    if (!isInRange(hor, 0.32, 0.68) || !isInRange(vert, 0.32, 0.68)) return -1;
                     OptionalInt slot = pEntity.getFirstNonEmptySlot();
                     return slot.isPresent() ? slot.getAsInt() : -1;
                 case 2:
                     if (Config.rightToLeft) {
                         // main dish slot
-                        if (isInRange(x_fr, 0.46, 0.74) && isInRange(z_fr, 0.32, 0.65)) return 0;
+                        if (isInRange(hor, 0.461, 0.74) && isInRange(vert, 0.32, 0.65)) return 0;
                         // side dish slot
-                        if (isInRange(x_fr, 0.26, 0.46) && isInRange(z_fr, 0.32, 0.65)) return 1;
+                        if (isInRange(hor, 0.26, 0.46) && isInRange(vert, 0.32, 0.65)) return 1;
                     } else {
                         // main dish slot
-                        if (isInRange(x_fr, 0.26, 0.54) && isInRange(z_fr, 0.32, 0.65)) return 0;
+                        if (isInRange(hor, 0.26, 0.54) && isInRange(vert, 0.32, 0.65)) return 0;
                         // side dish slot
-                        if (isInRange(x_fr, 0.54, 0.74) && isInRange(z_fr, 0.32, 0.65)) return 1;
+                        if (isInRange(hor, 0.541, 0.74) && isInRange(vert, 0.32, 0.65)) return 1;
                     }
                     return -1;
                 case 3:
                     if (Config.rightToLeft) {
                         // main dish slot
-                        if (isInRange(x_fr, 0.46, 0.74) && isInRange(z_fr, 0.24, 0.57)) return 0;
+                        if (isInRange(hor, 0.461, 0.74) && isInRange(vert, 0.24, 0.57)) return 0;
                         // side dish slot
-                        if (isInRange(x_fr, 0.26, 0.46) && isInRange(z_fr, 0.24, 0.57)) return 1;
+                        if (isInRange(hor, 0.26, 0.46) && isInRange(vert, 0.24, 0.57)) return 1;
                     } else {
                         // main dish slot
-                        if (isInRange(x_fr, 0.26, 0.54) && isInRange(z_fr, 0.24, 0.57)) return 0;
+                        if (isInRange(hor, 0.26, 0.54) && isInRange(vert, 0.24, 0.57)) return 0;
                         // side dish slot
-                        if (isInRange(x_fr, 0.54, 0.74) && isInRange(z_fr, 0.24, 0.57)) return 1;
+                        if (isInRange(hor, 0.541, 0.74) && isInRange(vert, 0.24, 0.57)) return 1;
                     }
                     // extra dish slot
-                    if (isInRange(x_fr, 0.26, 0.74) && isInRange(z_fr, 0.60, 0.78)) return 2;
+                    if (isInRange(hor, 0.26, 0.74) && isInRange(vert, 0.571, 0.78)) return 2;
                     return -1;
                 case 4:
                     // main dish slot
-                    if (isInRange(x_fr, 0.32, 0.68) && isInRange(z_fr, 0.32, 0.68)) return 0;
+                    if (isInRange(hor, 0.32, 0.68) && isInRange(vert, 0.32, 0.57)) return 0;
                     // extra dish slot
-                    if (isInRange(x_fr, 0.26, 0.74) && isInRange(z_fr, 0.60, 0.78)) return 2;
+                    if (isInRange(hor, 0.26, 0.74) && isInRange(vert, 0.571, 0.78)) return 2;
                     return -1;
                 case 5:
                     // side dish slot
-                    if (isInRange(x_fr, 0.32, 0.68) && isInRange(z_fr, 0.32, 0.68)) return 1;
+                    if (isInRange(hor, 0.32, 0.68) && isInRange(vert, 0.32, 0.57)) return 1;
                     // extra dish slot
-                    if (isInRange(x_fr, 0.26, 0.74) && isInRange(z_fr, 0.60, 0.78)) return 2;
+                    if (isInRange(hor, 0.26, 0.74) && isInRange(vert, 0.571, 0.78)) return 2;
                     return -1;
                 default: return -1;
             }
@@ -317,32 +388,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         return -1;
     }
 
+    private double fraction3Places(double a) { return (double) Math.round((a % 1) * 1000) / 1000; }
+
     private boolean isInRange(double x, double min, double max) { return x >= min && x <= max; }
-
-    @Override
-    public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity) {
-        if (!pLevel.isClientSide && Config.fragilePlates) {
-            pLevel.destroyBlock(pPos, true);
-            pLevel.gameEvent(pEntity, GameEvent.BLOCK_DESTROY, pPos);
-        } else super.entityInside(pState, pLevel, pPos, pEntity);
-    }
-
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
-        CompoundTag compoundtag = BlockItem.getBlockEntityData(pStack);
-        if (compoundtag != null && compoundtag.contains(PlateBlockBlockEntity.ITEMS_TAG)) {
-            compoundtag = compoundtag.getCompound(PlateBlockBlockEntity.ITEMS_TAG);
-            if (compoundtag.contains("Items", Tag.TAG_LIST)) {
-                NonNullList<ItemStack> nonnulllist = NonNullList.withSize(3, ItemStack.EMPTY);
-                ContainerHelper.loadAllItems(compoundtag, nonnulllist);
-                for(ItemStack itemstack : nonnulllist) {
-                    if (itemstack.isEmpty()) continue;
-                    MutableComponent mutablecomponent = itemstack.getHoverName().copy();
-                    mutablecomponent.append(" x").append(String.valueOf(itemstack.getCount()));
-                    pTooltip.add(mutablecomponent);
-                }
-            }
-        }
-    }
 }

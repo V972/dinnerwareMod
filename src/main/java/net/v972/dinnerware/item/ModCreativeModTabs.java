@@ -24,7 +24,7 @@ public class ModCreativeModTabs {
                     pOutput.accept(block);
                 }
 
-                pOutput.accept(ModItems.TRAY.get());
+                //pOutput.accept(ModItems.TRAY.get());
             })
             .build());
 
