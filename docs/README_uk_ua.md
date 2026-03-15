@@ -1,7 +1,7 @@
 [[Eng](../README.md)] | **Ua** | [[Ru](../docs/README_ru_ru.md)]
 
 <p align="center">
-  <img alt="Логотип" src="../docs/images/logo.png"><br>
+  <img alt="Логотип" src="../docs/images/title.png"><br>
   <img alt="Иконка" width="400" src="../src/main/resources/icon.png">
 </p>
 
@@ -84,23 +84,9 @@
 
 <details><summary>Натисніть щоб розгорнути</summary>
 
-<table>
-<tr>
-
-<td>
-
-![Item Material Craft](../docs/images/info/crafts-item.png)</td>
-
-<td>
-
-![Block Material Craft](../docs/images/info/crafts-block.png)</td>
-
-<td>
-
-![Colored Craft](../docs/images/info/crafts-block-color.png)</td>
-
-</tr>
-</table>  
+<p align="center">
+  <img alt="Крафти" width="750" src="./docs/images/crafting.png">
+</p>
 
 </details>
 
@@ -111,6 +97,7 @@
 <details><summary>Натисніть щоб розгорнути</summary>
 
 ![Dining Room](../docs/images/pretty/dining-room.png)  
+![Dining Room 2](../docs/images/pretty/dining-room-2.png)  
 ![Public Diner](../docs/images/pretty/public-diner.png)  
 ![Ominous Plate](../docs/images/pretty/obsidian_plate_eyes.gif)
 
@@ -122,19 +109,19 @@
 
 <details><summary>Barebones</summary>  
 
-![Barebones](../docs/images/textures/textures-barebones.png)
+![Barebones](../docs/images/textures/texture_example_bare_bones.png)
 
 </details>
 
 <details><summary>Ashen 16x</summary>  
 
-![Ashen 16x](../docs/images/textures/textures-ashen.png)
+![Ashen 16x](../docs/images/textures/texture_example_ashen.png)
 
 </details>
 
 <details><summary>Default HD 128x</summary>  
 
-![Default HD 128x](../docs/images/textures/textures-default-hd-128x.png)
+![Default HD 128x](../docs/images/textures/texture_example_default128.png)
 
 </details>
 
