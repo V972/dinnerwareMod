@@ -51,6 +51,8 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     private int eatingAttemptClicks;
     private int roundRobinCurrentSlot;
 
+    private boolean doDropContent = true;
+
     private final ItemStackHandler items = createItemHandler();
     private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> items);
 
@@ -390,4 +392,9 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
 
     // ========================================
 
+    public void doDropContent() { doDropContent = true; }
+
+    public void doNotDropContent() { doDropContent = false; }
+
+    public boolean isDoDropContent() { return doDropContent; }
 }
