@@ -32,7 +32,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         for (Block block : ModBlocks.getKnownBlocks()) {
             PlateBlock plateBlock = (PlateBlock)block;
 
-            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, plateBlock, plateBlock.CRAFTING_AMOUNT)
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, plateBlock, plateBlock.CRAFTING_AMOUNT)
                 .pattern("M M")
                 .pattern(" M ")
                 .define('M', plateBlock.CRAFTING_MATERIAL)

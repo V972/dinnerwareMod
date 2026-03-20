@@ -34,7 +34,6 @@ public class ModBlockStateProvider extends BlockStateProvider {
                         .rotationY((int)state.getValue(HORIZONTAL_FACING).toYRot())
                         .build(),
                     WATERLOGGED);
-            simpleBlockItem(plateBlock, model);
         }
     }
 }
