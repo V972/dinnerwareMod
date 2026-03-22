@@ -1,26 +1,18 @@
 package net.v972.dinnerware.block.entity.renderer;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LightLayer;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.v972.dinnerware.Config;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
-
-import java.util.function.Consumer;
+import net.v972.dinnerware.util.DinnerwareHelper;
 
 public class PlateBlockBlockEntityRenderer implements BlockEntityRenderer<PlateBlockBlockEntity> {
     public PlateBlockBlockEntityRenderer(BlockEntityRendererProvider.Context pContext) {
@@ -30,198 +22,16 @@ public class PlateBlockBlockEntityRenderer implements BlockEntityRenderer<PlateB
     @Override
     public void render(PlateBlockBlockEntity pBlockEntity, float pPartialTick, PoseStack pPoseStack,
                        MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        positionItems(pBlockEntity, pPoseStack, pBuffer);
-    }
-
-
-    private void positionItems(PlateBlockBlockEntity pBlockEntity, PoseStack pPoseStack, MultiBufferSource pBuffer) {
-        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-
         Direction facing = pBlockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
         NonNullList<ItemStack> stacks = pBlockEntity.getInventoryStacks();
-
         int nonEmptyCount = pBlockEntity.getNonEmptySlotsCount();
-        switch (nonEmptyCount) {
-            case 1 -> {
-                int firstNonEmptySlot = pBlockEntity.getFirstNonEmptySlot().orElse(-1);
-                renderItem(
-                    pBlockEntity, pPoseStack,
-                    itemRenderer, pBuffer,
-                    pBlockEntity.getStackInSlot(firstNonEmptySlot), facing, 0.045f,
-                    (PoseStack p) -> {}, 1
-                );
-            }
-            case 2 -> positionTwoItems(
-                    pBlockEntity, pPoseStack,
-                    itemRenderer, pBuffer,
-                    stacks, facing
-            );
-            case 3 -> positionThreeItems(
-                    pBlockEntity, pPoseStack,
-                    itemRenderer, pBuffer,
-                    stacks, facing
-            );
-        }
-    }
+        Level beLevel = pBlockEntity.getLevel();
+        int lightLevel = beLevel == null
+                ? pPackedLight
+                : DinnerwareHelper.getLightLevel(pBlockEntity.getLevel(), pBlockEntity.getBlockPos());
 
-    private void positionTwoItems(PlateBlockBlockEntity pBlockEntity, PoseStack pPoseStack,
-                                    ItemRenderer pItemRenderer, MultiBufferSource pBuffer,
-                                    NonNullList<ItemStack> pStacks, Direction facing) {
-        ItemStack extraDish = pStacks.get(2);
-        if (!extraDish.isEmpty()) {
-            renderItem(
-                pBlockEntity, pPoseStack,
-                pItemRenderer, pBuffer,
-                extraDish, facing, 0.085f,
-                this::positionExtraDish, 2
-            );
-
-            ItemStack leftOverDish = !pStacks.get(0).isEmpty()
-                    ? pStacks.get(0)
-                    : pStacks.get(1);
-            int slot = pStacks.indexOf(leftOverDish);
-            renderItem(
-                    pBlockEntity, pPoseStack,
-                    pItemRenderer, pBuffer,
-                    leftOverDish, facing, 0.045f,
-                    (PoseStack p) -> {}, slot
-            );
-        } else {
-            boolean rtl = Config.rightToLeft;
-
-            ItemStack mainDish = pStacks.get(0);
-            renderItem(
-                    pBlockEntity, pPoseStack,
-                    pItemRenderer, pBuffer,
-                    mainDish, facing, 0.045f,
-                    (PoseStack p) -> positionMainDish(p, false, rtl), 0
-            );
-
-            ItemStack sideDish = pStacks.get(1);
-            renderItem(
-                    pBlockEntity, pPoseStack,
-                    pItemRenderer, pBuffer,
-                    sideDish, facing, 0.07f,
-                    (PoseStack p) -> positionSideDish(p, false, rtl), 1
-            );
-        }
-    }
-
-    private void positionThreeItems(PlateBlockBlockEntity pBlockEntity, PoseStack pPoseStack,
-                                    ItemRenderer pItemRenderer, MultiBufferSource pBuffer,
-                                    NonNullList<ItemStack> pStacks, Direction facing) {
-
-        boolean rtl = Config.rightToLeft;
-
-        for (int pSlot = 0; pSlot < pBlockEntity.getInventorySize(); pSlot++) {
-            float yLevel = switch (pSlot) {
-                case 1 -> 0.07f;
-                case 2 -> 0.085f;
-                default -> 0.045f;
-            };
-
-            Consumer<PoseStack> precisePositioner = switch (pSlot) {
-                case 0 -> (PoseStack p) -> positionMainDish(p, true, rtl);
-                case 1 -> (PoseStack p) -> positionSideDish(p, true, rtl);
-                case 2 -> this::positionExtraDish;
-                default -> (PoseStack p) -> {};
-            };
-
-            renderItem(
-                    pBlockEntity, pPoseStack,
-                    pItemRenderer, pBuffer,
-                    pStacks.get(pSlot), facing, yLevel,
-                    precisePositioner, pSlot
-            );
-        }
-    }
-
-    private void renderItem(PlateBlockBlockEntity pBlockEntity, PoseStack pPoseStack,
-                            ItemRenderer pItemRenderer, MultiBufferSource pBuffer,
-                            ItemStack pStack, Direction facing,
-                            float pY, Consumer<PoseStack> precisePositioner,
-                            int pSeed) {
-        pPoseStack.pushPose();
-
-        // Move to the center
-        pPoseStack.translate(0.5f, pY, 0.5f);
-
-        // Rotate based on facing
-        switch (facing) {
-            case NORTH -> {} // pPoseStack.mulPose(Axis.YP.rotationDegrees(0));
-            case WEST -> pPoseStack.mulPose(Axis.YP.rotationDegrees(90));
-            case SOUTH -> pPoseStack.mulPose(Axis.YP.rotationDegrees(180));
-            case EAST -> pPoseStack.mulPose(Axis.YN.rotationDegrees(90));
-        }
-
-        // Lie flat
-        pPoseStack.mulPose(Axis.XP.rotationDegrees(90));
-
-        // Precise positioning
-        precisePositioner.accept(pPoseStack);
-
-        // Scale down
-        pPoseStack.scale(0.4f, 0.4f, 0.4f);
-
-        pItemRenderer.renderStatic(pStack,
-                ItemDisplayContext.FIXED, getLightLevel(pBlockEntity.getLevel(), pBlockEntity.getBlockPos()),
-                OverlayTexture.NO_OVERLAY, pPoseStack, pBuffer, pBlockEntity.getLevel(), pSeed);
-        pPoseStack.popPose();
-    }
-
-    private void positionSideDish(PoseStack pPoseStack, boolean lower, boolean mirrored) {
-        // Move to plate edge
-        pPoseStack.translate(
-            mirrored ? 0.15f : -0.15f,
-            lower ? -0.05f : 0f, -0.01f);
-
-        // Rotate
-        pPoseStack.mulPose(
-            mirrored
-                ? Axis.ZP.rotationDegrees(300)
-                : Axis.ZN.rotationDegrees(30)
-        );
-
-        // Tilt against plate edge
-        if (mirrored) {
-            pPoseStack.mulPose(Axis.YP.rotationDegrees(15));
-            pPoseStack.mulPose(Axis.XN.rotationDegrees(15));
-        } else {
-            pPoseStack.mulPose(Axis.YN.rotationDegrees(15));
-            pPoseStack.mulPose(Axis.XP.rotationDegrees(15));
-        }
-    }
-
-    private void positionMainDish(PoseStack pPoseStack, boolean lower, boolean mirrored) {
-        // Move to plate edge
-        pPoseStack.translate(
-            mirrored ? -0.075f : 0.05f,
-            lower ? -0.05f : 0f, -0.01f);
-
-        // Rotate
-        if (!mirrored)
-            pPoseStack.mulPose(Axis.ZP.rotationDegrees(90));
-
-        // Tilt against plate edge
-        pPoseStack.mulPose(Axis.YN.rotationDegrees(10));
-        pPoseStack.mulPose(Axis.XP.rotationDegrees(10));
-    }
-
-    private void positionExtraDish(PoseStack pPoseStack) {
-        // Move to plate edge
-        pPoseStack.translate(0f, 0.2f, -0.01f);
-
-        // Rotate
-        pPoseStack.mulPose(Axis.ZP.rotationDegrees(40));
-
-        // Tilt against plate edge
-        pPoseStack.mulPose(Axis.YP.rotationDegrees(20));
-        pPoseStack.mulPose(Axis.XN.rotationDegrees(20));
-    }
-
-    private int getLightLevel(Level level, BlockPos pos) {
-        int bLight = level.getBrightness(LightLayer.BLOCK, pos);
-        int sLight = level.getBrightness(LightLayer.SKY, pos);
-        return LightTexture.pack(bLight, sLight);
+        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+        DinnerwareHelper.positionAndRenderPlateItems(pPoseStack, pBuffer, itemRenderer,
+                stacks, nonEmptyCount, facing, beLevel, lightLevel);
     }
 }

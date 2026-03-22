@@ -9,6 +9,8 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -38,6 +40,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 import net.v972.dinnerware.Config;
+import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.block.entity.ModBlockEntities;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import net.v972.dinnerware.util.DinnerwareHelper;
@@ -170,11 +173,34 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         if (pState.getBlock() != pNewState.getBlock()) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
             if (blockEntity instanceof PlateBlockBlockEntity plateEntity) {
-                plateEntity.dropContents();
+                if(plateEntity.isDoDropContent())
+                    plateEntity.dropContents();
             }
         }
 
         super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
+    }
+
+    @Override
+    public void attack(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
+        BlockEntity blockentity = pLevel.getBlockEntity(pPos);
+        if(blockentity instanceof PlateBlockBlockEntity plateBE &&
+            pPlayer != null && pPlayer.isShiftKeyDown()
+        ) {
+            if(this.MATERIAL == Blocks.BEDROCK || plateBE.isEmpty()) {
+                super.attack(pState, pLevel, pPos, pPlayer);
+            } else {
+                plateBE.doNotDropContent();
+                pPlayer.getInventory().placeItemBackInInventory(plateBE.getItem());
+                pLevel.removeBlock(pPos, false);
+                pPlayer.playSound(SoundEvents.ITEM_PICKUP,
+                        0.8F, 0.8F + pLevel.getRandom().nextFloat() * 0.4F);
+                pPlayer.awardStat(Stats.BLOCK_MINED.get(this));
+                for (Block plateType : ModBlocks.getKnownBlocks()) {
+                    pPlayer.getCooldowns().addCooldown(plateType.asItem(), 5);
+                }
+            }
+        } super.attack(pState, pLevel, pPos, pPlayer);
     }
 
     @Override
