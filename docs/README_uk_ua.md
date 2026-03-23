@@ -49,11 +49,9 @@
 Тарілки (зазвичай) розбиваються миттєво (в т.ч. поршнями чи вибухами) та їжа всередині випадає.  
 При цьому, якщо "розбити" тарілку в присяді, то натомість тарілка "підбереться" з їжею всередині. Їжа в тарілці все також відображатиметься.  
 
-<details><summary>>Натисніть щоб розгорнути</summary>
+<details><summary>Натисніть щоб розгорнути</summary>
 
-<p align="center">
-  <img alt="Pickup video here" width="850" src="../docs/videos/0.9.0_plate_pickup.mp4">
-</p>
+https://github.com/user-attachments/assets/a0c89c09-796a-4a2c-b504-01a7dcfdc5e1
 
 </details>
 
