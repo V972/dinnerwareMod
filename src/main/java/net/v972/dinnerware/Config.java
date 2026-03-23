@@ -67,14 +67,6 @@ public class Config
             )
             .defineEnum("eatingMode", EATING_MODES.AIMING);
 
-//    private static final ForgeConfigSpec.IntValue TRAY_PLATE_PILE_MAX_SIZE = BUILDER
-//            .comment(
-//                    "\n Max number of plates that can be carried on a tray.\n" +
-//                            " Set 0 for infinite amount. \n" +
-//                            "Default: 8"
-//            )
-//            .defineInRange("trayPlatePileMaxSize", 8, 0, Integer.MAX_VALUE);
-
 //    public static final ForgeConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
 //            .comment("What you want the introduction message to be for the magic number")
 //            .define("magicNumberIntroduction", "The magic number is... ");
@@ -91,7 +83,6 @@ public class Config
     public static boolean fragilePlates;
     public static boolean rightToLeft;
     public static EATING_MODES eatingMode;
-    //public static int trayPlatePileMaxSize;
 
 //    public static String magicNumberIntroduction;
 //    public static Set<Item> items;
@@ -109,7 +100,6 @@ public class Config
         fragilePlates = FRAGILE_PLATES.get();
         rightToLeft = RIGHT_TO_LEFT.get();
         eatingMode = EATING_MODE.get();
-        //trayPlatePileMaxSize = TRAY_PLATE_PILE_MAX_SIZE.get();
 
 //        magicNumberIntroduction = MAGIC_NUMBER_INTRODUCTION.get();
 //        // convert the list of strings into a set of items

@@ -24,8 +24,8 @@
 <details><summary>Натисніть щоб розгорнути</summary>
 
 <p align="center">
-  <img alt="Усі тарілки в 0.8.2" width="750" src="../docs/images/all-the-plates-0.8.2.png">
-  <img alt="Усі тарілки каскадом" width="750" src="../docs/images/all-the-plates-0.8.2_cascade.png">
+  <img alt="Усі тарілки в 0.8.2" width="850" src="../docs/images/all-the-plates-0.8.2.png">
+  <img alt="Усі тарілки каскадом" width="850" src="../docs/images/all-the-plates-0.8.2_cascade.png">
 </p>
 
 </details>
@@ -40,8 +40,19 @@
 <details><summary>Натисніть щоб розгорнути</summary>
 
 <p align="center">
-  <img alt="Інтерфейс тарілки" width="750" src="../docs/images/plate-gui.png"><br>
-  <img alt="Варіанти відображення та розміщення" width="750" src="../docs/images/slots-and-facing.png">
+  <img alt="Інтерфейс тарілки" width="850" src="../docs/images/plate-gui.png"><br>
+  <img alt="Варіанти відображення та розміщення" width="850" src="../docs/images/slots-and-facing.png">
+</p>
+
+</details>
+
+Тарілки (зазвичай) розбиваються миттєво (в т.ч. поршнями чи вибухами) та їжа всередині випадає.  
+При цьому, якщо "розбити" тарілку в присяді, то натомість тарілка "підбереться" з їжею всередині. Їжа в тарілці все також відображатиметься.  
+
+<details><summary>>Натисніть щоб розгорнути</summary>
+
+<p align="center">
+  <img alt="Pickup video here" width="850" src="../docs/videos/0.9.0_plate_pickup.mp4">
 </p>
 
 </details>
@@ -58,7 +69,7 @@
 <details><summary>Натисніть щоб розгорнути</summary>
 
 <p align="center">
-  <img alt="Ефекти з'їденої їжі" width="750" src="../docs/images/food-effects.png">
+  <img alt="Ефекти з'їденої їжі" width="850" src="../docs/images/food-effects.png">
 </p>
 
 </details>
@@ -69,7 +80,7 @@
 <details><summary>Натисніть щоб розгорнути</summary>
 
 <p align="center">
-  <img alt="Будь-яке різне на тарілках" width="750" src="../docs/images/plates-of-random-stuff.png">
+  <img alt="Будь-яке різне на тарілках" width="850" src="../docs/images/plates-of-random-stuff.png">
 </p>
 
 </details>
@@ -85,7 +96,7 @@
 <details><summary>Натисніть щоб розгорнути</summary>
 
 <p align="center">
-  <img alt="Крафти" width="750" src="./docs/images/crafting.png">
+  <img alt="Крафти" width="850" src="./docs/images/crafting.png">
 </p>
 
 </details>
@@ -159,4 +170,4 @@ Forge 47.4.16+ для Майнкрафт версії 1.20.1.
 * Queez_ - мотивація, асети та творчий внесок;
 * Kaupenjoe - чудова серія відео-туторилів;
 * diesieben07 - Код переміщення предмета в інтерфейсі по шифт-кліку;
-* Ранні бета-тостери - Відгуки та вилов багів;
+* Ранні бета-тостери (AmalgaMaid, EtheryalFalcon та інші) - Відгуки та вилов багів;

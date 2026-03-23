@@ -43,6 +43,7 @@ import net.v972.dinnerware.Config;
 import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.block.entity.ModBlockEntities;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
+import net.v972.dinnerware.item.ModItems;
 import net.v972.dinnerware.util.DinnerwareHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -123,8 +124,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
 
     @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
-        return  this.MATERIAL == Blocks.BEDROCK ||
-                !pLevel.isEmptyBlock(pPos.below());
+        return this.MATERIAL == Blocks.BEDROCK || !pLevel.isEmptyBlock(pPos.below());
     }
 
     @Override
@@ -184,21 +184,13 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     @Override
     public void attack(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
         BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-        if(blockentity instanceof PlateBlockBlockEntity plateBE &&
+        if(blockentity instanceof PlateBlockBlockEntity pPlateEntity &&
             pPlayer != null && pPlayer.isShiftKeyDown()
         ) {
-            if(this.MATERIAL == Blocks.BEDROCK || plateBE.isEmpty()) {
+            if(this.MATERIAL == Blocks.BEDROCK || pPlateEntity.isEmpty()) {
                 super.attack(pState, pLevel, pPos, pPlayer);
             } else {
-                plateBE.doNotDropContent();
-                pPlayer.getInventory().placeItemBackInInventory(plateBE.getItem());
-                pLevel.removeBlock(pPos, false);
-                pPlayer.playSound(SoundEvents.ITEM_PICKUP,
-                        0.8F, 0.8F + pLevel.getRandom().nextFloat() * 0.4F);
-                pPlayer.awardStat(Stats.BLOCK_MINED.get(this));
-                for (Block plateType : ModBlocks.getKnownBlocks()) {
-                    pPlayer.getCooldowns().addCooldown(plateType.asItem(), 5);
-                }
+                pickUpPlate(pPlateEntity, pPlayer, pLevel, pPos);
             }
         } super.attack(pState, pLevel, pPos, pPlayer);
     }
@@ -261,6 +253,23 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         }
 
         return InteractionResult.sidedSuccess(pLevel.isClientSide());
+    }
+
+    private void pickUpPlate(PlateBlockBlockEntity pPlateEntity, Player pPlayer, Level pLevel, BlockPos pPos) {
+        pPlateEntity.doNotDropContent();
+        ItemStack selectedStack = pPlayer.getInventory().getSelected();
+        if (selectedStack.isEmpty()) {
+            pPlayer.getInventory().add(pPlayer.getInventory().selected, pPlateEntity.getItem());
+        } else {
+            pPlayer.getInventory().placeItemBackInInventory(pPlateEntity.getItem());
+        }
+        pLevel.removeBlock(pPos, false);
+        pPlayer.playSound(SoundEvents.ITEM_PICKUP,
+                0.8F, 0.8F + pLevel.getRandom().nextFloat() * 0.4F);
+        pPlayer.awardStat(Stats.BLOCK_MINED.get(this));
+        for (Block plateType : ModBlocks.getKnownBlocks()) {
+            pPlayer.getCooldowns().addCooldown(plateType.asItem(), 5);
+        }
     }
 
     private InteractionResult attemptEat(Level pLevel, BlockPos pPos, BlockHitResult pHit, PlateBlockBlockEntity pEntity, Player pPlayer) {

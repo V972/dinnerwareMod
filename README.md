@@ -24,8 +24,8 @@ Plates can be made out of:
 <details><summary>Click to expand</summary>
 
 <p align="center">
-  <img alt="All the plates 0.8.2" width="750" src="./docs/images/all-the-plates-0.8.2.png">
-  <img alt="All the plates cascade" width="750" src="./docs/images/all-the-plates-0.8.2_cascade.png">
+  <img alt="All the plates 0.8.2" width="850" src="./docs/images/all-the-plates-0.8.2.png">
+  <img alt="All the plates cascade" width="850" src="./docs/images/all-the-plates-0.8.2_cascade.png">
 </p>
 
 </details>
@@ -40,8 +40,19 @@ The placed food is rendered on the plate depending on what slots are filled (4 c
 <details><summary>Click to expand</summary>
 
 <p align="center">
-  <img alt="Plate GUI" width="750" src="./docs/images/plate-gui.png"><br>
-  <img alt="Display options" width="750" src="./docs/images/slots-and-facing.png">
+  <img alt="Plate GUI" width="850" src="./docs/images/plate-gui.png"><br>
+  <img alt="Display options" width="850" src="./docs/images/slots-and-facing.png">
+</p>
+
+</details>
+
+Plates are generally insta-breakable and will drop the food inside (including piston pushing and explosions).  
+However, crouch-breaking them will instead "scoop" them up WITH food inside. The food will render on the plate.  
+
+<details><summary>Click to expand</summary>
+
+<p align="center">
+  <img alt="Pickup video here" width="850" src="./docs/videos/0.9.0_plate_pickup.mp4">
 </p>
 
 </details>
@@ -58,7 +69,7 @@ By default, the player can only eat until they're full, but over-eating can be e
 <details><summary>Click to expand</summary>
 
 <p align="center">
-  <img alt="Food Effects" width="750" src="./docs/images/food-effects.png">
+  <img alt="Food Effects" width="850" src="./docs/images/food-effects.png">
 </p>
 
 </details>
@@ -69,7 +80,7 @@ See [Customization](#customization) for details.
 <details><summary>Click to expand</summary>
 
 <p align="center">
-  <img alt="Stuff on the Plate" width="750" src="./docs/images/plates-of-random-stuff.png">
+  <img alt="Stuff on the Plate" width="850" src="./docs/images/plates-of-random-stuff.png">
 </p>
 
 </details>
@@ -85,7 +96,7 @@ Additionally, colored plates (like terracotta ones) can be crafted by coloring t
 <details><summary>Click to expand</summary>
 
 <p align="center">
-  <img alt="Crafting" width="750" src="./docs/images/crafting.png">
+  <img alt="Crafting" width="850" src="./docs/images/crafting.png">
 </p>
 
 </details>
@@ -159,4 +170,4 @@ Any of these may or may not be implemented, depends.
 * Queez_ - Motivation, assets and creative input;
 * Kaupenjoe - Great free modding tutorial series;
 * diesieben07 - That one method for shift-right-clicking an item in the GUI;
-* Early playtesters - Feedback and bug reports;
+* Early playtesters (AmalgaMaid, EtheryalFalcon and others) - Feedback and bug reports;

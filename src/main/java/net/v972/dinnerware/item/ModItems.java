@@ -15,7 +15,7 @@ public class ModItems {
             DeferredRegister.create(ForgeRegistries.ITEMS, DinnerwareMod.MOD_ID);
 
     public  static final RegistryObject<Item> ICON = ITEMS.register("dinnerware_icon",
-            () -> new Item(new Item.Properties().stacksTo(1).fireResistant()));
+            () -> new Item(new Item.Properties().fireResistant()));
 
     public static final RegistryObject<Item> TRAY = ITEMS.register("tray",
             () -> new TrayItem(new Item.Properties().stacksTo(1)));
