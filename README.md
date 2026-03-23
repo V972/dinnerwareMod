@@ -51,9 +51,7 @@ However, crouch-breaking them will instead "scoop" them up WITH food inside. The
 
 <details><summary>Click to expand</summary>
 
-<p align="center">
-  <img alt="Pickup video here" width="850" src="./docs/videos/0.9.0_plate_pickup.mp4">
-</p>
+https://github.com/user-attachments/assets/a0c89c09-796a-4a2c-b504-01a7dcfdc5e1
 
 </details>
 
