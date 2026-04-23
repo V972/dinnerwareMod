@@ -1,6 +1,7 @@
 package net.v972.dinnerware.item;
 
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -10,6 +11,10 @@ import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.item.custom.PlateBlockBlockItem;
 import net.v972.dinnerware.item.custom.TrayItem;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, DinnerwareMod.MOD_ID);
@@ -17,8 +22,12 @@ public class ModItems {
     public  static final RegistryObject<Item> ICON = ITEMS.register("dinnerware_icon",
             () -> new Item(new Item.Properties().fireResistant()));
 
-    public static final RegistryObject<Item> TRAY = ITEMS.register("tray",
-            () -> new TrayItem(new Item.Properties().stacksTo(1)));
+
+    public static final RegistryObject<TrayItem> TRAY_IRON = ITEMS.register("iron_tray",
+            () -> new TrayItem(Blocks.IRON_BLOCK, new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<TrayItem> TRAY_GOLD = ITEMS.register("gold_tray",
+            () -> new TrayItem(Blocks.GOLD_BLOCK, new Item.Properties().stacksTo(1)));
+
 
     public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_BEDROCK = ITEMS.register("bedrock_plate",
             () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_BEDROCK.get(), new Item.Properties()));
@@ -142,6 +151,31 @@ public class ModItems {
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
+    }
+
+    public static TrayItem[] getTrayItemsArray() {
+        return new TrayItem[] {
+            TRAY_IRON.get(),
+            TRAY_GOLD.get(),
+        };
+    }
+
+    public static Set<Item> getTrayItemsSet() {
+        return Set.of(
+            TRAY_IRON.get(),
+            TRAY_GOLD.get()
+        );
+    }
+
+    public static Item[] getSurvivalPlateItemsArray() {
+        return Stream.of(getPlateItemsArray())
+            .filter(plate -> plate != PLATE_ITEM_BEDROCK.get())
+            .toArray(Item[]::new);
+    }
+
+    public static Set<Item> getPlateItemsSet() {
+        return Stream.of(getPlateItemsArray())
+            .collect(Collectors.toSet());
     }
 
     public static PlateBlockBlockItem[] getPlateItemsArray() {

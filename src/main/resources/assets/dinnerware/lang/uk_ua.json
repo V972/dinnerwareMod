@@ -1,4 +1,16 @@
 {
+  "advancement.dinnerware.put_plate_in_plate.title": "Мотрійка",
+  "advancement.dinnerware.put_plate_in_plate.description": "Покладіть тарілку в іншу тарілку",
+
+  "advancement.dinnerware.get_diamond_plate.title": "Люба, у нас гості...",
+  "advancement.dinnerware.get_diamond_plate.description": "Добудьте даімантову тарілку",
+
+  "advancement.dinnerware.get_tray_with_all_regular_plates.title": "Одна таця, щоб ними правити",
+  "advancement.dinnerware.get_tray_with_all_regular_plates.description": "Покладіть на одну тацю всі ванильні види звичайних тарілок",
+
+  "advancement.dinnerware.root.title": "Dinnerware",
+  "advancement.dinnerware.root.description": "Красиво та функціонально",
+
   "block.dinnerware.quartz_plate_block": "Кварцова тарілка",
 
   "block.dinnerware.iron_plate_block": "Залізна тарілка",
@@ -66,10 +78,13 @@
   "creativetab.dinnerware_tab": "Dinnerware",
 
   "item.dinnerware.dinnerware_icon": "Значок моду Dinnerware",
-  "item.dinnerware.tray": "Піднос [У РОЗРОБЦІ]",
+  "item.dinnerware.iron_tray": "Залізна таця",
+  "item.dinnerware.gold_tray": "Золота таця",
 
-  "item.dinnerware.tray.fullness": "%s/%s тарілок",
+  "container.dinnerware.tray.fullness": "%s/%s тарілок",
+  "container.dinnerware.tray.with_food": "%s з їжою",
+  "container.dinnerware.tray.more": "і ще %s...",
 
-  "sounds.dinnerware.tray_metal_load": "Предмет покладено на піднос",
-  "sounds.dinnerware.tray_metal_unload": "Предмет взято з підносу"
+  "sounds.dinnerware.tray_metal_load": "Предмет покладено на тацю",
+  "sounds.dinnerware.tray_metal_unload": "Предмет взято з таці"
 }

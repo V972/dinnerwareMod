@@ -14,6 +14,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -30,11 +31,14 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.v972.dinnerware.Config;
 import net.v972.dinnerware.DinnerwareMod;
 import net.v972.dinnerware.block.custom.PlateBlock;
+import net.v972.dinnerware.item.ModItems;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.OptionalInt;
+import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class DinnerwareHelper {
@@ -90,12 +94,32 @@ public class DinnerwareHelper {
 
     public static int getNonEmptySlotsCount(NonNullList<ItemStack> pList) {
         return (int)IntStream
-                .range(0, pList.size())
-                .filter(i -> !pList.get(i).isEmpty())
-                .count();
+            .range(0, pList.size())
+            .filter(i -> !pList.get(i).isEmpty())
+            .count();
     }
 
-    public static NonNullList<ItemStack> fromNBT(CompoundTag pTag) {
+    public static boolean hasPlateInside(ItemStack pStack) {
+        Set<Item> allPlatesSet = ModItems.getPlateItemsSet();
+        if (!allPlatesSet.contains(pStack.getItem())) return false;
+
+        CompoundTag nbt = pStack.getTag();
+        if (nbt == null || nbt.isEmpty()) return false;
+
+        nbt = nbt.getCompound("BlockEntityTag").getCompound("Inventory");
+
+        if (nbt.isEmpty() || nbt.contains("Items")) return false;
+
+        ListTag listTag = nbt.getList("Items", 10);
+        Set<Item> plateItemsSet =
+            listTag.stream()
+                .map(tag -> ItemStack.of((CompoundTag)tag).getItem())
+                .collect(Collectors.toSet());
+        plateItemsSet.retainAll(allPlatesSet);
+        return !plateItemsSet.isEmpty();
+    }
+
+    public static NonNullList<ItemStack> plateContentFromNBT(CompoundTag pTag) {
         NonNullList<ItemStack> result = NonNullList.withSize(3, ItemStack.EMPTY);
 
         if (pTag != null) {
@@ -123,38 +147,105 @@ public class DinnerwareHelper {
 
     // ===============================================================
 
-    public static ModelFile getPlateModelWithMaterial(PlateBlock plateBlock, BlockModelProvider models) {
-        ResourceLocation finalTexture = getTextureForPlate(plateBlock.MATERIAL);
+    public static NonNullList<ItemStack> trayContentFromNBT(CompoundTag pTag) {
+        if (pTag != null && pTag.contains("Items")) {
+            ListTag tagList = pTag.getList("Items", 10);
 
-        ResourceLocation parentModelLoc =
-                ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID,
-                        plateBlock.MATERIAL instanceof RotatedPillarBlock &&
-                        !plateBlock.MATERIAL.getDescriptionId().equals(Blocks.QUARTZ_BLOCK.getDescriptionId())
-                            ? "plate_block_column"
-                            : "plate_block"
-                );
+            int listSize = tagList.size();
+            if (listSize == 0) return NonNullList.withSize(64, ItemStack.EMPTY);
 
-        return models
-                .getBuilder(DinnerwareHelper.getBlockId(plateBlock))
-                .parent(models.getExistingFile(parentModelLoc))
-                .texture("0", finalTexture)
-                .texture("particle", finalTexture);
+            NonNullList<ItemStack> result = NonNullList.withSize(listSize, ItemStack.EMPTY);
+            for (int i = 0; i < tagList.size(); i++)
+            {
+                CompoundTag itemTags = tagList.getCompound(i);
+                result.set(listSize - (i + 1), ItemStack.of(itemTags));
+            }
+
+            return result;
+        }
+
+        return NonNullList.withSize(64, ItemStack.EMPTY);
     }
 
-    public static @NotNull ResourceLocation getTextureForPlate(Block pMaterial) {
+    // ===============================================================
+
+    public static ModelFile getPlateModelWithMaterial(PlateBlock plateBlock, BlockModelProvider models) {
+        ResourceLocation finalTexture = getTextureForModel(plateBlock.MATERIAL);
+
+        ResourceLocation parentModelLoc =
+            ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID,
+                plateBlock.MATERIAL instanceof RotatedPillarBlock &&
+                !plateBlock.MATERIAL.getDescriptionId().equals(Blocks.QUARTZ_BLOCK.getDescriptionId())
+                    ? "plate_block_column"
+                    : "plate_block"
+            );
+
+        return models
+            .getBuilder(DinnerwareHelper.getBlockId(plateBlock))
+            .parent(models.getExistingFile(parentModelLoc))
+            .texture("0", finalTexture)
+            .texture("particle", finalTexture);
+    }
+
+    public static @NotNull ResourceLocation getTextureForModel(Block pMaterial) {
         ResourceLocation materialBlockName = ForgeRegistries.BLOCKS.getKey(pMaterial);
 
         boolean isColumn =
             pMaterial.getDescriptionId().equals(Blocks.QUARTZ_BLOCK.getDescriptionId()) ||
             pMaterial instanceof RotatedPillarBlock;
 
-        ResourceLocation materialTexture = ResourceLocation.fromNamespaceAndPath(materialBlockName.getNamespace(),
-                ModelProvider.BLOCK_FOLDER + "/" + materialBlockName.getPath());
+        ResourceLocation materialTexture = ResourceLocation
+            .fromNamespaceAndPath(
+                materialBlockName.getNamespace(),
+            ModelProvider.BLOCK_FOLDER + "/" + materialBlockName.getPath());
         ResourceLocation materialTextureTop = materialTexture.withSuffix("_top");
 
         return isColumn
             ? materialTextureTop
             : materialTexture;
+    }
+
+    // ===============================================================
+
+    public static void positionAndRenderTrayItems(PoseStack pPoseStack, MultiBufferSource pBuffer, ItemRenderer pItemRenderer,
+                                                  NonNullList<ItemStack> pStacks, Direction pFacing,
+                                                  @Nullable Level pLevel, int pLightLevel) {
+        float currentY = -0.05f;
+
+        for (int i = 0; i < pStacks.size(); i++) {
+            var stack = pStacks.get(i);
+            if (stack.isEmpty()) continue;
+
+            currentY += 0.05f;
+            for (int j = 0; j < stack.getCount(); j++) {
+                currentY += j == 0 ? 0 : 0.025f;
+
+                pPoseStack.pushPose();
+
+                // Move to the center
+                pPoseStack.translate(0.5f, currentY, 0.5f);
+
+                // Rotate based on facing
+                switch (pFacing) {
+                    case NORTH -> {} // pPoseStack.mulPose(Axis.YP.rotationDegrees(0));
+                    case WEST -> pPoseStack.mulPose(Axis.YP.rotationDegrees(90));
+                    case SOUTH -> pPoseStack.mulPose(Axis.YP.rotationDegrees(180));
+                    case EAST -> pPoseStack.mulPose(Axis.YN.rotationDegrees(90));
+                }
+
+                // Lie flat
+                pPoseStack.mulPose(Axis.XP.rotationDegrees(90));
+
+                // Scale down
+                pPoseStack.scale(0.45f, 0.45f, 0.45f);
+
+                pItemRenderer.renderStatic(stack,
+                        ItemDisplayContext.FIXED, pLightLevel, OverlayTexture.NO_OVERLAY,
+                        pPoseStack, pBuffer, pLevel, i);
+
+                pPoseStack.popPose();
+            }
+        }
     }
 
     // ===============================================================

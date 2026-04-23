@@ -1,4 +1,16 @@
 {
+  "advancement.dinnerware.put_plate_in_plate.title": "Ёшки матрёшки",
+  "advancement.dinnerware.put_plate_in_plate.description": "Положите тарелку в другую тарелку",
+
+  "advancement.dinnerware.get_diamond_plate.title": "Дорогая, у нас гости...",
+  "advancement.dinnerware.get_diamond_plate.description": "Заполучите алмазную тарелку",
+
+  "advancement.dinnerware.get_tray_with_all_regular_plates.title": "Один поднос, чтоб править всеми",
+  "advancement.dinnerware.get_tray_with_all_regular_plates.description": "Положите на один поднос все ванильные виды обычных тарелок",
+
+  "advancement.dinnerware.root.title": "Dinnerware",
+  "advancement.dinnerware.root.description": "Красиво и функционально",
+
   "block.dinnerware.quartz_plate_block": "Кварцевая тарелка",
 
   "block.dinnerware.iron_plate_block": "Железная тарелка",
@@ -66,9 +78,12 @@
   "creativetab.dinnerware_tab": "Dinnerware",
 
   "item.dinnerware.dinnerware_icon": "Иконка мода Dinnerware",
-  "item.dinnerware.tray": "Поднос [В РАЗРАБОТКЕ]",
+  "item.dinnerware.iron_tray": "Железный поднос",
+  "item.dinnerware.gold_tray": "Золотой поднос",
 
-  "item.dinnerware.tray.fullness": "%s/%s тарелок",
+  "container.dinnerware.tray.fullness": "%s/%s тарелок",
+  "container.dinnerware.tray.with_food": "%s с едой",
+  "container.dinnerware.tray.more": "и ещё %s...",
 
   "sounds.dinnerware.tray_metal_load": "Предмет положен на поднос",
   "sounds.dinnerware.tray_metal_unload": "Предмет взят с подноса"

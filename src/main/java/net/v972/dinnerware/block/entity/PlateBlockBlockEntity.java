@@ -31,6 +31,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import net.v972.dinnerware.Config;
+import net.v972.dinnerware.item.ModItems;
 import net.v972.dinnerware.screen.PlateMenu;
 import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
@@ -110,8 +111,8 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
             @Override
             public boolean isItemValid(int slot, @NotNull ItemStack stack) {
                 return Config.onlyFoodOnPlate
-                        ? canPlaceItemOnPlate(stack)
-                        : super.isItemValid(slot, stack);
+                    ? canPlaceItemOnPlate(stack)
+                    : super.isItemValid(slot, stack);
             }
 
             @Override
@@ -235,7 +236,7 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
         return this.getItem(true);
     }
 
-    private ItemStack getItem(boolean pWithContent) {
+    public ItemStack getItem(boolean pWithContent) {
         ItemStack itemstack = new ItemStack(getBlock());
         if (!this.isEmpty() && pWithContent) {
             CompoundTag compoundtag = new CompoundTag();
@@ -260,21 +261,29 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
         for(int i = 0; i < items.getSlots(); i++) {
             if (!items.getStackInSlot(i).isEmpty()) return false;
         }
-
         return true;
     }
 
     public int getNonEmptySlotsCount() {
         return (int)IntStream
-                .range(0, SLOT_COUNT)
-                .filter(i -> !items.getStackInSlot(i).isEmpty())
-                .count();
+            .range(0, SLOT_COUNT)
+            .filter(i -> !items.getStackInSlot(i).isEmpty())
+            .count();
     }
 
     public OptionalInt getFirstNonEmptySlot() {
         return IntStream.range(0, SLOT_COUNT)
-                .filter(i -> !items.getStackInSlot(i).isEmpty())
-                .findFirst();
+            .filter(i -> !items.getStackInSlot(i).isEmpty())
+            .findFirst();
+    }
+
+    public boolean hasPlateInside() {
+        var platesSet = ModItems.getPlateItemsSet();
+
+        for(int i = 0; i < items.getSlots(); i++) {
+            if (platesSet.contains(items.getStackInSlot(i).getItem())) return true;
+        }
+        return false;
     }
 
     ///  Returns **a copy** of the item stacks in all slots

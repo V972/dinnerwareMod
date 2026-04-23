@@ -1,6 +1,8 @@
 package net.v972.dinnerware.screen;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
@@ -9,8 +11,12 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.SlotItemHandler;
+import net.v972.dinnerware.DinnerwareMod;
+import net.v972.dinnerware.advancement.ModCriterionTriggers;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import net.v972.dinnerware.Config;
+import net.v972.dinnerware.item.ModItems;
+import org.jetbrains.annotations.NotNull;
 
 public class PlateMenu extends AbstractContainerMenu {
     public final PlateBlockBlockEntity blockEntity;
@@ -71,7 +77,7 @@ public class PlateMenu extends AbstractContainerMenu {
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
     private static final int TE_INVENTORY_SLOT_COUNT = 3;
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+    public @NotNull ItemStack quickMoveStack(@NotNull Player pPlayer, int pIndex) {
         Slot sourceSlot = slots.get(pIndex);
         if (sourceSlot == null || !sourceSlot.hasItem()) return ItemStack.EMPTY;  //EMPTY_ITEM
         ItemStack sourceStack = sourceSlot.getItem();
@@ -80,9 +86,11 @@ public class PlateMenu extends AbstractContainerMenu {
         // Check if the slot clicked is one of the vanilla container slots
         if (pIndex < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
             // This is a vanilla container slot so merge the stack into the tile inventory
-            if (!moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX, TE_INVENTORY_FIRST_SLOT_INDEX
-                    + TE_INVENTORY_SLOT_COUNT, false)) {
+            if (!moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX,
+                    TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT, false)) {
                 return ItemStack.EMPTY;  // EMPTY_ITEM
+            } else {
+                checkIfPlateAndAwardInception(copyOfSourceStack, pPlayer);
             }
         } else if (pIndex < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT) {
             // This is a TE slot so merge the stack into the players inventory
@@ -104,7 +112,48 @@ public class PlateMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public boolean stillValid(Player pPlayer) {
+    public void clicked(int pSlotId, int pButton, @NotNull ClickType pClickType, @NotNull Player pPlayer) {
+        if (!level.isClientSide()) {
+            System.out.println("pSlotId: " + pSlotId);
+            System.out.println("pButton: " + pButton);
+            System.out.println("pClickType: " + pClickType);
+
+            ItemStack item1Pre = slots.get(TE_INVENTORY_FIRST_SLOT_INDEX).getItem().copy();
+            ItemStack item2Pre = slots.get(TE_INVENTORY_FIRST_SLOT_INDEX + 1).getItem().copy();
+            ItemStack item3Pre = slots.get(TE_INVENTORY_FIRST_SLOT_INDEX + 2).getItem().copy();
+
+            super.clicked(pSlotId, pButton, pClickType, pPlayer);
+
+            if (pClickType != ClickType.QUICK_MOVE && pSlotId >= TE_INVENTORY_FIRST_SLOT_INDEX &&
+                (pSlotId < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT)
+            ) {
+                System.out.println(slots.get(pSlotId).getItem());
+                if (pClickType != ClickType.QUICK_CRAFT) {
+                    checkIfPlateAndAwardInception(slots.get(pSlotId).getItem(), pPlayer);
+                } else {
+
+
+                    ItemStack item1Post = slots.get(TE_INVENTORY_FIRST_SLOT_INDEX).getItem().copy();
+                    ItemStack item2Post = slots.get(TE_INVENTORY_FIRST_SLOT_INDEX + 1).getItem().copy();
+                    ItemStack item3Post = slots.get(TE_INVENTORY_FIRST_SLOT_INDEX + 2).getItem().copy();
+
+                    System.out.println(item1Pre + " -> " + item1Post);
+                    System.out.println(item2Pre + " -> " + item2Post);
+                    System.out.println(item3Pre + " -> " + item3Post);
+                }
+            }
+        } else super.clicked(pSlotId, pButton, pClickType, pPlayer);
+    }
+
+    private void checkIfPlateAndAwardInception(ItemStack pStack, Player pPlayer) {
+        if (ModItems.getPlateItemsSet().contains(pStack.getItem()) && (pPlayer instanceof ServerPlayer pServerPlayer)) {
+            ModCriterionTriggers.MANUAL_TRIGGER.trigger(pServerPlayer,
+                ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, "put_plate_in_plate"));
+        }
+    }
+
+    @Override
+    public boolean stillValid(@NotNull Player pPlayer) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
                 pPlayer, blockEntity.getBlock(level));
     }

@@ -157,8 +157,8 @@ Fabric port is father to the back, but not out of the picture. We'll see.
 Any of these may or may not be implemented, depends.
 - Modded materials for plates;
 - Different sizes/types of plates;
-- Rendering food when in item form in world/inventory;
-- Transporting plates with food inside without breaking (maybe on a food tray?).
+- ~~Rendering food when in item form in world/inventory;~~
+- ~~Transporting plates with food inside without breaking (maybe on a food tray?).~~
 
 </details>  
 

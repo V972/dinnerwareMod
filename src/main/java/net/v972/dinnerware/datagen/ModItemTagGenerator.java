@@ -7,7 +7,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.v972.dinnerware.block.ModBlocks;
+import net.v972.dinnerware.item.ModItems;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
@@ -21,6 +21,7 @@ public class ModItemTagGenerator extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
         this.tag(ItemTags.PIGLIN_LOVED)
-                .add(ModBlocks.PLATE_BLOCK_GOLD.get().asItem());
+            .add(ModItems.PLATE_ITEM_GOLD.get())
+            .add(ModItems.TRAY_GOLD.get());
     }
 }

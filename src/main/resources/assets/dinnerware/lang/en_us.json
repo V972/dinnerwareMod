@@ -1,4 +1,16 @@
 {
+  "advancement.dinnerware.put_plate_in_plate.title": "Inception",
+  "advancement.dinnerware.put_plate_in_plate.description": "Put plate inside another plate",
+
+  "advancement.dinnerware.get_diamond_plate.title": "Honey, we have guests...",
+  "advancement.dinnerware.get_diamond_plate.description": "Acquire Diamond Plate",
+
+  "advancement.dinnerware.get_tray_with_all_regular_plates.title": "One Tray to hold them all",
+  "advancement.dinnerware.get_tray_with_all_regular_plates.description": "Put every vanilla type of regular plate onto one tray",
+
+  "advancement.dinnerware.root.title": "Dinnerware",
+  "advancement.dinnerware.root.description": "Place, display, eat",
+
   "block.dinnerware.quartz_plate_block": "Quartz Plate",
 
   "block.dinnerware.iron_plate_block": "Iron Plate",
@@ -66,9 +78,12 @@
   "creativetab.dinnerware_tab": "Dinnerware",
 
   "item.dinnerware.dinnerware_icon": "Dinnerware Icon",
-  "item.dinnerware.tray": "Tray WIP",
+  "item.dinnerware.iron_tray": "Iron Tray",
+  "item.dinnerware.gold_tray": "Gold Tray",
 
-  "item.dinnerware.tray.fullness": "%s/%s Plates",
+  "container.dinnerware.tray.fullness": "%s/%s Plates",
+  "container.dinnerware.tray.with_food": "%s with food",
+  "container.dinnerware.tray.more": "and %s more...",
 
   "sounds.dinnerware.tray_metal_load": "Item placed on Tray",
   "sounds.dinnerware.tray_metal_unload": "Item taken off Tray"

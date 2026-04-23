@@ -1,9 +1,7 @@
 {
+	"parent": "builtin/entity",
 	"format_version": "1.9.0",
 	"credit": "Made with Blockbench",
-	"textures": {
-		"0": "block/iron_block"
-	},
 	"elements": [
 		{
 			"name": "Core",

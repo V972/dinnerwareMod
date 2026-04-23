@@ -13,6 +13,7 @@ import net.v972.dinnerware.DinnerwareMod;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.item.ModItems;
 import net.v972.dinnerware.item.custom.PlateBlockBlockItem;
+import net.v972.dinnerware.item.custom.TrayItem;
 import net.v972.dinnerware.util.DinnerwareHelper;
 
 public class ModItemModelProvider extends ItemModelProvider {
@@ -26,13 +27,22 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         for (PlateBlockBlockItem item : ModItems.getPlateItemsArray()) {
             Block material = ((PlateBlock) item.getBlock()).MATERIAL;
-            ResourceLocation finalTexture = DinnerwareHelper.getTextureForPlate(material);
+            ResourceLocation finalTexture = DinnerwareHelper.getTextureForModel(material);
             getBuilder(item.toString())
                 .parent(new ModelFile.ExistingModelFile(
                     ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, ITEM_FOLDER + "/plate"),
                     existingFileHelper
                 )
             ).texture("particle", finalTexture);
+        }
+
+        for (TrayItem item : ModItems.getTrayItemsArray()) {
+            ResourceLocation finalTexture = DinnerwareHelper.getTextureForModel(item.MATERIAL);
+            ResourceLocation parentModelLoc = ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, ITEM_FOLDER + "/tray");
+            getBuilder(item.toString())
+                .parent(new ModelFile.ExistingModelFile(parentModelLoc, existingFileHelper))
+                .texture("0", finalTexture)
+                .texture("particle", finalTexture);
         }
     }
 
