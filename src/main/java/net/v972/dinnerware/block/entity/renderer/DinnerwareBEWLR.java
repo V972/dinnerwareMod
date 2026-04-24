@@ -28,34 +28,31 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class DinnerwareBEWLR extends BlockEntityWithoutLevelRenderer {
-    public static final DinnerwareBEWLR INSTANCE = new DinnerwareBEWLR(
-        Minecraft.getInstance().getBlockEntityRenderDispatcher(),
-        Minecraft.getInstance().getEntityModels()
-    );
 
-    public DinnerwareBEWLR(BlockEntityRenderDispatcher pBlockEntityRenderDispatcher, EntityModelSet pEntityModelSet) {
-        super(pBlockEntityRenderDispatcher, pEntityModelSet);
+    public DinnerwareBEWLR(BlockEntityRenderDispatcher dispatcher, EntityModelSet modelSet) {
+        super(dispatcher, modelSet);
     }
 
     @Override
-    public void renderByItem(ItemStack pStack, @NotNull ItemDisplayContext pDisplayContext, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        Optional<PlateBlockBlockItem> plateBlockItem = Arrays.stream(ModItems.getPlateItemsArray()).filter(pStack::is).findFirst();
-        Optional<TrayItem> trayItem = Arrays.stream(ModItems.getTrayItemsArray()).filter(pStack::is).findFirst();
+    public void renderByItem(ItemStack stack, @NotNull ItemDisplayContext pDisplayContext, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+        Optional<PlateBlockBlockItem> plateBlockItem = Arrays.stream(ModItems.getPlateItemsArray()).filter(stack::is).findFirst();
+        Optional<TrayItem> trayItem = Arrays.stream(ModItems.getTrayItemsArray()).filter(stack::is).findFirst();
 
         if (plateBlockItem.isPresent() && trayItem.isPresent()) {
             throw new RuntimeException("ItemStack cannot be both Tray and Plate");
         }
 
-        if (plateBlockItem.isEmpty() && trayItem.isEmpty()) {
-            super.renderByItem(pStack, pDisplayContext, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
-        } else if (plateBlockItem.isPresent()) {
-            renderPlate(plateBlockItem.get(), pStack, pDisplayContext, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
+        // Dont really need this once tags are used above
+        if (plateBlockItem.isEmpty() && trayItem.isEmpty()) return;
+
+        if (plateBlockItem.isPresent()) {
+            renderPlate(plateBlockItem.get(), stack, pDisplayContext, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
         } else if (trayItem.isPresent()) {
-            renderTray(trayItem.get(), pStack, pDisplayContext, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
+            renderTray(trayItem.get(), stack, pDisplayContext, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
         }
     }
 
-    private void renderPlate(PlateBlockBlockItem pPlateItem, ItemStack pStack, ItemDisplayContext pDisplayContext, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+    private void renderPlate(PlateBlockBlockItem pPlateItem, ItemStack stack, ItemDisplayContext context, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
         PlateBlock plateBlock = (PlateBlock)pPlateItem.getBlock();
@@ -64,28 +61,23 @@ public class DinnerwareBEWLR extends BlockEntityWithoutLevelRenderer {
             BlockModelShaper.stateToModelLocation(plateBlock.defaultBlockState())
         );
 
-        pPoseStack.pushPose();
+        poseStack.pushPose();
         {
-            pPoseStack.translate(0.5, 0.5, 0.5);
-            pPoseStack.mulPose(Axis.XP.rotationDegrees(90));
-            pPoseStack.translate(0, 0, 0.485);
-            pPoseStack.scale(0.625f, 0.625f, 0.625f);
+            poseStack.translate(0.5, 0.5, 0.5);
+            poseStack.mulPose(Axis.XP.rotationDegrees(90));
+            poseStack.translate(0, 0, 0.485);
+            poseStack.scale(0.625f, 0.625f, 0.625f);
 
-            boolean isLeftHand =
-                    pDisplayContext == ItemDisplayContext.FIRST_PERSON_LEFT_HAND ||
-                            pDisplayContext == ItemDisplayContext.THIRD_PERSON_LEFT_HAND;
-            //                          pDisplayContext
-            itemRenderer.render(pStack, ItemDisplayContext.FIXED, isLeftHand, pPoseStack, pBuffer,
-                    pPackedLight, pPackedOverlay, bakedModel);
+            boolean isLeftHand = context == ItemDisplayContext.FIRST_PERSON_LEFT_HAND || context == ItemDisplayContext.THIRD_PERSON_LEFT_HAND;
+            itemRenderer.render(stack, ItemDisplayContext.FIXED, isLeftHand, poseStack, buffer, packedLight, packedOverlay, bakedModel);
         }
-        pPoseStack.popPose();
+        poseStack.popPose();
 
         Direction facing = Direction.SOUTH;
-        NonNullList<ItemStack> stacks = DinnerwareHelper.plateContentFromNBT(pStack.getTag());
+        NonNullList<ItemStack> stacks = DinnerwareHelper.plateContentFromNBT(stack.getTag());
         int nonEmptyCount = DinnerwareHelper.getNonEmptySlotsCount(stacks);
 
-        DinnerwareHelper.positionAndRenderPlateItems(pPoseStack, pBuffer, itemRenderer,
-                stacks, nonEmptyCount, facing, null, pPackedLight);
+        DinnerwareHelper.positionAndRenderPlateItems(poseStack, buffer, itemRenderer, stacks, nonEmptyCount, facing, null, packedLight);
     }
 
     private void renderTray(TrayItem pTrayItem, ItemStack pStack, ItemDisplayContext pDisplayContext, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
@@ -96,27 +88,9 @@ public class DinnerwareBEWLR extends BlockEntityWithoutLevelRenderer {
             Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(pTrayItem))
         );
 
-//        pPoseStack.pushPose();
-//        {
-//            pPoseStack.translate(0.5, 0.5, 0.5);
-//            pPoseStack.mulPose(Axis.XP.rotationDegrees(90));
-//            pPoseStack.translate(0, 0, 0.485);
-//            pPoseStack.scale(0.625f, 0.625f, 0.625f);
-//
-//            boolean isLeftHand =
-//                    pDisplayContext == ItemDisplayContext.FIRST_PERSON_LEFT_HAND ||
-//                            pDisplayContext == ItemDisplayContext.THIRD_PERSON_LEFT_HAND;
-//            //                          pDisplayContext
-//            itemRenderer.render(pStack, ItemDisplayContext.FIXED, isLeftHand, pPoseStack, pBuffer,
-//                pPackedLight, pPackedOverlay, bakedModel
-//            );
-//        }
-//        pPoseStack.popPose();
-
         Direction facing = Direction.SOUTH;
         NonNullList<ItemStack> stacks = DinnerwareHelper.trayContentFromNBT(pStack.getTag());
 
-        DinnerwareHelper.positionAndRenderTrayItems(pPoseStack, pBuffer, itemRenderer,
-                stacks, facing, null, pPackedLight);
+        DinnerwareHelper.positionAndRenderTrayItems(pPoseStack, pBuffer, itemRenderer, stacks, facing, null, pPackedLight);
     }
 }
