@@ -1,9 +1,9 @@
 package net.v972.dinnerware.item.custom;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.AnimationUtils;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -38,11 +38,13 @@ import net.v972.dinnerware.advancement.ModCriterionTriggers;
 import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
-import net.v972.dinnerware.block.entity.renderer.DinnerwareBEWLR;
 import net.v972.dinnerware.item.ModItems;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -458,15 +460,15 @@ public class TrayItem extends Item {
         consumer.accept(new IClientItemExtensions() {
             private static final HumanoidModel.ArmPose TRAY_ARMS_POSE_IDLE = HumanoidModel.ArmPose.create("TRAY_ARMS_POSE_IDLE", true,
                 (model, entity, arm) -> {
+                    float ageInTicks = entity.tickCount + TrayItem.getPartialTick();
+
                     model.rightArm.xRot = -((float)Math.PI / 8F);
-                    AnimationUtils.bobModelPart(model.rightArm, entity.tickCount, -1.0F); // * -1 from regular
+                    AnimationUtils.bobModelPart(model.rightArm, ageInTicks, -1.0F); // * -1 from regular
 
                     model.leftArm.xRot  = -((float)Math.PI / 8F);
-                    AnimationUtils.bobModelPart(model.leftArm, entity.tickCount, 1.0F); // * -1 from regular
+                    AnimationUtils.bobModelPart(model.leftArm, ageInTicks, 1.0F); // * -1 from regular
                 }
             );
-
-
 
             @Override
             public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
@@ -474,14 +476,14 @@ public class TrayItem extends Item {
 
                 return HumanoidModel.ArmPose.EMPTY;
             }
-
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return DinnerwareBEWLR.INSTANCE;
-            }
         });
     }
 
+    /** @return The current partialTick. */
+    public static float getPartialTick() {
+        Minecraft mc = Minecraft.getInstance();
+        return mc.isPaused() ? mc.pausePartialTick : mc.getFrameTime();
+    }
 
     // =============================
 }
