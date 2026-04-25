@@ -46,6 +46,7 @@ import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import net.v972.dinnerware.item.ModItems;
 import net.v972.dinnerware.item.custom.TrayItem;
 import net.v972.dinnerware.util.DinnerwareHelper;
+import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -242,7 +243,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
             BlockEntity bEntity = pLevel.getBlockEntity(pPos);
             if (bEntity instanceof PlateBlockBlockEntity pPlateEntity) {
                 // pick up with tray no matter what
-                if (ModItems.getTrayItemsSet().contains(pPlayer.getItemInHand(pHand).getItem())) {
+                if (pPlayer.getItemInHand(pHand).is(ModTags.Items.TRAYS)) {
                     pickUpPlate(pPlateEntity, pPlayer, pLevel, pPos);
 
                 // open menu when shift-clicking or clicking empty
@@ -263,7 +264,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     private void pickUpPlate(PlateBlockBlockEntity pPlateEntity, Player pPlayer, Level pLevel, BlockPos pPos) {
         ItemStack selectedItemStack = pPlayer.getInventory().getSelected();
 
-        boolean isTray = ModItems.getTrayItemsSet().contains(selectedItemStack.getItem());
+        boolean isTray = selectedItemStack.is(ModTags.Items.TRAYS);
         boolean didAddToTray = false;
 
         // with empty hand

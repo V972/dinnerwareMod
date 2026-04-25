@@ -21,6 +21,7 @@ import net.v972.dinnerware.item.ModItems;
 import net.v972.dinnerware.item.custom.PlateBlockBlockItem;
 import net.v972.dinnerware.item.custom.TrayItem;
 import net.v972.dinnerware.util.DinnerwareHelper;
+import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -35,27 +36,24 @@ public class DinnerwareBEWLR extends BlockEntityWithoutLevelRenderer {
 
     @Override
     public void renderByItem(ItemStack stack, @NotNull ItemDisplayContext pDisplayContext, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
-        Optional<PlateBlockBlockItem> plateBlockItem = Arrays.stream(ModItems.getPlateItemsArray()).filter(stack::is).findFirst();
-        Optional<TrayItem> trayItem = Arrays.stream(ModItems.getTrayItemsArray()).filter(stack::is).findFirst();
+        boolean isPlate = stack.is(ModTags.Items.PLATES);
+        boolean isTray = stack.is(ModTags.Items.TRAYS);
 
-        if (plateBlockItem.isPresent() && trayItem.isPresent()) {
+        if (isPlate && isTray) {
             throw new RuntimeException("ItemStack cannot be both Tray and Plate");
         }
 
-        // Dont really need this once tags are used above
-        if (plateBlockItem.isEmpty() && trayItem.isEmpty()) return;
-
-        if (plateBlockItem.isPresent()) {
-            renderPlate(plateBlockItem.get(), stack, pDisplayContext, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
-        } else if (trayItem.isPresent()) {
-            renderTray(trayItem.get(), stack, pDisplayContext, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
+        if (isPlate) {
+            renderPlate(stack, pDisplayContext, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
+        } else if (isTray) {
+            renderTray(stack, pDisplayContext, pPoseStack, pBuffer, pPackedLight, pPackedOverlay);
         }
     }
 
-    private void renderPlate(PlateBlockBlockItem pPlateItem, ItemStack stack, ItemDisplayContext context, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
+    private void renderPlate(ItemStack stack, ItemDisplayContext context, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
-        PlateBlock plateBlock = (PlateBlock)pPlateItem.getBlock();
+        PlateBlock plateBlock = (PlateBlock)((PlateBlockBlockItem)stack.getItem()).getBlock();
         ModelManager modelManager = Minecraft.getInstance().getModelManager();
         BakedModel bakedModel = modelManager.getModel(
             BlockModelShaper.stateToModelLocation(plateBlock.defaultBlockState())
@@ -80,13 +78,10 @@ public class DinnerwareBEWLR extends BlockEntityWithoutLevelRenderer {
         DinnerwareHelper.positionAndRenderPlateItems(poseStack, buffer, itemRenderer, stacks, nonEmptyCount, facing, null, packedLight);
     }
 
-    private void renderTray(TrayItem pTrayItem, ItemStack pStack, ItemDisplayContext pDisplayContext, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+    private void renderTray(ItemStack pStack, ItemDisplayContext pDisplayContext, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
-        ModelManager modelManager = Minecraft.getInstance().getModelManager();
-        BakedModel bakedModel = modelManager.getModel(
-            Objects.requireNonNull(ForgeRegistries.ITEMS.getKey(pTrayItem))
-        );
+        // Tray itself is rendered via vanilla means
 
         Direction facing = Direction.SOUTH;
         NonNullList<ItemStack> stacks = DinnerwareHelper.trayContentFromNBT(pStack.getTag());

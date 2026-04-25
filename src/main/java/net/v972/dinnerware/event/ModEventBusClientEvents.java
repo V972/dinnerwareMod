@@ -21,7 +21,10 @@ public class ModEventBusClientEvents {
     public static void clientSetup(final FMLClientSetupEvent event) {
         // Registers the "DinnerwareBEWLR" to the given item sets
         DinnerwareBEWLRManager.register(
-            Stream.concat(ModItems.getPlateItemsSet().stream(), ModItems.getTrayItemsSet().stream()).collect(Collectors.toSet()),
+            Stream.concat(
+                ModItems.getPlateItemsSet().stream(),
+                ModItems.getTrayItemsSet().stream()
+            ).collect(Collectors.toSet()),
             DinnerwareBEWLR::new
         );
     }

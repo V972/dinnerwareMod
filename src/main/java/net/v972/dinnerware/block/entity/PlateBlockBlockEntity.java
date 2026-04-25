@@ -278,10 +278,8 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     }
 
     public boolean hasPlateInside() {
-        var platesSet = ModItems.getPlateItemsSet();
-
         for(int i = 0; i < items.getSlots(); i++) {
-            if (platesSet.contains(items.getStackInSlot(i).getItem())) return true;
+            if (items.getStackInSlot(i).is(ModTags.Items.PLATES)) return true;
         }
         return false;
     }

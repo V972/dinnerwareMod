@@ -39,6 +39,7 @@ import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import net.v972.dinnerware.item.ModItems;
+import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -166,13 +167,11 @@ public class TrayItem extends Item {
         //
         // TODO: Add Farmer's Delight Compat for Feasts
         //
-        return Arrays.stream(ModItems.getPlateItemsArray()).anyMatch(pStack::is);
+        return pStack.is(ModTags.Items.PLATES);
     }
 
     public static boolean addPlateToTray(ItemStack pTrayStack, ItemStack pPlateStack) {
-        if (ModItems.getTrayItemsSet().contains(pTrayStack.getItem()) &&
-            Arrays.stream(ModItems.getPlateItemsArray()).anyMatch(pPlateStack::is)
-        ) {
+        if (pTrayStack.is(ModTags.Items.TRAYS) && pPlateStack.is(ModTags.Items.PLATES)) {
             return add(pTrayStack, pPlateStack) > 0;
         }
         return false;
@@ -402,7 +401,7 @@ public class TrayItem extends Item {
     }
 
     private static Optional<CompoundTag> getMatchingItem(ItemStack pStack, ListTag pList) {
-        return ModItems.getTrayItemsSet().contains(pStack.getItem())
+        return pStack.is(ModTags.Items.TRAYS)
             ? Optional.empty()
             : pList
                 .stream()
@@ -414,7 +413,7 @@ public class TrayItem extends Item {
     }
 
     public static boolean hasAllItems(ItemStack pStack) {
-        if (!ModItems.getTrayItemsSet().contains(pStack.getItem())) return false;
+        if (!pStack.is(ModTags.Items.TRAYS)) return false;
 
         CompoundTag compoundtag = pStack.getTag();
         if (compoundtag == null || !compoundtag.contains(TAG_ITEMS)) return false;

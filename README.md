@@ -166,6 +166,7 @@ Any of these may or may not be implemented, depends.
 
 * v972 - Initial idea, coding;
 * Queez_ - Motivation, assets and creative input;
-* Kaupenjoe - Great free modding tutorial series;
+* [Kaupenjoe](https://www.youtube.com/playlist?list=PLKGarocXCE1H9Y21-pxjt5Pt8bW14twa-) - Great free modding tutorial series;
+* [andrew0030](github.com/andrew0030) - Custom BEWLR system and advice;
 * diesieben07 - That one method for shift-right-clicking an item in the GUI;
 * Early playtesters (AmalgaMaid, EtheryalFalcon and others) - Feedback and bug reports;

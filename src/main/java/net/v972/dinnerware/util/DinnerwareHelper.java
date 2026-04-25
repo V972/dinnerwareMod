@@ -100,8 +100,7 @@ public class DinnerwareHelper {
     }
 
     public static boolean hasPlateInside(ItemStack pStack) {
-        Set<Item> allPlatesSet = ModItems.getPlateItemsSet();
-        if (!allPlatesSet.contains(pStack.getItem())) return false;
+        if (!pStack.is(ModTags.Items.PLATES)) return false;
 
         CompoundTag nbt = pStack.getTag();
         if (nbt == null || nbt.isEmpty()) return false;
@@ -115,6 +114,7 @@ public class DinnerwareHelper {
             listTag.stream()
                 .map(tag -> ItemStack.of((CompoundTag)tag).getItem())
                 .collect(Collectors.toSet());
+        Set<Item> allPlatesSet = ModItems.getPlateItemsSet();
         plateItemsSet.retainAll(allPlatesSet);
         return !plateItemsSet.isEmpty();
     }
@@ -210,7 +210,7 @@ public class DinnerwareHelper {
     public static void positionAndRenderTrayItems(PoseStack pPoseStack, MultiBufferSource pBuffer, ItemRenderer pItemRenderer,
                                                   NonNullList<ItemStack> pStacks, Direction pFacing,
                                                   @Nullable Level pLevel, int pLightLevel) {
-        float currentY = -0.05f;
+        float currentY = 0;//-0.05f;
 
         for (int i = 0; i < pStacks.size(); i++) {
             var stack = pStacks.get(i);

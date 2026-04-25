@@ -15,7 +15,7 @@ import net.v972.dinnerware.DinnerwareMod;
 import net.v972.dinnerware.advancement.ModCriterionTriggers;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import net.v972.dinnerware.Config;
-import net.v972.dinnerware.item.ModItems;
+import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
 
 public class PlateMenu extends AbstractContainerMenu {
@@ -146,7 +146,7 @@ public class PlateMenu extends AbstractContainerMenu {
     }
 
     private void checkIfPlateAndAwardInception(ItemStack pStack, Player pPlayer) {
-        if (ModItems.getPlateItemsSet().contains(pStack.getItem()) && (pPlayer instanceof ServerPlayer pServerPlayer)) {
+        if (pStack.is(ModTags.Items.PLATES) && (pPlayer instanceof ServerPlayer pServerPlayer)) {
             ModCriterionTriggers.MANUAL_TRIGGER.trigger(pServerPlayer,
                 ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, "put_plate_in_plate"));
         }
