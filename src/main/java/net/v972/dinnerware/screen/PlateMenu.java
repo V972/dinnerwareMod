@@ -11,54 +11,49 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.SlotItemHandler;
+import net.v972.dinnerware.Config;
 import net.v972.dinnerware.DinnerwareMod;
 import net.v972.dinnerware.advancement.ModCriterionTriggers;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
-import net.v972.dinnerware.Config;
 import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlateMenu extends AbstractContainerMenu {
     public final PlateBlockBlockEntity blockEntity;
     private final Level level;
     private final ContainerData data;
+    private final List<Integer> targetIndexCache = new ArrayList<>();
 
-    public PlateMenu(int pContainerId, Inventory pInv, FriendlyByteBuf pExtraData) {
-        this(pContainerId, pInv, pInv.player.level().getBlockEntity(pExtraData.readBlockPos()),
-                new SimpleContainerData(1));
+    public PlateMenu(int containerId, Inventory inv, FriendlyByteBuf buffer) {
+        this(containerId, inv, inv.player.level().getBlockEntity(buffer.readBlockPos()), new SimpleContainerData(1));
     }
 
-    public PlateMenu(int pContainerId, Inventory pInv, BlockEntity pBlockEntity, ContainerData pData)
-    {
-        super(ModMenuTypes.PLATE_MENU.get(), pContainerId);
+    public PlateMenu(int containerId, Inventory inv, BlockEntity blockEntity, ContainerData data) {
+        super(ModMenuTypes.PLATE_MENU.get(), containerId);
 
-        checkContainerSize(pInv, PlateBlockBlockEntity.SLOT_COUNT);
-        blockEntity = ((PlateBlockBlockEntity)pBlockEntity);
-        this.level = pInv.player.level();
-        this.data = pData;
+        AbstractContainerMenu.checkContainerSize(inv, PlateBlockBlockEntity.SLOT_COUNT);
+        this.blockEntity = ((PlateBlockBlockEntity)blockEntity);
+        this.level = inv.player.level();
+        this.data = data;
 
-        addPlayerInventory(pInv);
-        addPlayerHotbar(pInv);
+        this.addPlayerInventory(inv);
+        this.addPlayerHotbar(inv);
 
         this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iItemHandler -> {
-            if (Config.rightToLeft) {
-                //    2
-                //
-                // 1     0
-                this.addSlot(new SlotItemHandler(iItemHandler, 0, 100, 49));
-                this.addSlot(new SlotItemHandler(iItemHandler, 1, 60, 49));
-            } else {
-                //    2
-                //
-                // 0     1
-                this.addSlot(new SlotItemHandler(iItemHandler, 0, 60, 49));
-                this.addSlot(new SlotItemHandler(iItemHandler, 1, 100, 49));
-            }
+            boolean rightSlotFirst = Config.rightToLeft;
+            // | right -> left | left -> right |
+            // |       2       |       2       |
+            // |     1   0     |     0   1     |
+            this.addSlot(new SlotItemHandler(iItemHandler, 0, rightSlotFirst ? 100 : 60, 49));
+            this.addSlot(new SlotItemHandler(iItemHandler, 1, rightSlotFirst ? 60 : 100, 49));
 
             this.addSlot(new SlotItemHandler(iItemHandler, 2, 80, 31));
         });
 
-        addDataSlots(data);
+        this.addDataSlots(this.data);
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
@@ -77,28 +72,28 @@ public class PlateMenu extends AbstractContainerMenu {
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
     private static final int TE_INVENTORY_SLOT_COUNT = 3;
     @Override
-    public @NotNull ItemStack quickMoveStack(@NotNull Player pPlayer, int pIndex) {
-        Slot sourceSlot = slots.get(pIndex);
-        if (sourceSlot == null || !sourceSlot.hasItem()) return ItemStack.EMPTY;  //EMPTY_ITEM
+    public @NotNull ItemStack quickMoveStack(@NotNull Player player, int index) {
+        Slot sourceSlot = this.slots.get(index);
+        if (!sourceSlot.hasItem()) return ItemStack.EMPTY;
         ItemStack sourceStack = sourceSlot.getItem();
         ItemStack copyOfSourceStack = sourceStack.copy();
 
         // Check if the slot clicked is one of the vanilla container slots
-        if (pIndex < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
+        if (index < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
             // This is a vanilla container slot so merge the stack into the tile inventory
-            if (!moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX,
-                    TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT, false)) {
-                return ItemStack.EMPTY;  // EMPTY_ITEM
+            if (!this.moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX, TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT, false)) {
+                return ItemStack.EMPTY;
             } else {
-                checkIfPlateAndAwardInception(copyOfSourceStack, pPlayer);
+                // Checks what successfully ended up in our slots
+                this.checkIfPlateAndAwardInception(copyOfSourceStack, player);
             }
-        } else if (pIndex < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT) {
+        } else if (index < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT) {
             // This is a TE slot so merge the stack into the players inventory
-            if (!moveItemStackTo(sourceStack, VANILLA_FIRST_SLOT_INDEX, VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT, false)) {
+            if (!this.moveItemStackTo(sourceStack, VANILLA_FIRST_SLOT_INDEX, VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT, false)) {
                 return ItemStack.EMPTY;
             }
         } else {
-            System.out.println("Invalid slotIndex:" + pIndex);
+            System.out.println("Invalid slotIndex:" + index);
             return ItemStack.EMPTY;
         }
         // If stack size == 0 (the entire stack was moved) set slot contents to null
@@ -107,55 +102,80 @@ public class PlateMenu extends AbstractContainerMenu {
         } else {
             sourceSlot.setChanged();
         }
-        sourceSlot.onTake(pPlayer, sourceStack);
+        sourceSlot.onTake(player, sourceStack);
         return copyOfSourceStack;
     }
 
     @Override
-    public void clicked(int pSlotId, int pButton, @NotNull ClickType pClickType, @NotNull Player pPlayer) {
+    public void clicked(int slotId, int button, @NotNull ClickType type, @NotNull Player player) {
+        // We only want to trigger an advancement on stack insertion, meaning we only need server
         if (!level.isClientSide()) {
-            System.out.println("pSlotId: " + pSlotId);
-            System.out.println("pButton: " + pButton);
-            System.out.println("pClickType: " + pClickType);
-
-            ItemStack item1Pre = slots.get(TE_INVENTORY_FIRST_SLOT_INDEX).getItem().copy();
-            ItemStack item2Pre = slots.get(TE_INVENTORY_FIRST_SLOT_INDEX + 1).getItem().copy();
-            ItemStack item3Pre = slots.get(TE_INVENTORY_FIRST_SLOT_INDEX + 2).getItem().copy();
-
-            super.clicked(pSlotId, pButton, pClickType, pPlayer);
-
-            if (pClickType != ClickType.QUICK_MOVE && pSlotId >= TE_INVENTORY_FIRST_SLOT_INDEX &&
-                (pSlotId < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT)
-            ) {
-                System.out.println(slots.get(pSlotId).getItem());
-                if (pClickType != ClickType.QUICK_CRAFT) {
-                    checkIfPlateAndAwardInception(slots.get(pSlotId).getItem(), pPlayer);
-                } else {
-
-
-                    ItemStack item1Post = slots.get(TE_INVENTORY_FIRST_SLOT_INDEX).getItem().copy();
-                    ItemStack item2Post = slots.get(TE_INVENTORY_FIRST_SLOT_INDEX + 1).getItem().copy();
-                    ItemStack item3Post = slots.get(TE_INVENTORY_FIRST_SLOT_INDEX + 2).getItem().copy();
-
-                    System.out.println(item1Pre + " -> " + item1Post);
-                    System.out.println(item2Pre + " -> " + item2Post);
-                    System.out.println(item3Pre + " -> " + item3Post);
+            // --- QUICK_CRAFT ---
+            // When the "clicked" method gets triggered, if the type is "QUICK_CRAFT" and
+            // the phase is "HEADER_END", items have been added to "quickcraftSlots" Set.
+            // So we cache them, before letting Minecraft handle insertion and clear the Set.
+            if (type == ClickType.QUICK_CRAFT) {
+                // If the "QUICK_CRAFT" phase isn't "HEADER_END" yet, to preserve the functionality
+                // of "QUICK_CRAFT" we simply let the early phases run, and then exit early.
+                if (button != QUICKCRAFT_HEADER_END) {
+                    super.clicked(slotId, button, type, player);
+                    return;
+                }
+                // If the phase is "HEADER_END" we proceed to cache and handle the checks
+                this.targetIndexCache.clear();
+                for (Slot slot : this.quickcraftSlots)
+                    if (slot.index >= TE_INVENTORY_FIRST_SLOT_INDEX && slot.index < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT)
+                        this.targetIndexCache.add(slot.index);
+                // Lets Minecraft handle the click/stack logic
+                super.clicked(slotId, button, type, player);
+                // Checks what successfully ended up in our slots
+                if (!this.targetIndexCache.isEmpty()) {
+                    for (int slotIndex : this.targetIndexCache) {
+                        Slot slot = this.slots.get(slotIndex);
+                        if (slot.hasItem())
+                            this.checkIfPlateAndAwardInception(slot.getItem(), player);
+                    }
                 }
             }
-        } else super.clicked(pSlotId, pButton, pClickType, pPlayer);
+            // --- PICKUP ---
+            // This gets triggered every time a stack is simply left-clicked, this includes to pickup or to place down.
+            // Since we only care about insertion, and this gets triggered for placement, we just have to check if the
+            // clicked slot is within the bounds of the block entity, and if so validate it.
+            // --- SWAP ---
+            // Gets triggered when items are swapped e.g. the player uses hotkeys to swap a hotbar item and the hovered item.
+            // Since this type uses the id of the slot that was swapped "into", we can reuse the logic above.
+            else if (type == ClickType.PICKUP || type == ClickType.SWAP) {
+                // Lets Minecraft handle the click/stack logic
+                super.clicked(slotId, button, type, player);
+                // Checks what successfully ended up in our slots
+                if (slotId >= TE_INVENTORY_FIRST_SLOT_INDEX && slotId < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT) {
+                    Slot slot = this.slots.get(slotId);
+                    if (slot.hasItem())
+                        this.checkIfPlateAndAwardInception(slot.getItem(), player);
+                }
+            }
+            // --- CLONE, THROW, PICKUP_ALL ---
+            // Simply delegates for types that can't insert items into the container
+            // --- QUICK_MOVE ---
+            // Handled entirely in the "quickMoveStack" method, no logic needed here
+            else {
+                super.clicked(slotId, button, type, player);
+            }
+        } else {
+            // Client side just delegates
+            super.clicked(slotId, button, type, player);
+        }
     }
 
-    private void checkIfPlateAndAwardInception(ItemStack pStack, Player pPlayer) {
-        if (pStack.is(ModTags.Items.PLATES) && (pPlayer instanceof ServerPlayer pServerPlayer)) {
-            ModCriterionTriggers.MANUAL_TRIGGER.trigger(pServerPlayer,
-                ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, "put_plate_in_plate"));
+    private void checkIfPlateAndAwardInception(ItemStack stack, Player player) {
+        if (stack.is(ModTags.Items.PLATES) && (player instanceof ServerPlayer serverPlayer)) {
+            ModCriterionTriggers.MANUAL_TRIGGER.trigger(serverPlayer, ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, "put_plate_in_plate"));
         }
     }
 
     @Override
-    public boolean stillValid(@NotNull Player pPlayer) {
-        return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
-                pPlayer, blockEntity.getBlock(level));
+    public boolean stillValid(@NotNull Player player) {
+        return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()), player, blockEntity.getBlock(level));
     }
 
     public int getRoundRobinSelectedSlot() {
