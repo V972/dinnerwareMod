@@ -117,7 +117,7 @@ public class PlateMenu extends AbstractContainerMenu {
             if (type == ClickType.QUICK_CRAFT) {
                 // If the "QUICK_CRAFT" phase isn't "HEADER_END" yet, to preserve the functionality
                 // of "QUICK_CRAFT" we simply let the early phases run, and then exit early.
-                if (button != QUICKCRAFT_HEADER_END) {
+                if ((button & 3) != QUICKCRAFT_HEADER_END) {
                     super.clicked(slotId, button, type, player);
                     return;
                 }
