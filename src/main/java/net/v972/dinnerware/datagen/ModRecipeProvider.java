@@ -33,6 +33,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         for (Block block : ModBlocks.getKnownBlocks()) {
             PlateBlock plateBlock = (PlateBlock)block;
 
+            // doesn't work, need workaround or manual edit :/
             var craftingItems =
                     Arrays.stream(plateBlock.CRAFTING_MATERIAL.getItems())
                     .map(ItemStack::getItem)
@@ -42,7 +43,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 plateBlock, plateBlock.CRAFTING_AMOUNT);
 
             // special case for iron to NOT override vanilla bucket
-            if (Arrays.stream(craftingItems).anyMatch(item -> item.getDefaultInstance().is(Items.IRON_INGOT))) {
+            if (plateBlock == ModBlocks.PLATE_BLOCK_IRON.get()) {
                 recipe
                     .pattern("MMM");
             } else {
