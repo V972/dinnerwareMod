@@ -17,10 +17,10 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SlotAccess;
+import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
@@ -31,18 +31,23 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.v972.dinnerware.Config;
 import net.v972.dinnerware.DinnerwareMod;
 import net.v972.dinnerware.advancement.ModCriterionTriggers;
 import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
+//import net.v972.dinnerware.client.hud.TrayItemHud;
 import net.v972.dinnerware.item.ModItems;
+import net.v972.dinnerware.sound.ModSounds;
 import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -63,72 +68,83 @@ public class TrayItem extends Item {
         this.MATERIAL = pMaterial;
     }
 
-    @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pUsedHand) {
-        ItemStack trayStack = pPlayer.getItemInHand(pUsedHand);
-        if (!trayStack.is(this)) return super.use(pLevel, pPlayer, pUsedHand);
-
-        if (pPlayer.isSecondaryUseActive()) {
-//            if (data.cycle()) {
-//                this.playInsertSound(pPlayer);
+//    @Override
+//    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pUsedHand) {
+//        ItemStack trayStack = pPlayer.getItemInHand(pUsedHand);
+//        if (!trayStack.is(this)) return super.use(pLevel, pPlayer, pUsedHand);
+//
+//        if (pPlayer.isSecondaryUseActive()) {
+//              if (data.cycle()) {
+//                  playInsertSound(pPlayer);
+//              }
+//            return InteractionResultHolder.sidedSuccess(trayStack, pLevel.isClientSide);
+//        } else {
+//            //same as startUsingItem but client only so it does not slow
+//            if (pLevel.isClientSide) {
+//                //TrayItemHud.getInstance().setUsingItem(SlotReference.hand(pUsedHand), pPlayer);
 //            }
-            return InteractionResultHolder.sidedSuccess(trayStack, pLevel.isClientSide);
-        } else {
-            //same as startUsingItem but client only so it does not slow
-            if (pLevel.isClientSide) {
-                //SelectableContainerItemHud.getInstance().setUsingItem(SlotReference.hand(hand), player);
-            }
-            this.playRemoveOneSound(pPlayer);
-            pPlayer.startUsingItem(pUsedHand);
-            return InteractionResultHolder.consume(trayStack);
-        }
-    }
+//            playRemoveOneSound(pPlayer);
+//            pPlayer.startUsingItem(pUsedHand);
+//            return InteractionResultHolder.consume(trayStack);
+//        }
+//    }
 
-    @Override
-    public void releaseUsing(@NotNull ItemStack pStack, Level pLevel, @NotNull LivingEntity pLivingEntity, int pTimeCharged) {
-        if (pLevel.isClientSide) {
-            //SelectableContainerItemHud.getInstance().setUsingItem(SlotReference.EMPTY, pLivingEntity);
-        }
-        playInsertSound(pLivingEntity);
-        pLivingEntity.swing(pLivingEntity.getUsedItemHand());
-        super.releaseUsing(pStack, pLevel, pLivingEntity, pTimeCharged);
-    }
+//    @Override
+//    public int getUseDuration(ItemStack stack) {
+//        return 72000;
+//    }
+
+//    @Override
+//    public void releaseUsing(@NotNull ItemStack pStack, Level pLevel, @NotNull LivingEntity pLivingEntity, int pTimeCharged) {
+//        if (pLevel.isClientSide) {
+//            //TrayItemHud.getInstance().setUsingItem(SlotReference.EMPTY, pLivingEntity);
+//        }
+//        playInsertSound(pLivingEntity);
+//        pLivingEntity.swing(pLivingEntity.getUsedItemHand());
+//        super.releaseUsing(pStack, pLevel, pLivingEntity, pTimeCharged);
+//    }
 
     @Override
     public @NotNull InteractionResult useOn(UseOnContext pContext) {
         Level contextLevel = pContext.getLevel();
-        if (!contextLevel.isClientSide()) {
+        //if (!contextLevel.isClientSide()) {
             BlockPos pos = pContext.getClickedPos();
             Player contextPlayer = pContext.getPlayer();
 
             if (contextPlayer == null) {
-                return InteractionResult.SUCCESS;
+                return InteractionResult.FAIL;
             }
             ItemStack trayStack = contextPlayer.getItemInHand(pContext.getHand());
 
             Block clickedBlock = contextLevel.getBlockState(pos).getBlock();
-            if (Arrays.asList(ModBlocks.getKnownBlocksArray()).contains(clickedBlock) && (
-                        ((PlateBlock)clickedBlock).MATERIAL != Blocks.BEDROCK ||
-                        contextPlayer.isCreative())
-                    ) {
+            if (Arrays.asList(ModBlocks.getKnownBlocksArray()).contains(clickedBlock)) {
+
+                if (((PlateBlock)clickedBlock).MATERIAL == Blocks.BEDROCK && !contextPlayer.isCreative()) {
+                    return InteractionResult.FAIL;
+                }
+
                 PlateBlockBlockEntity plateBE = (PlateBlockBlockEntity)contextLevel.getBlockEntity(pos);
                 ItemStack plateStack = plateBE != null ? plateBE.getItem() : ItemStack.EMPTY;
                 if (plateBE != null && add(trayStack, plateStack) > 0) {
                     plateBE.doNotDropContent();
                     contextLevel.removeBlock(pos, false);
-                    playInsertSound(contextPlayer);
+                    playInsertSound(contextPlayer, false);
                     contextPlayer.awardStat(Stats.ITEM_USED.get(this));
-                    contextPlayer.getCooldowns().addCooldown(this, 5);
+                    contextPlayer.getCooldowns().addCooldown(this, 5); // 1/4th of a sec
                     checkAndAwardTheOneTrayAdvancement(trayStack, contextPlayer);
+
+                    return InteractionResult.sidedSuccess(contextLevel.isClientSide());
                 }
             } else {
-                peekTop(trayStack, false).ifPresent((plateItemStack) -> {
+                InteractionResult result = InteractionResult.PASS;
+                Optional<ItemStack> peekedResult = peekTop(trayStack, false);
 
-                    PlateBlockBlockItem plateBlockBlockItem = (PlateBlockBlockItem)plateItemStack.getItem();
+                if (peekedResult.isPresent()) {
+                    PlateBlockBlockItem plateBlockBlockItem = (PlateBlockBlockItem)peekedResult.get().getItem();
                     PlateBlock plateBlock = (PlateBlock)plateBlockBlockItem.getBlock();
 
                     boolean canSurvive = plateBlock.canSurvive(
-                            plateBlock.defaultBlockState(), contextLevel, pos.relative(pContext.getClickedFace())
+                        plateBlock.defaultBlockState(), contextLevel, pos.relative(pContext.getClickedFace())
                     );
                     BlockPlaceContext plateContext =
                         new BlockPlaceContext(
@@ -136,7 +152,7 @@ public class TrayItem extends Item {
                                 contextLevel,
                                 contextPlayer,
                                 pContext.getHand(),
-                                plateItemStack,
+                                peekedResult.get(),
                                 new BlockHitResult(
                                     pContext.getClickLocation(),
                                     pContext.getClickedFace(),
@@ -145,17 +161,37 @@ public class TrayItem extends Item {
                                 )
                             )
                         );
-                    if (canSurvive && plateContext.canPlace()) {
-                        playRemoveOneSound(contextPlayer);
+                    if (canSurvive && plateContext.canPlace() &&
+                        !isEntityInBlock(contextLevel, pos.relative(pContext.getClickedFace()))) {
+
+                        playRemoveOneSound(contextPlayer, false);
                         removeOne(trayStack, false);
                         plateBlockBlockItem.place(plateContext);
                         contextPlayer.awardStat(Stats.ITEM_USED.get(this));
-                    }
-                });
-            }
-        }
 
-        return InteractionResult.SUCCESS;
+                        result = InteractionResult.sidedSuccess(contextLevel.isClientSide());
+                    }
+                }
+
+                return result;
+            }
+        //}
+
+        return InteractionResult.FAIL;
+    }
+
+    private boolean isEntityInBlock(Level level, BlockPos pos) {
+        // Create an AABB that covers the exact block space
+        AABB box = new AABB(pos);
+
+        // Find all entities within this box
+        List<Entity> entities = level.getEntitiesOfClass(Entity.class, box);
+
+        // Return true if the list is not empty
+        // or any of the entities cannot coexist with block
+        if (entities.isEmpty()) return false;
+        else return !entities.stream().allMatch(entity ->
+                entity instanceof HangingEntity);
     }
 
     @Override
@@ -177,7 +213,7 @@ public class TrayItem extends Item {
         return false;
     }
 
-    // ===== Bundle Copy-paste =====
+    // ===== Bundle-"Inspired" =====
 
     public boolean overrideStackedOnOther(ItemStack pStack, @NotNull Slot pSlot, @NotNull ClickAction pAction, @NotNull Player pPlayer) {
         // when clicking with tray on plate/slot
@@ -188,7 +224,7 @@ public class TrayItem extends Item {
 
         ItemStack itemstack = pSlot.getItem();
         if (itemstack.isEmpty()) {
-            this.playRemoveOneSound(pPlayer);
+            playRemoveOneSound(pPlayer, true);
             removeOne(pStack, true).ifPresent((itemStack) ->
                 add(pStack, pSlot.safeInsert(itemStack)));
         } else if (
@@ -198,7 +234,7 @@ public class TrayItem extends Item {
             int i = (64 - getContentWeight(pStack)) / getWeight(itemstack);
             int j = add(pStack, pSlot.safeTake(itemstack.getCount(), i, pPlayer));
             if (j > 0) {
-                this.playInsertSound(pPlayer);
+                playInsertSound(pPlayer, true);
             }
         }
 
@@ -215,13 +251,13 @@ public class TrayItem extends Item {
         if (pAction == ClickAction.SECONDARY && pSlot.allowModification(pPlayer)) {
             if (pOther.isEmpty()) {
                 removeOne(pStack, true).ifPresent((itemStack) -> {
-                    this.playRemoveOneSound(pPlayer);
+                    playRemoveOneSound(pPlayer, true);
                     pAccess.set(itemStack);
                 });
             } else {
                 int leftOver = add(pStack, pOther);
                 if (leftOver > 0) {
-                    this.playInsertSound(pPlayer);
+                    playInsertSound(pPlayer, true);
                     pOther.shrink(leftOver);
                 }
             }
@@ -266,7 +302,7 @@ public class TrayItem extends Item {
             ListTag listTag = compoundtag.getList(TAG_ITEMS, 10);
             int parsedItems;
             int itemsSize = listTag.size();
-            int maxLines = 5;
+            int maxLines = Config.maxTrayTooltipLines;
 
             for(parsedItems = 0; parsedItems < Math.min(itemsSize, maxLines); parsedItems++) {
                 CompoundTag itemTag = listTag.getCompound(parsedItems);
@@ -295,14 +331,18 @@ public class TrayItem extends Item {
         }
     }
 
-    private void playRemoveOneSound(Entity pEntity) {
-        pEntity.playSound(SoundEvents.BUNDLE_REMOVE_ONE, //ModSounds.TRAY_METAL_UNLOAD.get(),
+    public static void playRemoveOneSound(Entity pEntity, boolean pInInventory) {
+        if (pInInventory) {
+            pEntity.playSound(SoundEvents.BUNDLE_REMOVE_ONE, //ModSounds.TRAY_METAL_UNLOAD.get(),
                 0.8F, 0.8F + pEntity.level().getRandom().nextFloat() * 0.4F);
+        }
     }
 
-    private void playInsertSound(Entity pEntity) {
-        pEntity.playSound(SoundEvents.BUNDLE_INSERT, //ModSounds.TRAY_METAL_LOAD.get(),
-                0.8F, 0.8F + pEntity.level().getRandom().nextFloat() * 0.4F);
+    public static void playInsertSound(Entity pEntity, boolean pInInventory) {
+        pEntity.playSound(pInInventory
+                ? SoundEvents.BUNDLE_INSERT //ModSounds.TRAY_METAL_LOAD.get()
+                : SoundEvents.ITEM_PICKUP,
+            0.8F, 0.8F + pEntity.level().getRandom().nextFloat() * 0.4F);
     }
 
     // -----------------------------
@@ -317,26 +357,29 @@ public class TrayItem extends Item {
                 compoundtag.put(TAG_ITEMS, new ListTag());
             }
 
-            int i = getContentWeight(pTrayStack);
-            int j = getWeight(pInsertedStack);
-            int k = Math.min(pInsertedStack.getCount(), (64 - i) / j);
+            int trayContentWeight = getContentWeight(pTrayStack);
+            int insertedStackWeight = getWeight(pInsertedStack);
+            int k = Math.min(pInsertedStack.getCount(), (64 - trayContentWeight) / insertedStackWeight);
             if (k == 0) {
                 return 0;
             } else {
-                ListTag listtag = compoundtag.getList(TAG_ITEMS, 10);
-                Optional<CompoundTag> matchingItemOptional = getMatchingItem(pInsertedStack, listtag);
-                if (matchingItemOptional.isPresent()) {
+                ListTag listTag = compoundtag.getList(TAG_ITEMS, 10);
+                Optional<CompoundTag> matchingItemOptional = getMatchingItem(pInsertedStack, listTag);
+                if (matchingItemOptional.isPresent() && (
+                    Config.trayMergeMatchingItem ||
+                    listTag.indexOf(matchingItemOptional.get()) == 0
+                )) {
                     CompoundTag matchingItemTag = matchingItemOptional.get();
-                    ItemStack itemstack = ItemStack.of(matchingItemTag);
-                    itemstack.grow(k);
-                    itemstack.save(matchingItemTag);
-                    listtag.remove(matchingItemTag);
-                    listtag.add(0, matchingItemTag);
+                    ItemStack matchingItemStack = ItemStack.of(matchingItemTag);
+                    matchingItemStack.grow(k);
+                    matchingItemStack.save(matchingItemTag);
+                    listTag.remove(matchingItemTag);
+                    listTag.add(0, matchingItemTag);
                 } else {
-                    ItemStack itemstack1 = pInsertedStack.copyWithCount(k);
-                    CompoundTag compoundtag2 = new CompoundTag();
-                    itemstack1.save(compoundtag2);
-                    listtag.add(0, compoundtag2);
+                    ItemStack itemStackCopyWithCount = pInsertedStack.copyWithCount(k);
+                    CompoundTag compoundTagCopyWithCount = new CompoundTag();
+                    itemStackCopyWithCount.save(compoundTagCopyWithCount);
+                    listTag.add(0, compoundTagCopyWithCount);
                 }
 
                 return k;
@@ -412,6 +455,61 @@ public class TrayItem extends Item {
                 ).findFirst();
     }
 
+    private static Stream<ItemStack> getContents(ItemStack pStack) {
+        CompoundTag compoundtag = pStack.getTag();
+        if (compoundtag == null) {
+            return Stream.empty();
+        } else {
+            ListTag listtag = compoundtag.getList(TAG_ITEMS, 10);
+            return listtag.stream().map(CompoundTag.class::cast).map(ItemStack::of);
+        }
+    }
+
+    private static int getContentWeight(ItemStack pStack) {
+        return getContents(pStack).mapToInt((itemStack) ->
+            getWeight(itemStack) * itemStack.getCount()).sum();
+    }
+
+    private static int getWeight(ItemStack pStack) {
+        return 64 / pStack.getMaxStackSize();
+    }
+
+    // =============================
+
+    public static boolean cycle(ItemStack pStack) {
+        return cycle(pStack, 1);
+    }
+
+    public static boolean cycle(ItemStack pStack, boolean forward) {
+        return cycle(pStack, forward ? 1 : -1);
+    }
+
+    public static boolean cycle(ItemStack pStack, int slotsMoved) {
+        if (!pStack.is(ModTags.Items.TRAYS)) return false;
+        if (slotsMoved == 0) return false;
+
+        CompoundTag compoundtag = pStack.getTag();
+        if (compoundtag == null || !compoundtag.contains(TAG_ITEMS)) return false;
+
+        ListTag listTag = compoundtag.getList(TAG_ITEMS, Tag.TAG_COMPOUND);
+
+        int maxSlots = listTag.size();
+        if (maxSlots == 1 && Math.abs(slotsMoved) == 1) return false;
+
+        slotsMoved = slotsMoved % maxSlots;
+
+        int newFirstSlot = (maxSlots + slotsMoved) % maxSlots;
+        if (newFirstSlot == 0) return true;
+
+        Collections.rotate(listTag, slotsMoved);
+        compoundtag.put(TAG_ITEMS, listTag);
+        pStack.save(compoundtag);
+
+        return true;
+    }
+
+    // =============================
+
     public static boolean hasAllItems(ItemStack pStack) {
         if (!pStack.is(ModTags.Items.TRAYS)) return false;
 
@@ -431,25 +529,6 @@ public class TrayItem extends Item {
             ModCriterionTriggers.MANUAL_TRIGGER.trigger(pServerPlayer,
                 ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, "one_tray_to_hold_them_all"));
         }
-    }
-
-    private static Stream<ItemStack> getContents(ItemStack pStack) {
-        CompoundTag compoundtag = pStack.getTag();
-        if (compoundtag == null) {
-            return Stream.empty();
-        } else {
-            ListTag listtag = compoundtag.getList(TAG_ITEMS, 10);
-            return listtag.stream().map(CompoundTag.class::cast).map(ItemStack::of);
-        }
-    }
-
-    private static int getContentWeight(ItemStack pStack) {
-        return getContents(pStack).mapToInt((itemStack) ->
-                getWeight(itemStack) * itemStack.getCount()).sum();
-    }
-
-    private static int getWeight(ItemStack pStack) {
-        return 64 / pStack.getMaxStackSize();
     }
 
     // =============================

@@ -67,13 +67,40 @@ public class Config
             )
             .defineEnum("eatingMode", EATING_MODES.AIMING);
 
-//    public static final ForgeConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
-//            .comment("What you want the introduction message to be for the magic number")
-//            .define("magicNumberIntroduction", "The magic number is... ");
-//    // a list of strings that are treated as resource locations for items
-//    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> ITEM_STRINGS = BUILDER
-//            .comment("A list of items to log on common setup.")
-//            .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), Config::validateItemName);
+    private static final ForgeConfigSpec.BooleanValue TRAY_MERGE_MATCHING_ITEM = BUILDER
+            .comment(
+                    "\n" +
+                    "If set to true, the tray will behave like a bundle: \n" +
+                    "If there's a matching plates stack, the picked up one will be merged into it. \n" +
+                    "Otherwise, the merging only happens for the topmost plate. \n" +
+                    "Default: false"
+            )
+            .define("trayMergeMatchingItem", false);
+
+    private static final ForgeConfigSpec.IntValue MAX_TRAY_TOOLTIP_LINES = BUILDER
+            .comment(
+                    "\n" +
+                    "Number of item stacks to show in tray's tooltip." +
+                    "The rest will be omitted under \"and N more...\"." +
+                    "Default: 5"
+            )
+            .defineInRange("maxTrayTooltipLines", 5, 1, 64);
+
+//    private static final ForgeConfigSpec.IntValue TRAY_GUI_X = BUILDER
+//            .comment(
+//                    "\n" +
+//                    "Horizontal offset of Tray Selection GUI \n" +
+//                    "Default: 0"
+//            )
+//            .defineInRange("trayGuiX", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+//
+//    private static final ForgeConfigSpec.IntValue TRAY_GUI_Y = BUILDER
+//            .comment(
+//                    "\n" +
+//                    "Vertical offset of Tray Selection GUI \n" +
+//                    "Default: 0"
+//            )
+//            .defineInRange("trayGuiY", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
@@ -83,13 +110,10 @@ public class Config
     public static boolean fragilePlates;
     public static boolean rightToLeft;
     public static EATING_MODES eatingMode;
-
-//    public static String magicNumberIntroduction;
-//    public static Set<Item> items;
-//    private static boolean validateItemName(final Object obj)
-//    {
-//        return obj instanceof final String itemName && ForgeRegistries.ITEMS.containsKey(new ResourceLocation(itemName));
-//    }
+    public static boolean trayMergeMatchingItem;
+    public static int maxTrayTooltipLines;
+//    public static int trayGuiX;
+//    public static int trayGuiY;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event)
@@ -100,12 +124,10 @@ public class Config
         fragilePlates = FRAGILE_PLATES.get();
         rightToLeft = RIGHT_TO_LEFT.get();
         eatingMode = EATING_MODE.get();
-
-//        magicNumberIntroduction = MAGIC_NUMBER_INTRODUCTION.get();
-//        // convert the list of strings into a set of items
-//        items = ITEM_STRINGS.get().stream()
-//                .map(itemName -> ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemName)))
-//                .collect(Collectors.toSet());
+        trayMergeMatchingItem = TRAY_MERGE_MATCHING_ITEM.get();
+        maxTrayTooltipLines = MAX_TRAY_TOOLTIP_LINES.get();
+//        trayGuiX = TRAY_GUI_X.get();
+//        trayGuiY = TRAY_GUI_Y.get();
     }
 
     public enum EATING_MODES {

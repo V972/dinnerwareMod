@@ -239,29 +239,37 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (!pLevel.isClientSide()) {
+        //if (!pLevel.isClientSide()) {
             BlockEntity bEntity = pLevel.getBlockEntity(pPos);
             if (bEntity instanceof PlateBlockBlockEntity pPlateEntity) {
-                // pick up with tray no matter what
-                if (pPlayer.getItemInHand(pHand).is(ModTags.Items.TRAYS)) {
-                    pickUpPlate(pPlateEntity, pPlayer, pLevel, pPos);
+                ItemStack itemStackInHand = pPlayer.getItemInHand(pHand);
+                if (itemStackInHand.is(ModTags.Items.TRAYS)) {
+                    return pLevel.isClientSide()
+                        ? pPlayer.getCooldowns().isOnCooldown(itemStackInHand.getItem())
+                            ? InteractionResult.sidedSuccess(pLevel.isClientSide())
+                            : InteractionResult.PASS
+                        : super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
 
                 // open menu when shift-clicking or clicking empty
-                } else if (pPlayer.isCrouching() ||
-                           pPlateEntity.isEmpty()
-                ) {
-                    NetworkHooks.openScreen(
-                            (ServerPlayer)pPlayer,
-                            pPlateEntity,
-                            pPos);
+                } else if ((pPlayer.isCrouching() ||
+                           pPlateEntity.isEmpty())) {
+                    if (!pLevel.isClientSide()) {
+                        NetworkHooks.openScreen(
+                                (ServerPlayer) pPlayer,
+                                pPlateEntity,
+                                pPos);
+                    }
+                    return InteractionResult.sidedSuccess(pLevel.isClientSide());
                 } else return attemptEat(pLevel, pPos, pHit, pPlateEntity, pPlayer);
             }
-        }
 
-        return InteractionResult.sidedSuccess(pLevel.isClientSide());
+            return InteractionResult.FAIL;
+        //}
+
+        //return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }
 
-    private void pickUpPlate(PlateBlockBlockEntity pPlateEntity, Player pPlayer, Level pLevel, BlockPos pPos) {
+    private InteractionResult pickUpPlate(PlateBlockBlockEntity pPlateEntity, Player pPlayer, Level pLevel, BlockPos pPos) {
         ItemStack selectedItemStack = pPlayer.getInventory().getSelected();
 
         boolean isTray = selectedItemStack.is(ModTags.Items.TRAYS);
@@ -270,7 +278,8 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         // with empty hand
         if (selectedItemStack.isEmpty()) {
             // place in hand
-            pPlayer.getInventory().add(pPlayer.getInventory().selected, pPlateEntity.getItem());
+            if (!pPlayer.getInventory().add(pPlayer.getInventory().selected, pPlateEntity.getItem()))
+                return InteractionResult.FAIL;
 
         // with not empty hand, but specifically not tray
         } else if (!isTray) {
@@ -285,14 +294,13 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         // and if no luck
         if (isTray && !didAddToTray) {
             // cancel the pickup
-            return;
+            return InteractionResult.FAIL;
         }
 
         // handle block removal on successful pickup
         pPlateEntity.doNotDropContent();
         pLevel.removeBlock(pPos, false);
-        pPlayer.playSound(SoundEvents.ITEM_PICKUP,
-                0.8F, 0.8F + pLevel.getRandom().nextFloat() * 0.4F);
+
         pPlayer.awardStat(Stats.BLOCK_MINED.get(this));
         for (Block plateType : ModBlocks.getKnownBlocks()) {
             pPlayer.getCooldowns().addCooldown(plateType.asItem(), 5);
@@ -302,7 +310,14 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
                 pPlayer.getCooldowns().addCooldown(item, 5);
             }
             TrayItem.checkAndAwardTheOneTrayAdvancement(selectedItemStack, pPlayer);
+            TrayItem.playInsertSound(pPlayer, false);
         }
+        else {
+            pPlayer.playSound(SoundEvents.ITEM_PICKUP,
+                    0.8F, 0.8F + pLevel.getRandom().nextFloat() * 0.4F);
+        }
+
+        return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }
 
     private InteractionResult attemptEat(Level pLevel, BlockPos pPos, BlockHitResult pHit, PlateBlockBlockEntity pEntity, Player pPlayer) {

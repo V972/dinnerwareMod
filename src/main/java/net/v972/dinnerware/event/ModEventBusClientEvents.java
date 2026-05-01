@@ -2,6 +2,8 @@ package net.v972.dinnerware.event;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+//import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+//import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -10,6 +12,7 @@ import net.v972.dinnerware.block.entity.ModBlockEntities;
 import net.v972.dinnerware.block.entity.renderer.DinnerwareBEWLR;
 import net.v972.dinnerware.block.entity.renderer.DinnerwareBEWLRManager;
 import net.v972.dinnerware.block.entity.renderer.PlateBlockBlockEntityRenderer;
+//import net.v972.dinnerware.client.hud.TrayItemHud;
 import net.v972.dinnerware.item.ModItems;
 
 import java.util.stream.Collectors;
@@ -33,4 +36,10 @@ public class ModEventBusClientEvents {
     public static void registerBER(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(ModBlockEntities.PLATE_BLOCK_BE.get(), PlateBlockBlockEntityRenderer::new);
     }
+
+//    @SubscribeEvent
+//    public static void registerOverlays(RegisterGuiOverlaysEvent event) {
+//        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "tray_overlay",
+//            TrayItemHud.getInstance());
+//    }
 }
