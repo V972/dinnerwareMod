@@ -11,6 +11,8 @@
   "advancement.dinnerware.root.title": "Dinnerware",
   "advancement.dinnerware.root.description": "Place, display, eat",
 
+  "block.dinnerware.plate.food_blacklist_message": "Eating this food is forbidden by the config",
+
   "block.dinnerware.quartz_plate_block": "Quartz Plate",
 
   "block.dinnerware.iron_plate_block": "Iron Plate",
@@ -85,6 +87,6 @@
   "container.dinnerware.tray.with_food": "%s with food",
   "container.dinnerware.tray.more": "and %s more...",
 
-  "sounds.dinnerware.tray_metal_load": "Item placed on Tray",
-  "sounds.dinnerware.tray_metal_unload": "Item taken off Tray"
+  "subtitles.dinnerware.tray_metal_load": "Item placed on Tray",
+  "subtitles.dinnerware.tray_metal_unload": "Item taken off Tray"
 }

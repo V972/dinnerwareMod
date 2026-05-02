@@ -1,6 +1,7 @@
 package net.v972.dinnerware.block.custom;
 
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -51,6 +52,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.OptionalInt;
 
 public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
@@ -343,11 +345,19 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         if (itemStack.isEmpty() || itemStack == ItemStack.EMPTY) return InteractionResult.PASS;
 
         boolean isFood = itemStack.getFoodProperties(pPlayer) != null;
-        boolean isFoodAndCanAlwaysBeEaten = isFood && itemStack.getFoodProperties(pPlayer).canAlwaysEat();
+        boolean isFoodAndCanAlwaysBeEaten = isFood && Objects.requireNonNull(itemStack.getFoodProperties(pPlayer)).canAlwaysEat();
 
         if (isFoodAndCanAlwaysBeEaten ||
                 (pPlayer.canEat(Config.allowOverEating) && isFood)
         ) {
+
+            if (Config.isInFoodBlacklist(itemStack.getItem())) {
+                pPlayer.displayClientMessage(
+                    Component.translatable("block.dinnerware.plate.food_blacklist_message")
+                        .withStyle(ChatFormatting.RED), true);
+
+                return InteractionResult.PASS;
+            }
 
             if ((itemStack.getItem() instanceof BowlFoodItem) ||
                     (itemStack.getItem() instanceof SuspiciousStewItem)) {
@@ -381,7 +391,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     }
 
     private int getSlotToEatQueue(PlateBlockBlockEntity pEntity) {
-        OptionalInt firstNonEmptySlotOptional = pEntity.getFirstNonEmptySlot();
+        OptionalInt firstNonEmptySlotOptional = pEntity.getFirstNonEmptySlot(true);
         if (firstNonEmptySlotOptional.isEmpty())
             return -1;
         return firstNonEmptySlotOptional.getAsInt();
@@ -422,7 +432,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
                 case 1:
                     // center
                     if (!isInRange(hor, 0.32, 0.68) || !isInRange(vert, 0.32, 0.68)) return -1;
-                    OptionalInt slot = pEntity.getFirstNonEmptySlot();
+                    OptionalInt slot = pEntity.getFirstNonEmptySlot(false);
                     return slot.isPresent() ? slot.getAsInt() : -1;
                 case 2:
                     if (Config.rightToLeft) {

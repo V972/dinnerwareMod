@@ -1,9 +1,18 @@
 package net.v972.dinnerware;
 
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = DinnerwareMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Config
@@ -32,10 +41,22 @@ public class Config
             .comment(
                     "\n" +
                     "If true, only food items & items inside \"dinnerware:additional_food\" tag are allowed to be placed on plates. \n" +
-                    "Otherwise, anything will fit. Rendering mileage may vary. \n" +
+                    "Otherwise, anything will fit. Your rendering mileage may vary. \n" +
                     "Default: true"
             )
             .define("onlyFoodOnPlate", true);
+
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> FOOD_BLACKLIST = BUILDER
+            .comment(
+                    "\n" +
+                    "A list of items to forbid from being eaten, even if they're part of \"dinnerware:additional_food\" tag. \n" +
+                    "Items listed here may still be placed on a plate. \n" +
+                    "Default: [\"artifacts:everlasting_beef\", \"artifacts:eternal_steak\"]"
+            )
+            .defineListAllowEmpty("foodBlacklist", List.of(
+                    "artifacts:everlasting_beef",
+                    "artifacts:eternal_steak"
+            ), Config::validateItemName);
 
     private static final ForgeConfigSpec.BooleanValue FRAGILE_PLATES = BUILDER
             .comment(
@@ -80,8 +101,8 @@ public class Config
     private static final ForgeConfigSpec.IntValue MAX_TRAY_TOOLTIP_LINES = BUILDER
             .comment(
                     "\n" +
-                    "Number of item stacks to show in tray's tooltip." +
-                    "The rest will be omitted under \"and N more...\"." +
+                    "Number of item stacks to show in tray's tooltip. \n" +
+                    "The rest will be omitted under \"and N more...\". \n" +
                     "Default: 5"
             )
             .defineInRange("maxTrayTooltipLines", 5, 1, 64);
@@ -112,6 +133,7 @@ public class Config
     public static EATING_MODES eatingMode;
     public static boolean trayMergeMatchingItem;
     public static int maxTrayTooltipLines;
+    public static Set<ResourceLocation> foodBlacklist;
 //    public static int trayGuiX;
 //    public static int trayGuiY;
 
@@ -126,9 +148,30 @@ public class Config
         eatingMode = EATING_MODE.get();
         trayMergeMatchingItem = TRAY_MERGE_MATCHING_ITEM.get();
         maxTrayTooltipLines = MAX_TRAY_TOOLTIP_LINES.get();
+        foodBlacklist = FOOD_BLACKLIST.get().stream()
+                .map(ResourceLocation::parse)
+                .collect(Collectors.toSet());
 //        trayGuiX = TRAY_GUI_X.get();
 //        trayGuiY = TRAY_GUI_Y.get();
     }
+
+    private static boolean validateItemName(final Object obj)
+    {
+        if (!(obj instanceof final String itemName)) return false;
+        var resLoc = ResourceLocation.parse(itemName);
+        return
+            !ModList.get().isLoaded(resLoc.getNamespace()) ||
+            ForgeRegistries.ITEMS.containsKey(resLoc);
+    }
+
+    public static boolean isInFoodBlacklist(final ItemStack stack) {
+        return isInFoodBlacklist(stack.getItem());
+    }
+
+    public static boolean isInFoodBlacklist(final Item item) {
+        return foodBlacklist.contains(ForgeRegistries.ITEMS.getKey(item));
+    }
+
 
     public enum EATING_MODES {
         QUEUE,

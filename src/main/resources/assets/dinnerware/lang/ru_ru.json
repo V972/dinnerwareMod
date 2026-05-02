@@ -11,6 +11,8 @@
   "advancement.dinnerware.root.title": "Dinnerware",
   "advancement.dinnerware.root.description": "Красиво и функционально",
 
+  "block.dinnerware.plate.food_blacklist_message": "Есть эту еду запрещено настройкой мода",
+
   "block.dinnerware.quartz_plate_block": "Кварцевая тарелка",
 
   "block.dinnerware.iron_plate_block": "Железная тарелка",
@@ -85,6 +87,6 @@
   "container.dinnerware.tray.with_food": "%s с едой",
   "container.dinnerware.tray.more": "и ещё %s...",
 
-  "sounds.dinnerware.tray_metal_load": "Предмет положен на поднос",
-  "sounds.dinnerware.tray_metal_unload": "Предмет взят с подноса"
+  "subtitles.dinnerware.tray_metal_load": "Предмет положен на поднос",
+  "subtitles.dinnerware.tray_metal_unload": "Предмет взят с подноса"
 }

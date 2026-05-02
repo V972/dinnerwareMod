@@ -11,6 +11,8 @@
   "advancement.dinnerware.root.title": "Dinnerware",
   "advancement.dinnerware.root.description": "Piękne i funkcjonalne",
 
+  "block.dinnerware.plate.food_blacklist_message": "Spożywanie tego jedzenia jest zabronione przez konfigurację modyfikacji",
+
   "block.dinnerware.quartz_plate_block": "Kwarcowy talerz",
 
   "block.dinnerware.iron_plate_block": "Żelazny talerz",
@@ -85,6 +87,6 @@
   "container.dinnerware.tray.with_food": "%s z jedzeniem",
   "container.dinnerware.tray.more": "i %s więcej...",
 
-  "sounds.dinnerware.tray_metal_load": "Przedmiot umieszczono na tacy",
-  "sounds.dinnerware.tray_metal_unload": "Przedmiot zdjęto z tacy"
+  "subtitles.dinnerware.tray_metal_load": "Przedmiot umieszczono na tacy",
+  "subtitles.dinnerware.tray_metal_unload": "Przedmiot zdjęto z tacy"
 }
