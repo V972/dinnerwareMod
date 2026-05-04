@@ -63,6 +63,7 @@ public class Config
                     "\n" +
                     "If set to true, plates become fragile, i.e. break under various circumstances. \n" +
                     "Like walking on them. \n" +
+                    "Entities inside \"fragile_plate_ignored\" tag are ignored. \n" +
                     "Default: false"
             )
             .define("fragilePlates", false);

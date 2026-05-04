@@ -36,6 +36,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -213,11 +214,22 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     }
 
     @Override
-    public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity) {
-        if (!pLevel.isClientSide && Config.fragilePlates) {
+    public void entityInside(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, @NotNull Entity pEntity) {
+        if (pLevel.isClientSide || !Config.fragilePlates) return;
+        if (pEntity.getType().is(ModTags.Entities.FRAGILE_PLATE_IGNORED)) return;
+
+        AABB plateBox = pState.getShape(pLevel, pPos).bounds().move(pPos);
+        plateBox = plateBox.inflate(0.05, 0.1, 0.05); // Expand slightly
+
+        // only break if entity is actually touching from above or inside
+        boolean steppedOn =
+            pEntity.getY() <= pPos.getY() + 0.2 &&
+            pEntity.getDeltaMovement().y <= 0;
+
+        if (steppedOn && pEntity.getBoundingBox().intersects(plateBox)) {
             pLevel.destroyBlock(pPos, true);
             pLevel.gameEvent(pEntity, GameEvent.BLOCK_DESTROY, pPos);
-        } else super.entityInside(pState, pLevel, pPos, pEntity);
+        }
     }
 
     @Override

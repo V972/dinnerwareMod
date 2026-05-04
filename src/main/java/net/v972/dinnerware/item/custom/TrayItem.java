@@ -42,7 +42,6 @@ import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 //import net.v972.dinnerware.client.hud.TrayItemHud;
 import net.v972.dinnerware.item.ModItems;
-import net.v972.dinnerware.sound.ModSounds;
 import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
 
@@ -181,10 +180,7 @@ public class TrayItem extends Item {
     }
 
     private boolean isEntityInBlock(Level level, BlockPos pos) {
-        // Create an AABB that covers the exact block space
-        AABB box = new AABB(pos);
-
-        // Find all entities within this box
+        AABB box = PlateBlock.SHAPE.bounds().move(pos).inflate(0, 0.15, 0);
         List<Entity> entities = level.getEntitiesOfClass(Entity.class, box);
 
         // Return true if the list is not empty
@@ -259,6 +255,10 @@ public class TrayItem extends Item {
                 if (leftOver > 0) {
                     playInsertSound(pPlayer, true);
                     pOther.shrink(leftOver);
+
+                    // check for and award One Tray advancement
+                    checkAndAwardTheOneTrayAdvancement(pStack, pPlayer);
+
                 }
             }
 
