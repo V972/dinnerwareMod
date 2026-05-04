@@ -208,9 +208,37 @@ public class DinnerwareHelper {
     // ===============================================================
 
     public static void positionAndRenderTrayItems(PoseStack pPoseStack, MultiBufferSource pBuffer, ItemRenderer pItemRenderer,
-                                                  NonNullList<ItemStack> pStacks, Direction pFacing,
+                                                  NonNullList<ItemStack> pStacks, Direction pFacing, ItemDisplayContext pDisplayContext,
                                                   @Nullable Level pLevel, int pLightLevel) {
-        float currentY = 0;//-0.05f;
+        // initial offset so that the plate doesn't float above the tray surface.
+        float currentY = -0.01f;
+
+        // The following comments are for others who want to understand wtf are all these calculations and what they do,
+        // including my future self.
+        //
+        // In first person the tray renders much closer to the head to be in the view so plates fill the view
+        // faster than they do in 3rd person. To counter this, for plate towers higher than roughly 5 plates
+        // we calculate a counter-offset to make top plates be roughly under the crosshair. That being said,
+        // plate tower that's so tall you can't see is still funny af, so we stop countering at 16,
+        // because at that point you need to get your screen filled to get the message, buddy.
+        if (Config.trayDynamicPlateOffset &&
+            (pDisplayContext == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND ||
+            pDisplayContext == ItemDisplayContext.FIRST_PERSON_LEFT_HAND)) {
+
+            int plateTowerCount = getPlateTowerCount(pStacks);
+            float estimatedPlateTowerY = getPlateTowerHeight(pStacks, 0, plateTowerCount);
+
+            // since plates can be mixed and matched in diff stacks, 5 plates can be as low as 0.14 and as high as 0.24,
+            // so 0.21 fees like a good middle ground that doesn't counter-offsets too early nor too late...I hope.
+            if (plateTowerCount > 5 && estimatedPlateTowerY > 0.21f) {
+
+                // we get how much plates we need to calculate counter-offset for,
+                // from 6th until 16th, so between 1 (6-5) and 11 (16-5) and subtract it.
+                int platesCountToOffset = Math.min(plateTowerCount - 5, 11);
+                float counterOffset = getPlateTowerHeight(pStacks, 5, platesCountToOffset);
+                currentY -= counterOffset;
+            }
+        }
 
         for (int i = 0; i < pStacks.size(); i++) {
             var stack = pStacks.get(i);
@@ -246,6 +274,42 @@ public class DinnerwareHelper {
                 pPoseStack.popPose();
             }
         }
+    }
+
+    private static int getPlateTowerCount(NonNullList<ItemStack> pStacks) {
+        int sum = 0;
+        for (ItemStack itemStack : pStacks) {
+            if (itemStack.isEmpty()) continue;
+            sum += itemStack.getCount();
+        }
+        return sum;
+    }
+
+    private static float getPlateTowerHeight(NonNullList<ItemStack> stacks, int startPlate, int limit) {
+        float offset = startPlate == 0 ? -0.01f : 0.0f;
+
+        int plateIndex = 0;     // actual plate number in tower
+        int counted = 0;        // how many plates processed
+
+        for (ItemStack stack : stacks) {
+            if (stack.isEmpty()) continue;
+
+            for (int stackIndex = 0; stackIndex < stack.getCount(); stackIndex++) {
+                if (plateIndex >= startPlate && counted < limit) {
+
+                    if (stackIndex == 0) offset += 0.05f; // first plate of a stack adds base spacing
+                    if (stackIndex > 0) offset += 0.025f; // extra plates inside same stack add smaller one
+
+                    counted++;
+                }
+
+                plateIndex++;
+
+                if (counted >= limit) return offset;
+            }
+        }
+
+        return offset;
     }
 
     // ===============================================================
@@ -433,4 +497,16 @@ public class DinnerwareHelper {
     }
 
     // ===============================================================
+
+    public static float clamp(float val, float min, float max) {
+        return Math.max(min, Math.min(max, val));
+    }
+
+    public static double clamp(double val, double min, double max) {
+        return Math.max(min, Math.min(max, val));
+    }
+
+    public static int clamp(int val, int min, int max) {
+        return Math.max(min, Math.min(max, val));
+    }
 }

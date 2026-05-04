@@ -107,6 +107,16 @@ public class Config
             )
             .defineInRange("maxTrayTooltipLines", 5, 1, 64);
 
+    private static final ForgeConfigSpec.BooleanValue TRAY_DYNAMIC_PLATE_OFFSET = BUILDER
+            .comment(
+                    "\n" +
+                    "If enabled plates towers between ~5 and ~16 will render on the same height. \n" +
+                    "Otherwise, the rendering height will not be corrected. \n" +
+                    "Only affects first person perspective. \n" +
+                    "Default: true"
+            )
+            .define("trayDynamicPlateOffset", true);
+
 //    private static final ForgeConfigSpec.IntValue TRAY_GUI_X = BUILDER
 //            .comment(
 //                    "\n" +
@@ -134,6 +144,7 @@ public class Config
     public static boolean trayMergeMatchingItem;
     public static int maxTrayTooltipLines;
     public static Set<ResourceLocation> foodBlacklist;
+    public static boolean trayDynamicPlateOffset;
 //    public static int trayGuiX;
 //    public static int trayGuiY;
 
@@ -151,6 +162,7 @@ public class Config
         foodBlacklist = FOOD_BLACKLIST.get().stream()
                 .map(ResourceLocation::parse)
                 .collect(Collectors.toSet());
+        trayDynamicPlateOffset =  TRAY_DYNAMIC_PLATE_OFFSET.get();
 //        trayGuiX = TRAY_GUI_X.get();
 //        trayGuiY = TRAY_GUI_Y.get();
     }

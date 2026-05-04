@@ -81,11 +81,12 @@ public class DinnerwareBEWLR extends BlockEntityWithoutLevelRenderer {
     private void renderTray(ItemStack pStack, ItemDisplayContext pDisplayContext, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
-        // Tray itself is rendered via vanilla means
+        // Tray itself is rendered via mixin
 
         Direction facing = Direction.SOUTH;
         NonNullList<ItemStack> stacks = DinnerwareHelper.trayContentFromNBT(pStack.getTag());
 
-        DinnerwareHelper.positionAndRenderTrayItems(pPoseStack, pBuffer, itemRenderer, stacks, facing, null, pPackedLight);
+        DinnerwareHelper.positionAndRenderTrayItems(pPoseStack, pBuffer, itemRenderer,
+                stacks, facing, pDisplayContext, null, pPackedLight);
     }
 }
