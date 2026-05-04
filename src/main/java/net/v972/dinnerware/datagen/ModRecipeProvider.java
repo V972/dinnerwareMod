@@ -33,11 +33,13 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         for (Block block : ModBlocks.getKnownBlocks()) {
             PlateBlock plateBlock = (PlateBlock)block;
 
-            // doesn't work, need workaround or manual edit :/
             var craftingItems =
                     Arrays.stream(plateBlock.CRAFTING_MATERIAL.getItems())
                     .map(ItemStack::getItem)
                     .toArray(Item[]::new);
+            // fallback because tags are being pissy
+            if (craftingItems.length == 0 || Arrays.stream(craftingItems).allMatch(i -> i == Items.BARRIER)
+            ) craftingItems = new Item[] { plateBlock.asItem() };
 
             var recipe = ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS,
                 plateBlock, plateBlock.CRAFTING_AMOUNT);
@@ -55,7 +57,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
             recipe
                 .define('M', plateBlock.CRAFTING_MATERIAL)
                 .unlockedBy(
-                    "has_" + DinnerwareHelper.getBlockId(plateBlock) + "_ingredients",
+                    "has_" + DinnerwareHelper.getBlockId(plateBlock) + "_ingredients_or_self",
                     InventoryChangeTrigger.TriggerInstance.hasItems(craftingItems)
                 )
                 .save(pWriter);
@@ -86,7 +88,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                         DinnerwareMod.MOD_ID, DinnerwareHelper.getBlockId(plateBlock) + "_from_dyeing")
                 );
 
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, plateBlock, 1)
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, plateBlock, 1)
                 .requires(baseTerracottaPlate)
                 .requires(dyeItems)
                 .unlockedBy(
