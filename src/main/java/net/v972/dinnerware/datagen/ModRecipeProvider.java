@@ -5,6 +5,7 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -32,17 +33,32 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
         for (Block block : ModBlocks.getKnownBlocks()) {
             PlateBlock plateBlock = (PlateBlock)block;
 
-            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, plateBlock, plateBlock.CRAFTING_AMOUNT)
-                .pattern("M M")
-                .pattern(" M ")
+            var craftingItems =
+                    Arrays.stream(plateBlock.CRAFTING_MATERIAL.getItems())
+                    .map(ItemStack::getItem)
+                    .toArray(Item[]::new);
+            // fallback because tags are being pissy
+            if (craftingItems.length == 0 || Arrays.stream(craftingItems).allMatch(i -> i == Items.BARRIER)
+            ) craftingItems = new Item[] { plateBlock.asItem() };
+
+            var recipe = ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS,
+                plateBlock, plateBlock.CRAFTING_AMOUNT);
+
+            // special case for iron to NOT override vanilla bucket
+            if (plateBlock == ModBlocks.PLATE_BLOCK_IRON.get()) {
+                recipe
+                    .pattern("MMM");
+            } else {
+                recipe
+                    .pattern("M M")
+                    .pattern(" M ");
+            }
+
+            recipe
                 .define('M', plateBlock.CRAFTING_MATERIAL)
                 .unlockedBy(
-                    "has_" + DinnerwareHelper.getBlockId(plateBlock) + "_ingredients",
-                    InventoryChangeTrigger.TriggerInstance.hasItems(
-                        Arrays.stream(plateBlock.CRAFTING_MATERIAL.getItems())
-                            .map(itemStack -> itemStack.getItem())
-                            .toArray(Item[]::new)
-                    )
+                    "has_" + DinnerwareHelper.getBlockId(plateBlock) + "_ingredients_or_self",
+                    InventoryChangeTrigger.TriggerInstance.hasItems(craftingItems)
                 )
                 .save(pWriter);
         }
@@ -58,7 +74,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                         Arrays.stream(dyeItems.getItems()).map(ItemStack::getItem)
                     ).toArray(Item[]::new);
 
-            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, plateBlock, 8)
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, plateBlock, 8)
                 .pattern("BBB")
                 .pattern("BDB")
                 .pattern("BBB")
@@ -72,7 +88,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                         DinnerwareMod.MOD_ID, DinnerwareHelper.getBlockId(plateBlock) + "_from_dyeing")
                 );
 
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, plateBlock, 1)
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, plateBlock, 1)
                 .requires(baseTerracottaPlate)
                 .requires(dyeItems)
                 .unlockedBy(
@@ -84,12 +100,18 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 );
         }
 
-//        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.TRAY.get())
-//                .pattern("IPI")
-//                .define('P', Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE)
-//                .define('I', Tags.Items.INGOTS_IRON)
-//                .unlockedBy(getHasName(ModItems.TRAY.get()), has(ModItems.TRAY.get()))
-//                .save(pWriter);
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.TRAY_IRON.get())
+                .pattern("IPI")
+                .define('P', Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE)
+                .define('I', Tags.Items.INGOTS_IRON)
+                .unlockedBy("has_iron_ingot", has(Tags.Items.INGOTS_IRON))
+                .save(pWriter);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.TRAY_GOLD.get())
+                .pattern("IPI")
+                .define('P', Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE)
+                .define('I', Tags.Items.INGOTS_GOLD)
+                .unlockedBy("has_gold_ingot", has(Tags.Items.INGOTS_GOLD))
+                .save(pWriter);
     }
 }

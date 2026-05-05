@@ -14,6 +14,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -30,11 +31,14 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.v972.dinnerware.Config;
 import net.v972.dinnerware.DinnerwareMod;
 import net.v972.dinnerware.block.custom.PlateBlock;
+import net.v972.dinnerware.item.ModItems;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.OptionalInt;
+import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class DinnerwareHelper {
@@ -90,12 +94,32 @@ public class DinnerwareHelper {
 
     public static int getNonEmptySlotsCount(NonNullList<ItemStack> pList) {
         return (int)IntStream
-                .range(0, pList.size())
-                .filter(i -> !pList.get(i).isEmpty())
-                .count();
+            .range(0, pList.size())
+            .filter(i -> !pList.get(i).isEmpty())
+            .count();
     }
 
-    public static NonNullList<ItemStack> fromNBT(CompoundTag pTag) {
+    public static boolean hasPlateInside(ItemStack pStack) {
+        if (!pStack.is(ModTags.Items.PLATES)) return false;
+
+        CompoundTag nbt = pStack.getTag();
+        if (nbt == null || nbt.isEmpty()) return false;
+
+        nbt = nbt.getCompound("BlockEntityTag").getCompound("Inventory");
+
+        if (nbt.isEmpty() || nbt.contains("Items")) return false;
+
+        ListTag listTag = nbt.getList("Items", 10);
+        Set<Item> plateItemsSet =
+            listTag.stream()
+                .map(tag -> ItemStack.of((CompoundTag)tag).getItem())
+                .collect(Collectors.toSet());
+        Set<Item> allPlatesSet = ModItems.getPlateItemsSet();
+        plateItemsSet.retainAll(allPlatesSet);
+        return !plateItemsSet.isEmpty();
+    }
+
+    public static NonNullList<ItemStack> plateContentFromNBT(CompoundTag pTag) {
         NonNullList<ItemStack> result = NonNullList.withSize(3, ItemStack.EMPTY);
 
         if (pTag != null) {
@@ -123,38 +147,169 @@ public class DinnerwareHelper {
 
     // ===============================================================
 
-    public static ModelFile getPlateModelWithMaterial(PlateBlock plateBlock, BlockModelProvider models) {
-        ResourceLocation finalTexture = getTextureForPlate(plateBlock.MATERIAL);
+    public static NonNullList<ItemStack> trayContentFromNBT(CompoundTag pTag) {
+        if (pTag != null && pTag.contains("Items")) {
+            ListTag tagList = pTag.getList("Items", 10);
 
-        ResourceLocation parentModelLoc =
-                ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID,
-                        plateBlock.MATERIAL instanceof RotatedPillarBlock &&
-                        !plateBlock.MATERIAL.getDescriptionId().equals(Blocks.QUARTZ_BLOCK.getDescriptionId())
-                            ? "plate_block_column"
-                            : "plate_block"
-                );
+            int listSize = tagList.size();
+            if (listSize == 0) return NonNullList.withSize(64, ItemStack.EMPTY);
 
-        return models
-                .getBuilder(DinnerwareHelper.getBlockId(plateBlock))
-                .parent(models.getExistingFile(parentModelLoc))
-                .texture("0", finalTexture)
-                .texture("particle", finalTexture);
+            NonNullList<ItemStack> result = NonNullList.withSize(listSize, ItemStack.EMPTY);
+            for (int i = 0; i < tagList.size(); i++)
+            {
+                CompoundTag itemTags = tagList.getCompound(i);
+                result.set(listSize - (i + 1), ItemStack.of(itemTags));
+            }
+
+            return result;
+        }
+
+        return NonNullList.withSize(64, ItemStack.EMPTY);
     }
 
-    public static @NotNull ResourceLocation getTextureForPlate(Block pMaterial) {
+    // ===============================================================
+
+    public static ModelFile getPlateModelWithMaterial(PlateBlock plateBlock, BlockModelProvider models) {
+        ResourceLocation finalTexture = getTextureForModel(plateBlock.MATERIAL);
+
+        ResourceLocation parentModelLoc =
+            ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID,
+                plateBlock.MATERIAL instanceof RotatedPillarBlock &&
+                !plateBlock.MATERIAL.getDescriptionId().equals(Blocks.QUARTZ_BLOCK.getDescriptionId())
+                    ? "plate_block_column"
+                    : "plate_block"
+            );
+
+        return models
+            .getBuilder(DinnerwareHelper.getBlockId(plateBlock))
+            .parent(models.getExistingFile(parentModelLoc))
+            .texture("0", finalTexture)
+            .texture("particle", finalTexture);
+    }
+
+    public static @NotNull ResourceLocation getTextureForModel(Block pMaterial) {
         ResourceLocation materialBlockName = ForgeRegistries.BLOCKS.getKey(pMaterial);
 
         boolean isColumn =
             pMaterial.getDescriptionId().equals(Blocks.QUARTZ_BLOCK.getDescriptionId()) ||
             pMaterial instanceof RotatedPillarBlock;
 
-        ResourceLocation materialTexture = ResourceLocation.fromNamespaceAndPath(materialBlockName.getNamespace(),
-                ModelProvider.BLOCK_FOLDER + "/" + materialBlockName.getPath());
+        ResourceLocation materialTexture = ResourceLocation
+            .fromNamespaceAndPath(
+                materialBlockName.getNamespace(),
+            ModelProvider.BLOCK_FOLDER + "/" + materialBlockName.getPath());
         ResourceLocation materialTextureTop = materialTexture.withSuffix("_top");
 
         return isColumn
             ? materialTextureTop
             : materialTexture;
+    }
+
+    // ===============================================================
+
+    public static void positionAndRenderTrayItems(PoseStack pPoseStack, MultiBufferSource pBuffer, ItemRenderer pItemRenderer,
+                                                  NonNullList<ItemStack> pStacks, Direction pFacing, ItemDisplayContext pDisplayContext,
+                                                  @Nullable Level pLevel, int pLightLevel) {
+        // initial offset so that the plate doesn't float above the tray surface.
+        float currentY = -0.01f;
+
+        // The following comments are for others who want to understand wtf are all these calculations and what they do,
+        // including my future self.
+        //
+        // In first person the tray renders much closer to the head to be in the view so plates fill the view
+        // faster than they do in 3rd person. To counter this, for plate towers higher than roughly 5 plates
+        // we calculate a counter-offset to make top plates be roughly under the crosshair. That being said,
+        // plate tower that's so tall you can't see is still funny af, so we stop countering at 16,
+        // because at that point you need to get your screen filled to get the message, buddy.
+        if (Config.trayDynamicPlateOffset &&
+            (pDisplayContext == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND ||
+            pDisplayContext == ItemDisplayContext.FIRST_PERSON_LEFT_HAND)) {
+
+            int plateTowerCount = getPlateTowerCount(pStacks);
+            float estimatedPlateTowerY = getPlateTowerHeight(pStacks, 0, plateTowerCount);
+
+            // since plates can be mixed and matched in diff stacks, 5 plates can be as low as 0.14 and as high as 0.24,
+            // so 0.21 fees like a good middle ground that doesn't counter-offsets too early nor too late...I hope.
+            if (plateTowerCount > 5 && estimatedPlateTowerY > 0.21f) {
+
+                // we get how much plates we need to calculate counter-offset for,
+                // from 6th until 16th, so between 1 (6-5) and 11 (16-5) and subtract it.
+                int platesCountToOffset = Math.min(plateTowerCount - 5, 11);
+                float counterOffset = getPlateTowerHeight(pStacks, 5, platesCountToOffset);
+                currentY -= counterOffset;
+            }
+        }
+
+        for (int i = 0; i < pStacks.size(); i++) {
+            var stack = pStacks.get(i);
+            if (stack.isEmpty()) continue;
+
+            currentY += 0.05f;
+            for (int j = 0; j < stack.getCount(); j++) {
+                currentY += j == 0 ? 0 : 0.025f;
+
+                pPoseStack.pushPose();
+
+                // Move to the center
+                pPoseStack.translate(0.5f, currentY, 0.5f);
+
+                // Rotate based on facing
+                switch (pFacing) {
+                    case NORTH -> {} // pPoseStack.mulPose(Axis.YP.rotationDegrees(0));
+                    case WEST -> pPoseStack.mulPose(Axis.YP.rotationDegrees(90));
+                    case SOUTH -> pPoseStack.mulPose(Axis.YP.rotationDegrees(180));
+                    case EAST -> pPoseStack.mulPose(Axis.YN.rotationDegrees(90));
+                }
+
+                // Lie flat
+                pPoseStack.mulPose(Axis.XP.rotationDegrees(90));
+
+                // Scale down
+                pPoseStack.scale(0.45f, 0.45f, 0.45f);
+
+                pItemRenderer.renderStatic(stack,
+                        ItemDisplayContext.FIXED, pLightLevel, OverlayTexture.NO_OVERLAY,
+                        pPoseStack, pBuffer, pLevel, i);
+
+                pPoseStack.popPose();
+            }
+        }
+    }
+
+    private static int getPlateTowerCount(NonNullList<ItemStack> pStacks) {
+        int sum = 0;
+        for (ItemStack itemStack : pStacks) {
+            if (itemStack.isEmpty()) continue;
+            sum += itemStack.getCount();
+        }
+        return sum;
+    }
+
+    private static float getPlateTowerHeight(NonNullList<ItemStack> stacks, int startPlate, int limit) {
+        float offset = startPlate == 0 ? -0.01f : 0.0f;
+
+        int plateIndex = 0;     // actual plate number in tower
+        int counted = 0;        // how many plates processed
+
+        for (ItemStack stack : stacks) {
+            if (stack.isEmpty()) continue;
+
+            for (int stackIndex = 0; stackIndex < stack.getCount(); stackIndex++) {
+                if (plateIndex >= startPlate && counted < limit) {
+
+                    if (stackIndex == 0) offset += 0.05f; // first plate of a stack adds base spacing
+                    if (stackIndex > 0) offset += 0.025f; // extra plates inside same stack add smaller one
+
+                    counted++;
+                }
+
+                plateIndex++;
+
+                if (counted >= limit) return offset;
+            }
+        }
+
+        return offset;
     }
 
     // ===============================================================
@@ -342,4 +497,16 @@ public class DinnerwareHelper {
     }
 
     // ===============================================================
+
+    public static float clamp(float val, float min, float max) {
+        return Math.max(min, Math.min(max, val));
+    }
+
+    public static double clamp(double val, double min, double max) {
+        return Math.max(min, Math.min(max, val));
+    }
+
+    public static int clamp(int val, int min, int max) {
+        return Math.max(min, Math.min(max, val));
+    }
 }

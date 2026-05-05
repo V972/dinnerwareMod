@@ -2,13 +2,19 @@
   "tray_metal_load" : {
     "subtitles": "sounds.dinnerware.tray_metal_load",
     "sounds": [
-      "dinnerware:tray_metal_load"
+      {
+        "name": "dinnerware:tray/metal/load1",
+        "stream": false
+      }
     ]
   },
   "tray_metal_unload": {
     "subtitles": "sounds.dinnerware.tray_metal_unload",
     "sounds": [
-      "dinnerware:tray_metal_unload"
+      {
+        "name": "dinnerware:tray/metal/unload1",
+        "stream": false
+      }
     ]
   }
 }

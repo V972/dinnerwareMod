@@ -110,8 +110,8 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
             @Override
             public boolean isItemValid(int slot, @NotNull ItemStack stack) {
                 return Config.onlyFoodOnPlate
-                        ? canPlaceItemOnPlate(stack)
-                        : super.isItemValid(slot, stack);
+                    ? canPlaceItemOnPlate(stack)
+                    : super.isItemValid(slot, stack);
             }
 
             @Override
@@ -235,7 +235,7 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
         return this.getItem(true);
     }
 
-    private ItemStack getItem(boolean pWithContent) {
+    public ItemStack getItem(boolean pWithContent) {
         ItemStack itemstack = new ItemStack(getBlock());
         if (!this.isEmpty() && pWithContent) {
             CompoundTag compoundtag = new CompoundTag();
@@ -260,21 +260,30 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
         for(int i = 0; i < items.getSlots(); i++) {
             if (!items.getStackInSlot(i).isEmpty()) return false;
         }
-
         return true;
     }
 
     public int getNonEmptySlotsCount() {
         return (int)IntStream
-                .range(0, SLOT_COUNT)
-                .filter(i -> !items.getStackInSlot(i).isEmpty())
-                .count();
+            .range(0, SLOT_COUNT)
+            .filter(i -> !items.getStackInSlot(i).isEmpty())
+            .count();
     }
 
-    public OptionalInt getFirstNonEmptySlot() {
+    public OptionalInt getFirstNonEmptySlot(boolean validateBlacklist) {
         return IntStream.range(0, SLOT_COUNT)
-                .filter(i -> !items.getStackInSlot(i).isEmpty())
-                .findFirst();
+            .filter(i ->
+                !items.getStackInSlot(i).isEmpty() &&
+                (!validateBlacklist || !Config.isInFoodBlacklist(items.getStackInSlot(i)))
+            )
+            .findFirst();
+    }
+
+    public boolean hasPlateInside() {
+        for(int i = 0; i < items.getSlots(); i++) {
+            if (items.getStackInSlot(i).is(ModTags.Items.PLATES)) return true;
+        }
+        return false;
     }
 
     ///  Returns **a copy** of the item stacks in all slots
@@ -328,15 +337,21 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     private int advanceRoundRobinEatingSlot() {
         int newSlot = (roundRobinCurrentSlot + 1) % 3;
 
-        if (items.getStackInSlot(newSlot).isEmpty()) {
+        if (items.getStackInSlot(newSlot).isEmpty() ||
+            Config.isInFoodBlacklist(items.getStackInSlot(newSlot))
+        ) {
             newSlot = (newSlot + 1) % 3;
         } else return newSlot;
 
-        if (items.getStackInSlot(newSlot).isEmpty()) {
+        if (items.getStackInSlot(newSlot).isEmpty() ||
+            Config.isInFoodBlacklist(items.getStackInSlot(newSlot))
+        ) {
             newSlot = (newSlot + 1) % 3;
         } else return newSlot;
 
-        if (items.getStackInSlot(newSlot).isEmpty()) {
+        if (items.getStackInSlot(newSlot).isEmpty() ||
+            Config.isInFoodBlacklist(items.getStackInSlot(newSlot))
+        ) {
             return 0;
         }
 

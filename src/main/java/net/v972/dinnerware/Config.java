@@ -1,9 +1,18 @@
 package net.v972.dinnerware;
 
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = DinnerwareMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Config
@@ -32,16 +41,29 @@ public class Config
             .comment(
                     "\n" +
                     "If true, only food items & items inside \"dinnerware:additional_food\" tag are allowed to be placed on plates. \n" +
-                    "Otherwise, anything will fit. Rendering mileage may vary. \n" +
+                    "Otherwise, anything will fit. Your rendering mileage may vary. \n" +
                     "Default: true"
             )
             .define("onlyFoodOnPlate", true);
+
+    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> FOOD_BLACKLIST = BUILDER
+            .comment(
+                    "\n" +
+                    "A list of items to forbid from being eaten, even if they're part of \"dinnerware:additional_food\" tag. \n" +
+                    "Items listed here may still be placed on a plate. \n" +
+                    "Default: [\"artifacts:everlasting_beef\", \"artifacts:eternal_steak\"]"
+            )
+            .defineListAllowEmpty("foodBlacklist", List.of(
+                    "artifacts:everlasting_beef",
+                    "artifacts:eternal_steak"
+            ), Config::validateItemName);
 
     private static final ForgeConfigSpec.BooleanValue FRAGILE_PLATES = BUILDER
             .comment(
                     "\n" +
                     "If set to true, plates become fragile, i.e. break under various circumstances. \n" +
                     "Like walking on them. \n" +
+                    "Entities inside \"fragile_plate_ignored\" tag are ignored. \n" +
                     "Default: false"
             )
             .define("fragilePlates", false);
@@ -67,13 +89,50 @@ public class Config
             )
             .defineEnum("eatingMode", EATING_MODES.AIMING);
 
-//    public static final ForgeConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
-//            .comment("What you want the introduction message to be for the magic number")
-//            .define("magicNumberIntroduction", "The magic number is... ");
-//    // a list of strings that are treated as resource locations for items
-//    private static final ForgeConfigSpec.ConfigValue<List<? extends String>> ITEM_STRINGS = BUILDER
-//            .comment("A list of items to log on common setup.")
-//            .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), Config::validateItemName);
+    private static final ForgeConfigSpec.BooleanValue TRAY_MERGE_MATCHING_ITEM = BUILDER
+            .comment(
+                    "\n" +
+                    "If set to true, the tray will behave like a bundle: \n" +
+                    "If there's a matching plates stack, the picked up one will be merged into it. \n" +
+                    "Otherwise, the merging only happens for the topmost plate. \n" +
+                    "Default: false"
+            )
+            .define("trayMergeMatchingItem", false);
+
+    private static final ForgeConfigSpec.IntValue MAX_TRAY_TOOLTIP_LINES = BUILDER
+            .comment(
+                    "\n" +
+                    "Number of item stacks to show in tray's tooltip. \n" +
+                    "The rest will be omitted under \"and N more...\". \n" +
+                    "Default: 5"
+            )
+            .defineInRange("maxTrayTooltipLines", 5, 1, 64);
+
+    private static final ForgeConfigSpec.BooleanValue TRAY_DYNAMIC_PLATE_OFFSET = BUILDER
+            .comment(
+                    "\n" +
+                    "If enabled plates towers between ~5 and ~16 will render on the same height. \n" +
+                    "Otherwise, the rendering height will not be corrected. \n" +
+                    "Only affects first person perspective. \n" +
+                    "Default: true"
+            )
+            .define("trayDynamicPlateOffset", true);
+
+//    private static final ForgeConfigSpec.IntValue TRAY_GUI_X = BUILDER
+//            .comment(
+//                    "\n" +
+//                    "Horizontal offset of Tray Selection GUI \n" +
+//                    "Default: 0"
+//            )
+//            .defineInRange("trayGuiX", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+//
+//    private static final ForgeConfigSpec.IntValue TRAY_GUI_Y = BUILDER
+//            .comment(
+//                    "\n" +
+//                    "Vertical offset of Tray Selection GUI \n" +
+//                    "Default: 0"
+//            )
+//            .defineInRange("trayGuiY", 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
@@ -83,13 +142,12 @@ public class Config
     public static boolean fragilePlates;
     public static boolean rightToLeft;
     public static EATING_MODES eatingMode;
-
-//    public static String magicNumberIntroduction;
-//    public static Set<Item> items;
-//    private static boolean validateItemName(final Object obj)
-//    {
-//        return obj instanceof final String itemName && ForgeRegistries.ITEMS.containsKey(new ResourceLocation(itemName));
-//    }
+    public static boolean trayMergeMatchingItem;
+    public static int maxTrayTooltipLines;
+    public static Set<ResourceLocation> foodBlacklist;
+    public static boolean trayDynamicPlateOffset;
+//    public static int trayGuiX;
+//    public static int trayGuiY;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event)
@@ -100,13 +158,33 @@ public class Config
         fragilePlates = FRAGILE_PLATES.get();
         rightToLeft = RIGHT_TO_LEFT.get();
         eatingMode = EATING_MODE.get();
-
-//        magicNumberIntroduction = MAGIC_NUMBER_INTRODUCTION.get();
-//        // convert the list of strings into a set of items
-//        items = ITEM_STRINGS.get().stream()
-//                .map(itemName -> ForgeRegistries.ITEMS.getValue(new ResourceLocation(itemName)))
-//                .collect(Collectors.toSet());
+        trayMergeMatchingItem = TRAY_MERGE_MATCHING_ITEM.get();
+        maxTrayTooltipLines = MAX_TRAY_TOOLTIP_LINES.get();
+        foodBlacklist = FOOD_BLACKLIST.get().stream()
+                .map(ResourceLocation::parse)
+                .collect(Collectors.toSet());
+        trayDynamicPlateOffset =  TRAY_DYNAMIC_PLATE_OFFSET.get();
+//        trayGuiX = TRAY_GUI_X.get();
+//        trayGuiY = TRAY_GUI_Y.get();
     }
+
+    private static boolean validateItemName(final Object obj)
+    {
+        if (!(obj instanceof final String itemName)) return false;
+        var resLoc = ResourceLocation.parse(itemName);
+        return
+            !ModList.get().isLoaded(resLoc.getNamespace()) ||
+            ForgeRegistries.ITEMS.containsKey(resLoc);
+    }
+
+    public static boolean isInFoodBlacklist(final ItemStack stack) {
+        return isInFoodBlacklist(stack.getItem());
+    }
+
+    public static boolean isInFoodBlacklist(final Item item) {
+        return foodBlacklist.contains(ForgeRegistries.ITEMS.getKey(item));
+    }
+
 
     public enum EATING_MODES {
         QUEUE,

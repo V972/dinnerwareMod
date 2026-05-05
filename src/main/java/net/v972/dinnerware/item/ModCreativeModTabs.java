@@ -10,6 +10,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import net.v972.dinnerware.block.ModBlocks;
+import net.v972.dinnerware.item.custom.TrayItem;
 
 public class ModCreativeModTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
@@ -24,7 +25,10 @@ public class ModCreativeModTabs {
                     pOutput.accept(block);
                 }
 
-                //pOutput.accept(ModItems.TRAY.get());
+                for (TrayItem item : ModItems.getTrayItemsArray()) {
+                    pOutput.accept(item);
+                }
+
             })
             .build());
 
