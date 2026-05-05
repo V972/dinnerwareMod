@@ -2,7 +2,6 @@ package net.v972.dinnerware;
 
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -16,6 +15,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.block.entity.ModBlockEntities;
+import net.v972.dinnerware.config.ClientConfig;
+import net.v972.dinnerware.config.CommonConfig;
 import net.v972.dinnerware.item.ModCreativeModTabs;
 import net.v972.dinnerware.item.ModItems;
 import net.v972.dinnerware.screen.ModMenuTypes;
@@ -47,7 +48,8 @@ public class DinnerwareMod
 
         modEventBus.addListener(this::addCreative);
 
-        context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        context.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
+        context.registerConfig(ModConfig.Type.COMMON, CommonConfig.SPEC);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)

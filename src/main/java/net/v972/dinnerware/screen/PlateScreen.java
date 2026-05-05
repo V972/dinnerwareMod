@@ -7,8 +7,8 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.v972.dinnerware.Config;
 import net.v972.dinnerware.DinnerwareMod;
+import net.v972.dinnerware.config.CommonConfig;
 
 public class PlateScreen extends AbstractContainerScreen<PlateMenu> {
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(
@@ -37,15 +37,15 @@ public class PlateScreen extends AbstractContainerScreen<PlateMenu> {
         pGuiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
 
         // slot selection
-        if (Config.eatingMode == Config.EATING_MODES.ROUND_ROBIN) {
+        if (CommonConfig.EATING_MODE.get() == CommonConfig.EATING_MODES.ROUND_ROBIN) {
             int selectedSlot = menu.getRoundRobinSelectedSlot();
             if (selectedSlot > -1) {
                 ResourceLocation widgets = ResourceLocation.fromNamespaceAndPath(
                         "minecraft", "textures/gui/widgets.png");
 
                 int xOffset = switch (selectedSlot) {
-                  case 0 -> Config.rightToLeft ? 96 : 56;
-                  case 1 -> Config.rightToLeft ? 56 : 96;
+                  case 0 -> CommonConfig.RIGHT_TO_LEFT.get() ? 96 : 56;
+                  case 1 -> CommonConfig.RIGHT_TO_LEFT.get() ? 56 : 96;
                   case 2 -> 76;
                   default -> throw new IllegalStateException("Unexpected value: " + selectedSlot);
                 };

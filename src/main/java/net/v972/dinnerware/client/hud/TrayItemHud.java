@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.v972.dinnerware.Config;
+import net.v972.dinnerware.config.ClientConfig;
 import net.v972.dinnerware.DinnerwareMod;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import net.v972.dinnerware.item.custom.TrayItem;
@@ -144,8 +144,8 @@ public class TrayItemHud implements IGuiOverlay {
         int px = uWidth / 2;
         int py = screenHeight / 2 - 40;
 
-        //px += Config.trayGuiX;
-        //py += Config.trayGuiY;
+//        px += ClientConfig.TRAY_GUI_X.get();
+//        py += ClientConfig.TRAY_GUI_Y.get();
 
         //graphics.blit(TEXTURE, centerX - px, py, 0, 0, uWidth - 1, 40);
         //graphics.blit(TEXTURE, centerX + px - 1, py, 0, 0, 1, 40);

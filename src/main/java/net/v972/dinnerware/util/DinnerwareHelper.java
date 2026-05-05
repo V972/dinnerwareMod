@@ -28,9 +28,10 @@ import net.minecraftforge.client.model.generators.BlockModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.ModelProvider;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.v972.dinnerware.Config;
 import net.v972.dinnerware.DinnerwareMod;
 import net.v972.dinnerware.block.custom.PlateBlock;
+import net.v972.dinnerware.config.ClientConfig;
+import net.v972.dinnerware.config.CommonConfig;
 import net.v972.dinnerware.item.ModItems;
 import org.jetbrains.annotations.NotNull;
 
@@ -221,7 +222,7 @@ public class DinnerwareHelper {
         // we calculate a counter-offset to make top plates be roughly under the crosshair. That being said,
         // plate tower that's so tall you can't see is still funny af, so we stop countering at 16,
         // because at that point you need to get your screen filled to get the message, buddy.
-        if (Config.trayDynamicPlateOffset &&
+        if (ClientConfig.TRAY_DYNAMIC_PLATE_OFFSET.get() && //trayDynamicPlateOffset &&
             (pDisplayContext == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND ||
             pDisplayContext == ItemDisplayContext.FIRST_PERSON_LEFT_HAND)) {
 
@@ -360,7 +361,7 @@ public class DinnerwareHelper {
                     (PoseStack p) -> {}, slot
             );
         } else {
-            boolean rtl = Config.rightToLeft;
+            boolean rtl = CommonConfig.RIGHT_TO_LEFT.get();
 
             ItemStack mainDish = pStacks.get(0);
             renderItem(
@@ -383,7 +384,7 @@ public class DinnerwareHelper {
     private static void positionThreeItems(PoseStack pPoseStack, ItemRenderer pItemRenderer, MultiBufferSource pBuffer,
                                     NonNullList<ItemStack> pStacks, Direction facing, @Nullable Level pLevel, int pLightLevel) {
 
-        boolean rtl = Config.rightToLeft;
+        boolean rtl = CommonConfig.RIGHT_TO_LEFT.get();
 
         for (int pSlot = 0; pSlot < pStacks.size(); pSlot++) {
             float yLevel = switch (pSlot) {

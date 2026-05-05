@@ -34,13 +34,14 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.v972.dinnerware.Config;
 import net.v972.dinnerware.DinnerwareMod;
 import net.v972.dinnerware.advancement.ModCriterionTriggers;
 import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 //import net.v972.dinnerware.client.hud.TrayItemHud;
+import net.v972.dinnerware.config.ClientConfig;
+import net.v972.dinnerware.config.CommonConfig;
 import net.v972.dinnerware.item.ModItems;
 import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
@@ -302,7 +303,7 @@ public class TrayItem extends Item {
             ListTag listTag = compoundtag.getList(TAG_ITEMS, 10);
             int parsedItems;
             int itemsSize = listTag.size();
-            int maxLines = Config.maxTrayTooltipLines;
+            int maxLines = ClientConfig.MAX_TRAY_TOOLTIP_LINES.get();
 
             for(parsedItems = 0; parsedItems < Math.min(itemsSize, maxLines); parsedItems++) {
                 CompoundTag itemTag = listTag.getCompound(parsedItems);
@@ -366,7 +367,7 @@ public class TrayItem extends Item {
                 ListTag listTag = compoundtag.getList(TAG_ITEMS, 10);
                 Optional<CompoundTag> matchingItemOptional = getMatchingItem(pInsertedStack, listTag);
                 if (matchingItemOptional.isPresent() && (
-                    Config.trayMergeMatchingItem ||
+                    CommonConfig.TRAY_MERGE_MATCHING_ITEM.get() ||
                     listTag.indexOf(matchingItemOptional.get()) == 0
                 )) {
                     CompoundTag matchingItemTag = matchingItemOptional.get();

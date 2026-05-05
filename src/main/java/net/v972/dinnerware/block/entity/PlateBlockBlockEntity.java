@@ -30,7 +30,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import net.v972.dinnerware.Config;
+import net.v972.dinnerware.config.CommonConfig;
 import net.v972.dinnerware.screen.PlateMenu;
 import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
@@ -109,14 +109,14 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
 
             @Override
             public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-                return Config.onlyFoodOnPlate
+                return CommonConfig.ONLY_FOOD_ON_PLATE.get()
                     ? canPlaceItemOnPlate(stack)
                     : super.isItemValid(slot, stack);
             }
 
             @Override
             public int getSlotLimit(int slot) {
-                return Config.maxPlateStackSize;
+                return CommonConfig.MAX_PLATE_STACK_SIZE.get();
             }
         };
     }
@@ -274,7 +274,7 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
         return IntStream.range(0, SLOT_COUNT)
             .filter(i ->
                 !items.getStackInSlot(i).isEmpty() &&
-                (!validateBlacklist || !Config.isInFoodBlacklist(items.getStackInSlot(i)))
+                (!validateBlacklist || !CommonConfig.isInFoodBlacklist(items.getStackInSlot(i)))
             )
             .findFirst();
     }
@@ -323,7 +323,7 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
 
     private boolean canPlaceItemOnPlate(ItemStack pStack) {
         return
-            !Config.onlyFoodOnPlate ||
+            !CommonConfig.ONLY_FOOD_ON_PLATE.get() ||
             (
                 pStack.isEdible() &&
                 !(pStack.getItem() instanceof BowlFoodItem) &&
@@ -338,19 +338,19 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
         int newSlot = (roundRobinCurrentSlot + 1) % 3;
 
         if (items.getStackInSlot(newSlot).isEmpty() ||
-            Config.isInFoodBlacklist(items.getStackInSlot(newSlot))
+            CommonConfig.isInFoodBlacklist(items.getStackInSlot(newSlot))
         ) {
             newSlot = (newSlot + 1) % 3;
         } else return newSlot;
 
         if (items.getStackInSlot(newSlot).isEmpty() ||
-            Config.isInFoodBlacklist(items.getStackInSlot(newSlot))
+            CommonConfig.isInFoodBlacklist(items.getStackInSlot(newSlot))
         ) {
             newSlot = (newSlot + 1) % 3;
         } else return newSlot;
 
         if (items.getStackInSlot(newSlot).isEmpty() ||
-            Config.isInFoodBlacklist(items.getStackInSlot(newSlot))
+            CommonConfig.isInFoodBlacklist(items.getStackInSlot(newSlot))
         ) {
             return 0;
         }
@@ -390,7 +390,7 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
 
     public void eatFromSlot(int pSlot) {
         this.extractItem(pSlot);
-        if (Config.eatingMode == Config.EATING_MODES.ROUND_ROBIN)
+        if (CommonConfig.EATING_MODE.get() == CommonConfig.EATING_MODES.ROUND_ROBIN)
             eatingAttemptClick();
     }
 

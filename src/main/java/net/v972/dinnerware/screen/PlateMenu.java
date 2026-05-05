@@ -11,10 +11,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.SlotItemHandler;
-import net.v972.dinnerware.Config;
 import net.v972.dinnerware.DinnerwareMod;
 import net.v972.dinnerware.advancement.ModCriterionTriggers;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
+import net.v972.dinnerware.config.CommonConfig;
 import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +43,7 @@ public class PlateMenu extends AbstractContainerMenu {
         this.addPlayerHotbar(inv);
 
         this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iItemHandler -> {
-            boolean rightSlotFirst = Config.rightToLeft;
+            boolean rightSlotFirst = CommonConfig.RIGHT_TO_LEFT.get();
             // | right -> left | left -> right |
             // |       2       |       2       |
             // |     1   0     |     0   1     |

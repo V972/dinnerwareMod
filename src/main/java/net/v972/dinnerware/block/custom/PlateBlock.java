@@ -41,10 +41,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
-import net.v972.dinnerware.Config;
 import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.block.entity.ModBlockEntities;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
+import net.v972.dinnerware.config.CommonConfig;
 import net.v972.dinnerware.item.ModItems;
 import net.v972.dinnerware.item.custom.TrayItem;
 import net.v972.dinnerware.util.DinnerwareHelper;
@@ -215,7 +215,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
 
     @Override
     public void entityInside(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, @NotNull Entity pEntity) {
-        if (pLevel.isClientSide || !Config.fragilePlates) return;
+        if (pLevel.isClientSide || !CommonConfig.FRAGILE_PLATES.get()) return;
         if (pEntity.getType().is(ModTags.Entities.FRAGILE_PLATE_IGNORED)) return;
 
         AABB plateBox = pState.getShape(pLevel, pPos).bounds().move(pPos);
@@ -335,7 +335,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     }
 
     private InteractionResult attemptEat(Level pLevel, BlockPos pPos, BlockHitResult pHit, PlateBlockBlockEntity pEntity, Player pPlayer) {
-        int slotToEat = switch (Config.eatingMode) {
+        int slotToEat = switch (CommonConfig.EATING_MODE.get()) {
             case QUEUE -> getSlotToEatQueue(pEntity);
             case ROUND_ROBIN -> getSlotToEatRoundRobin(pEntity);
             case AIMING -> getSlotToEatAim(pHit, pEntity, pLevel.getBlockState(pPos)
@@ -360,10 +360,10 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         boolean isFoodAndCanAlwaysBeEaten = isFood && Objects.requireNonNull(itemStack.getFoodProperties(pPlayer)).canAlwaysEat();
 
         if (isFoodAndCanAlwaysBeEaten ||
-                (pPlayer.canEat(Config.allowOverEating) && isFood)
+                (pPlayer.canEat(CommonConfig.ALLOW_OVEREATING.get()) && isFood)
         ) {
 
-            if (Config.isInFoodBlacklist(itemStack.getItem())) {
+            if (CommonConfig.isInFoodBlacklist(itemStack.getItem())) {
                 pPlayer.displayClientMessage(
                     Component.translatable("block.dinnerware.plate.food_blacklist_message")
                         .withStyle(ChatFormatting.RED), true);
@@ -396,7 +396,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
             return InteractionResult.SUCCESS;
         }
 
-        if (Config.eatingMode == Config.EATING_MODES.ROUND_ROBIN)
+        if (CommonConfig.EATING_MODE.get() == CommonConfig.EATING_MODES.ROUND_ROBIN)
             pEntity.eatingAttemptClick();
 
         return InteractionResult.PASS;
@@ -447,7 +447,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
                     OptionalInt slot = pEntity.getFirstNonEmptySlot(false);
                     return slot.isPresent() ? slot.getAsInt() : -1;
                 case 2:
-                    if (Config.rightToLeft) {
+                    if (CommonConfig.RIGHT_TO_LEFT.get()) {
                         // main dish slot
                         if (isInRange(hor, 0.461, 0.74) && isInRange(vert, 0.32, 0.65)) return 0;
                         // side dish slot
@@ -460,7 +460,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
                     }
                     return -1;
                 case 3:
-                    if (Config.rightToLeft) {
+                    if (CommonConfig.RIGHT_TO_LEFT.get()) {
                         // main dish slot
                         if (isInRange(hor, 0.461, 0.74) && isInRange(vert, 0.24, 0.57)) return 0;
                         // side dish slot
