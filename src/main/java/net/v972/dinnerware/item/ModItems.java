@@ -56,23 +56,23 @@ public class ModItems {
             () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_PURPUR.get(), new Item.Properties()));
 
     public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_OAK = ITEMS.register("oak_plate",
-            () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_OAK.get(), new Item.Properties()));
+            () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_OAK.get(), new Item.Properties(), 150));
     public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_BIRCH = ITEMS.register("birch_plate",
-            () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_BIRCH.get(), new Item.Properties()));
+            () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_BIRCH.get(), new Item.Properties(), 150));
     public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_SPRUCE = ITEMS.register("spruce_plate",
-            () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_SPRUCE.get(), new Item.Properties()));
+            () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_SPRUCE.get(), new Item.Properties(), 150));
     public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_JUNGLE = ITEMS.register("jungle_plate",
-            () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_JUNGLE.get(), new Item.Properties()));
+            () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_JUNGLE.get(), new Item.Properties(), 150));
     public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_ACACIA = ITEMS.register("acacia_plate",
-            () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_ACACIA.get(), new Item.Properties()));
+            () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_ACACIA.get(), new Item.Properties(), 150));
     public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_DARK_OAK = ITEMS.register("dark_oak_plate",
-            () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_DARK_OAK.get(), new Item.Properties()));
+            () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_DARK_OAK.get(), new Item.Properties(), 150));
     public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_CHERRY = ITEMS.register("cherry_plate",
-            () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_CHERRY.get(), new Item.Properties()));
+            () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_CHERRY.get(), new Item.Properties(), 150));
     public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_MANGROVE = ITEMS.register("mangrove_plate",
-            () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_MANGROVE.get(), new Item.Properties()));
+            () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_MANGROVE.get(), new Item.Properties(), 150));
     public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_BAMBOO = ITEMS.register("bamboo_plate",
-            () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_BAMBOO.get(), new Item.Properties()));
+            () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_BAMBOO.get(), new Item.Properties(), 150));
 
     public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_CRIMSON = ITEMS.register("crimson_plate",
             () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_CRIMSON.get(), new Item.Properties()));
