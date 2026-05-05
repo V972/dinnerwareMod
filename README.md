@@ -145,20 +145,30 @@ Note that adding items to this tag does not guarantee they'll be able to be eate
 
 Forge 47.4.16+ for Minecraft 1.20.1.  
 
-When the mod is feature-complete I will be looking into forward porting it to 1.21.1 (or maybe 1.21.4?).  
+When the mod is feature-complete I will be looking into forward porting it to 1.21.1.  
 As well as back-porting to Forge 1.18.2. Yes, really.  
 
-Fabric port is father to the back, but not out of the picture. We'll see.
+Fabric port is looming on the horizon...
 
-## Potential Plans  
+## Potential Plans and Known Issues
 
-<details><summary>Click to expand</summary>  
+<details><summary>Plans</summary>  
 
 Any of these may or may not be implemented, depends.
-- Modded materials for plates;
-- Different sizes/types of plates;
-- ~~Rendering food when in item form in world/inventory;~~
-- ~~Transporting plates with food inside without breaking (maybe on a food tray?).~~
+- Modded materials for plates;  
+- Different sizes/types of plates;  
+- Provide robust [preferably user-driven] system for handling irregular modded food items;  
+- HUD and ability for switching top plate stack in the tray a-la quiver from Supplementaries.
+Fun, but unlikely stuff:
+- chance for plate to fall off on tall towers
+- burnable item burn with flames
+
+</details>  
+
+<details><summary>Issues</summary>  
+
+- "The one tray" advancement doesn't work from GUI, only from in-world interactions;
+- Tag-based crafting ingredients are not properly listed in recipe unlock criteria. This is irrelevant to 90% of the players, but there's still that 10%, so I will try to do something about it.  
 
 </details>  
 
@@ -168,5 +178,5 @@ Any of these may or may not be implemented, depends.
 * Queez_ - Motivation, assets and creative input;
 * [Kaupenjoe](https://www.youtube.com/playlist?list=PLKGarocXCE1H9Y21-pxjt5Pt8bW14twa-) - Great free modding tutorial series;
 * [andrew0030](github.com/andrew0030) - Custom BEWLR system and advice;
-* diesieben07 - That one method for shift-right-clicking an item in the GUI;
+* diesieben07 - That one method for shift-clicking an item in the GUI;
 * Early playtesters (AmalgaMaid, EtheryalFalcon and others) - Feedback and bug reports;
