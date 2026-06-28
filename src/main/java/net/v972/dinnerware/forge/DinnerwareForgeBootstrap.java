@@ -2,10 +2,8 @@ package net.v972.dinnerware.forge;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.v972.dinnerware.config.ClientConfig;
-import net.v972.dinnerware.config.CommonConfig;
+import net.v972.dinnerware.forge.config.DinnerwareForgeConfigs;
 import net.v972.dinnerware.forge.registry.DinnerwareForgeRegistries;
 
 public final class DinnerwareForgeBootstrap {
@@ -21,8 +19,7 @@ public final class DinnerwareForgeBootstrap {
     }
 
     public static void registerConfigs(FMLJavaModLoadingContext context) {
-        context.registerConfig(ModConfig.Type.COMMON, CommonConfig.SPEC);
-        context.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
+        DinnerwareForgeConfigs.register(context);
     }
 
     public static void registerForgeEventHandlers() {
