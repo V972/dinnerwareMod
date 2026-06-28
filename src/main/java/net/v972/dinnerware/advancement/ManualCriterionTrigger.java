@@ -5,11 +5,11 @@ import com.google.gson.JsonPrimitive;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.v972.dinnerware.DinnerwareMod;
+import net.v972.dinnerware.DinnerwareCommon;
 import org.jetbrains.annotations.NotNull;
 
 public class ManualCriterionTrigger extends SimpleCriterionTrigger<ManualCriterionTrigger.TriggerInstance> {
-    static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, "manual_trigger");
+    static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, "manual_trigger");
 
     @Override
     public ResourceLocation getId() {  return ID; }

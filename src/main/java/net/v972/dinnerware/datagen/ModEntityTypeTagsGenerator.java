@@ -5,7 +5,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import net.v972.dinnerware.DinnerwareMod;
+import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.util.ModTags;
 
 import java.util.concurrent.CompletableFuture;
@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
 public class ModEntityTypeTagsGenerator extends EntityTypeTagsProvider {
     public ModEntityTypeTagsGenerator(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
                                       ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, DinnerwareMod.MOD_ID, existingFileHelper);
+        super(output, lookupProvider, DinnerwareCommon.MOD_ID, existingFileHelper);
     }
 
     @Override

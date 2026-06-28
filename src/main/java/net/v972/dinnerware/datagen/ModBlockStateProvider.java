@@ -2,7 +2,7 @@ package net.v972.dinnerware.datagen;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ModelFile;
-import net.v972.dinnerware.DinnerwareMod;
+import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.block.ModBlocks;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
@@ -16,7 +16,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 
 public class ModBlockStateProvider extends BlockStateProvider {
     public ModBlockStateProvider(PackOutput output, ExistingFileHelper exFileHelper) {
-        super(output, DinnerwareMod.MOD_ID, exFileHelper);
+        super(output, DinnerwareCommon.MOD_ID, exFileHelper);
     }
 
     @Override

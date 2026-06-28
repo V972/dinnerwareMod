@@ -8,11 +8,11 @@ import net.minecraftforge.network.IContainerFactory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import net.v972.dinnerware.DinnerwareMod;
+import net.v972.dinnerware.DinnerwareCommon;
 
 public class ModMenuTypes {
     public static final DeferredRegister<MenuType<?>> MENUS =
-            DeferredRegister.create(ForgeRegistries.MENU_TYPES, DinnerwareMod.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.MENU_TYPES, DinnerwareCommon.MOD_ID);
 
     public static final RegistryObject<MenuType<PlateMenu>> PLATE_MENU =
             registerMenuType("plate_menu", PlateMenu::new);

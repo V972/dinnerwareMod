@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.ForgeAdvancementProvider;
-import net.v972.dinnerware.DinnerwareMod;
+import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.advancement.ManualCriterionTrigger;
 import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.item.ModItems;
@@ -43,7 +43,7 @@ public class ModAdvancementProvider extends ForgeAdvancementProvider {
                 .addCriterion("for_free",
                     InventoryChangeTrigger.TriggerInstance.hasItems(new ItemLike[] {})
                 )
-                .save(saver, ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, "root"), existingFileHelper);
+                .save(saver, ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, "root"), existingFileHelper);
 
             Advancement finestChina = Advancement.Builder.advancement()
                 .parent(root)
@@ -58,7 +58,7 @@ public class ModAdvancementProvider extends ForgeAdvancementProvider {
                             ModItems.PLATE_ITEM_DIAMOND.get()
                     )
                 )
-                .save(saver, ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, "get_diamond_plate"), existingFileHelper);
+                .save(saver, ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, "get_diamond_plate"), existingFileHelper);
 
             ItemStack inceptionPlateStack = new ItemStack(ModItems.PLATE_ITEM_IRON.get());
             CompoundTag tag = null;
@@ -78,10 +78,10 @@ public class ModAdvancementProvider extends ForgeAdvancementProvider {
                 )
                 .addCriterion("put_plate_in_plate",
                     ManualCriterionTrigger.TriggerInstance.byId(
-                        ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, "put_plate_in_plate")
+                        ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, "put_plate_in_plate")
                     )
                 )
-                .save(saver, ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, "put_plate_in_plate"), existingFileHelper);
+                .save(saver, ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, "put_plate_in_plate"), existingFileHelper);
 
             Advancement oneTrayToRuleThemAll = Advancement.Builder.advancement()
                 .parent(root)
@@ -93,10 +93,10 @@ public class ModAdvancementProvider extends ForgeAdvancementProvider {
                 )
                 .addCriterion("one_tray_to_hold_them_all",
                     ManualCriterionTrigger.TriggerInstance.byId(
-                        ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, "one_tray_to_hold_them_all")
+                        ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, "one_tray_to_hold_them_all")
                     )
                 )
-                .save(saver, ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, "get_tray_with_all_regular_plates"), existingFileHelper);
+                .save(saver, ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, "get_tray_with_all_regular_plates"), existingFileHelper);
         }
     }
 }

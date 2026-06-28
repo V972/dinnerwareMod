@@ -34,7 +34,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.v972.dinnerware.DinnerwareMod;
+import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.advancement.ModCriterionTriggers;
 import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.block.custom.PlateBlock;
@@ -528,7 +528,7 @@ public class TrayItem extends Item {
     public static void checkAndAwardTheOneTrayAdvancement(ItemStack pStack, Player pPlayer) {
         if ((pPlayer instanceof ServerPlayer pServerPlayer) && TrayItem.hasAllItems(pStack)) {
             ModCriterionTriggers.MANUAL_TRIGGER.trigger(pServerPlayer,
-                ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, "one_tray_to_hold_them_all"));
+                ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, "one_tray_to_hold_them_all"));
         }
     }
 

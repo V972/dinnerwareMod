@@ -9,7 +9,7 @@ import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.RegistryObject;
-import net.v972.dinnerware.DinnerwareMod;
+import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.item.ModItems;
 import net.v972.dinnerware.item.custom.PlateBlockBlockItem;
@@ -18,7 +18,7 @@ import net.v972.dinnerware.util.DinnerwareHelper;
 
 public class ModItemModelProvider extends ItemModelProvider {
     public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
-        super(output, DinnerwareMod.MOD_ID, existingFileHelper);
+        super(output, DinnerwareCommon.MOD_ID, existingFileHelper);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class ModItemModelProvider extends ItemModelProvider {
             ResourceLocation finalTexture = DinnerwareHelper.getTextureForModel(material);
             getBuilder(item.toString())
                 .parent(new ModelFile.ExistingModelFile(
-                    ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, ITEM_FOLDER + "/plate"),
+                    ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, ITEM_FOLDER + "/plate"),
                     existingFileHelper
                 )
             ).texture("particle", finalTexture);
@@ -38,7 +38,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         for (TrayItem item : ModItems.getTrayItemsArray()) {
             ResourceLocation finalTexture = DinnerwareHelper.getTextureForModel(item.MATERIAL);
-            ResourceLocation parentModelLoc = ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, ITEM_FOLDER + "/tray");
+            ResourceLocation parentModelLoc = ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, ITEM_FOLDER + "/tray");
             getBuilder(item.toString())
                 .parent(new ModelFile.ExistingModelFile(parentModelLoc, existingFileHelper))
                 .texture("0", finalTexture)
@@ -49,6 +49,6 @@ public class ModItemModelProvider extends ItemModelProvider {
     private ItemModelBuilder simpleItem(RegistryObject<Item> item) {
         return withExistingParent(item.getId().getPath(),
                 ResourceLocation.fromNamespaceAndPath("minecraft","item/generated")).texture("layer0",
-                ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID,"item/" + item.getId().getPath()));
+                ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID,"item/" + item.getId().getPath()));
     }
 }

@@ -1,7 +1,7 @@
 package net.v972.dinnerware.item;
 
 import net.minecraft.world.level.block.Block;
-import net.v972.dinnerware.DinnerwareMod;
+import net.v972.dinnerware.DinnerwareCommon;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -14,7 +14,7 @@ import net.v972.dinnerware.item.custom.TrayItem;
 
 public class ModCreativeModTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
-            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, DinnerwareMod.MOD_ID);
+            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, DinnerwareCommon.MOD_ID);
 
     public static final RegistryObject<CreativeModeTab> DINNERWARE_TAB = CREATIVE_MODE_TABS.register("dinnerware_tab",
         () -> CreativeModeTab.builder()

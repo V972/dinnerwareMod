@@ -10,7 +10,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
-import net.v972.dinnerware.DinnerwareMod;
+import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.item.ModItems;
@@ -85,7 +85,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                         InventoryChangeTrigger.TriggerInstance.hasItems(unlockItems)
                 )
                 .save(pWriter, ResourceLocation.fromNamespaceAndPath(
-                        DinnerwareMod.MOD_ID, DinnerwareHelper.getBlockId(plateBlock) + "_from_dyeing")
+                        DinnerwareCommon.MOD_ID, DinnerwareHelper.getBlockId(plateBlock) + "_from_dyeing")
                 );
 
             ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, plateBlock, 1)
@@ -96,7 +96,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                         InventoryChangeTrigger.TriggerInstance.hasItems(unlockItems)
                 )
                 .save(pWriter, ResourceLocation.fromNamespaceAndPath(
-                        DinnerwareMod.MOD_ID, DinnerwareHelper.getBlockId(plateBlock) + "_from_dyeing_single")
+                        DinnerwareCommon.MOD_ID, DinnerwareHelper.getBlockId(plateBlock) + "_from_dyeing_single")
                 );
         }
 

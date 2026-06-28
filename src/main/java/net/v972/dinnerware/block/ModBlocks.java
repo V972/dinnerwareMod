@@ -14,7 +14,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import net.v972.dinnerware.DinnerwareMod;
+import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.item.ModItems;
 
@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS =
-            DeferredRegister.create(ForgeRegistries.BLOCKS, DinnerwareMod.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.BLOCKS, DinnerwareCommon.MOD_ID);
 
     // ========================================
 

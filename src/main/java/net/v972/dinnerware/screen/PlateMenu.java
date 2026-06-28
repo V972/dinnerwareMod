@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.SlotItemHandler;
-import net.v972.dinnerware.DinnerwareMod;
+import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.advancement.ModCriterionTriggers;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import net.v972.dinnerware.config.CommonConfig;
@@ -169,7 +169,7 @@ public class PlateMenu extends AbstractContainerMenu {
 
     private void checkIfPlateAndAwardInception(ItemStack stack, Player player) {
         if (stack.is(ModTags.Items.PLATES) && (player instanceof ServerPlayer serverPlayer)) {
-            ModCriterionTriggers.MANUAL_TRIGGER.trigger(serverPlayer, ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, "put_plate_in_plate"));
+            ModCriterionTriggers.MANUAL_TRIGGER.trigger(serverPlayer, ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, "put_plate_in_plate"));
         }
     }
 

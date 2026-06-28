@@ -2,7 +2,7 @@ package net.v972.dinnerware.util;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
-import net.v972.dinnerware.DinnerwareMod;
+import net.v972.dinnerware.DinnerwareCommon;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
@@ -16,7 +16,7 @@ public class ModTags {
 
 
         private static TagKey<Block> tag(String name) {
-            return BlockTags.create(ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, name));
+            return BlockTags.create(ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, name));
         }
     }
 
@@ -31,7 +31,7 @@ public class ModTags {
         public static final TagKey<Item> TRAYS = tag("trays");
 
         private static TagKey<Item> tag(String name) {
-            return ItemTags.create(ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, name));
+            return ItemTags.create(ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, name));
         }
     }
 
@@ -40,7 +40,7 @@ public class ModTags {
 
         private static TagKey<EntityType<?>> tag(String name) {
             return TagKey.create(Registries.ENTITY_TYPE,
-                ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, name)
+                ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, name)
             );
         }
     }

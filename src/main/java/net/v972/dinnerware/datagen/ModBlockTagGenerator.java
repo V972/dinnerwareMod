@@ -1,6 +1,6 @@
 package net.v972.dinnerware.datagen;
 
-import net.v972.dinnerware.DinnerwareMod;
+import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.util.ModTags;
 import net.minecraft.core.HolderLookup;
@@ -15,7 +15,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class ModBlockTagGenerator extends BlockTagsProvider {
     public ModBlockTagGenerator(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, DinnerwareMod.MOD_ID, existingFileHelper);
+        super(output, lookupProvider, DinnerwareCommon.MOD_ID, existingFileHelper);
     }
 
     @Override

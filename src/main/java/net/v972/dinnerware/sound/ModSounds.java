@@ -6,18 +6,18 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import net.v972.dinnerware.DinnerwareMod;
+import net.v972.dinnerware.DinnerwareCommon;
 
 public class ModSounds {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS =
-            DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, DinnerwareMod.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, DinnerwareCommon.MOD_ID);
 
     public static final RegistryObject<SoundEvent> TRAY_METAL_LOAD = registerSoundEvent("tray_metal_load");
     public static final RegistryObject<SoundEvent> TRAY_METAL_UNLOAD = registerSoundEvent("tray_metal_unload");
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(
-                ResourceLocation.fromNamespaceAndPath(DinnerwareMod.MOD_ID, name)
+                ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, name)
         ));
     }
 

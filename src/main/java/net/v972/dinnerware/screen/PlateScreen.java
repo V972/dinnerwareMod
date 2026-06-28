@@ -7,12 +7,12 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.v972.dinnerware.DinnerwareMod;
+import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.config.CommonConfig;
 
 public class PlateScreen extends AbstractContainerScreen<PlateMenu> {
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(
-            DinnerwareMod.MOD_ID, "textures/gui/plate_block_gui.png");
+            DinnerwareCommon.MOD_ID, "textures/gui/plate_block_gui.png");
 
     public PlateScreen(PlateMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
