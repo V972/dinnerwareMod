@@ -25,14 +25,16 @@ import net.v972.dinnerware.sound.ModSounds;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod(DinnerwareMod.MOD_ID)
+@Mod(DinnerwareCommon.MOD_ID)
 public class DinnerwareMod
 {
-    public static final String MOD_ID = "dinnerware";
+    public static final String MOD_ID = DinnerwareCommon.MOD_ID;
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public DinnerwareMod(FMLJavaModLoadingContext context)
     {
+        DinnerwareCommon.init();
+
         IEventBus modEventBus = context.getModEventBus();
 
         ModItems.register(modEventBus);
@@ -54,7 +56,7 @@ public class DinnerwareMod
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
-
+        DinnerwareCommon.commonSetup();
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
