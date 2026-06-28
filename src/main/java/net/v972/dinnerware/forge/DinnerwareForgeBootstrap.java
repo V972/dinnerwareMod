@@ -25,4 +25,8 @@ public final class DinnerwareForgeBootstrap {
     public static void registerForgeEventHandlers() {
         MinecraftForge.EVENT_BUS.register(DinnerwareForgeLifecycleEvents.class);
     }
+
+    public static void registerModEventHandlers(IEventBus modEventBus) {
+        modEventBus.addListener(DinnerwareForgeLifecycleEvents::commonSetup);
+    }
 }
