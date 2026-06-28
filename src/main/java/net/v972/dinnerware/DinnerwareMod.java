@@ -3,28 +3,19 @@ package net.v972.dinnerware;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.v972.dinnerware.block.ModBlocks;
-import net.v972.dinnerware.block.entity.ModBlockEntities;
-import net.v972.dinnerware.config.ClientConfig;
-import net.v972.dinnerware.config.CommonConfig;
-import net.v972.dinnerware.item.ModCreativeModTabs;
-import net.v972.dinnerware.item.ModItems;
+import net.v972.dinnerware.forge.DinnerwareForgeBootstrap;
 import net.v972.dinnerware.screen.ModMenuTypes;
 import net.v972.dinnerware.screen.PlateScreen;
-import net.v972.dinnerware.sound.ModSounds;
 import org.slf4j.Logger;
 
-// The value here should match an entry in the META-INF/mods.toml file
 @Mod(DinnerwareCommon.MOD_ID)
 public class DinnerwareMod
 {
@@ -34,24 +25,11 @@ public class DinnerwareMod
     public DinnerwareMod(FMLJavaModLoadingContext context)
     {
         DinnerwareCommon.init();
-
-        IEventBus modEventBus = context.getModEventBus();
-
-        ModItems.register(modEventBus);
-        ModBlocks.register(modEventBus);
-        ModCreativeModTabs.register(modEventBus);
-        ModSounds.register(modEventBus);
-        ModBlockEntities.register(modEventBus);
-        ModMenuTypes.register(modEventBus);
-
+        IEventBus modEventBus = DinnerwareForgeBootstrap.getModEventBus(context);
+        DinnerwareForgeBootstrap.registerRegistries(modEventBus);
         modEventBus.addListener(this::commonSetup);
-
-        MinecraftForge.EVENT_BUS.register(this);
-
-        modEventBus.addListener(this::addCreative);
-
-        context.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
-        context.registerConfig(ModConfig.Type.COMMON, CommonConfig.SPEC);
+        DinnerwareForgeBootstrap.registerConfigs(context);
+        DinnerwareForgeBootstrap.registerForgeEventHandlers(this);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)
