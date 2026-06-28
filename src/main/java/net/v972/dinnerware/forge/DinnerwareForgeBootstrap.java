@@ -4,7 +4,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.v972.dinnerware.DinnerwareMod;
 import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.block.entity.ModBlockEntities;
 import net.v972.dinnerware.config.ClientConfig;
@@ -36,7 +35,7 @@ public final class DinnerwareForgeBootstrap {
         context.registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
     }
 
-    public static void registerForgeEventHandlers(DinnerwareMod mod) {
-        MinecraftForge.EVENT_BUS.register(mod);
+    public static void registerForgeEventHandlers() {
+        MinecraftForge.EVENT_BUS.register(DinnerwareForgeLifecycleEvents.class);
     }
 }

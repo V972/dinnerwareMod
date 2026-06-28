@@ -2,13 +2,11 @@ package net.v972.dinnerware;
 
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.v972.dinnerware.forge.DinnerwareForgeBootstrap;
+import net.v972.dinnerware.forge.DinnerwareForgeLifecycleEvents;
 import org.slf4j.Logger;
 
 @Mod(DinnerwareCommon.MOD_ID)
@@ -22,24 +20,12 @@ public class DinnerwareMod
         DinnerwareCommon.init();
         IEventBus modEventBus = DinnerwareForgeBootstrap.getModEventBus(context);
         DinnerwareForgeBootstrap.registerRegistries(modEventBus);
-        modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(DinnerwareForgeLifecycleEvents::commonSetup);
         DinnerwareForgeBootstrap.registerConfigs(context);
-        DinnerwareForgeBootstrap.registerForgeEventHandlers(this);
-    }
-
-    private void commonSetup(final FMLCommonSetupEvent event)
-    {
-        DinnerwareCommon.commonSetup();
+        DinnerwareForgeBootstrap.registerForgeEventHandlers();
     }
 
     private void addCreative(BuildCreativeModeTabContentsEvent event) {
-
-    }
-
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event)
-    {
 
     }
 }
