@@ -4,14 +4,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.v972.dinnerware.block.ModBlocks;
-import net.v972.dinnerware.block.entity.ModBlockEntities;
 import net.v972.dinnerware.config.ClientConfig;
 import net.v972.dinnerware.config.CommonConfig;
-import net.v972.dinnerware.item.ModCreativeModTabs;
-import net.v972.dinnerware.item.ModItems;
-import net.v972.dinnerware.screen.ModMenuTypes;
-import net.v972.dinnerware.sound.ModSounds;
+import net.v972.dinnerware.forge.registry.DinnerwareForgeRegistries;
 
 public final class DinnerwareForgeBootstrap {
     private DinnerwareForgeBootstrap() {
@@ -22,12 +17,7 @@ public final class DinnerwareForgeBootstrap {
     }
 
     public static void registerRegistries(IEventBus modEventBus) {
-        ModItems.register(modEventBus);
-        ModBlocks.register(modEventBus);
-        ModCreativeModTabs.register(modEventBus);
-        ModBlockEntities.register(modEventBus);
-        ModMenuTypes.register(modEventBus);
-        ModSounds.register(modEventBus);
+        DinnerwareForgeRegistries.register(modEventBus);
     }
 
     public static void registerConfigs(FMLJavaModLoadingContext context) {
