@@ -10,6 +10,7 @@ import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.item.custom.PlateBlockBlockItem;
 import net.v972.dinnerware.item.custom.TrayItem;
+import net.v972.dinnerware.registry.DinnerwareRegistryNames;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,13 +20,13 @@ public class ModItems {
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, DinnerwareCommon.MOD_ID);
 
-    public  static final RegistryObject<Item> ICON = ITEMS.register("dinnerware_icon",
+    public  static final RegistryObject<Item> ICON = ITEMS.register(DinnerwareRegistryNames.Items.DINNERWARE_ICON,
             () -> new Item(new Item.Properties().fireResistant()));
 
 
-    public static final RegistryObject<TrayItem> TRAY_IRON = ITEMS.register("iron_tray",
+    public static final RegistryObject<TrayItem> TRAY_IRON = ITEMS.register(DinnerwareRegistryNames.Items.IRON_TRAY,
             () -> new TrayItem(Blocks.IRON_BLOCK, new Item.Properties().stacksTo(1)));
-    public static final RegistryObject<TrayItem> TRAY_GOLD = ITEMS.register("gold_tray",
+    public static final RegistryObject<TrayItem> TRAY_GOLD = ITEMS.register(DinnerwareRegistryNames.Items.GOLD_TRAY,
             () -> new TrayItem(Blocks.GOLD_BLOCK, new Item.Properties().stacksTo(1)));
 
 

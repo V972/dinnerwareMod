@@ -7,6 +7,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.block.ModBlocks;
+import net.v972.dinnerware.registry.DinnerwareRegistryNames;
 
 public class ModBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
@@ -14,7 +15,7 @@ public class ModBlockEntities {
 
     public static final RegistryObject<BlockEntityType<PlateBlockBlockEntity>> PLATE_BLOCK_BE =
         BLOCK_ENTITIES.register(
-            "plate_block",
+                DinnerwareRegistryNames.BlockEntities.PLATE_BLOCK,
             () -> BlockEntityType.Builder.of(PlateBlockBlockEntity::new, ModBlocks.getKnownBlocksArray()).build(null));
 
     public static void register(IEventBus eventBus) {

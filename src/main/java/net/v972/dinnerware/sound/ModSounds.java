@@ -7,13 +7,14 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.v972.dinnerware.DinnerwareCommon;
+import net.v972.dinnerware.registry.DinnerwareRegistryNames;
 
 public class ModSounds {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS =
             DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, DinnerwareCommon.MOD_ID);
 
-    public static final RegistryObject<SoundEvent> TRAY_METAL_LOAD = registerSoundEvent("tray_metal_load");
-    public static final RegistryObject<SoundEvent> TRAY_METAL_UNLOAD = registerSoundEvent("tray_metal_unload");
+    public static final RegistryObject<SoundEvent> TRAY_METAL_LOAD = registerSoundEvent(DinnerwareRegistryNames.Sounds.TRAY_METAL_LOAD);
+    public static final RegistryObject<SoundEvent> TRAY_METAL_UNLOAD = registerSoundEvent(DinnerwareRegistryNames.Sounds.TRAY_METAL_UNLOAD);
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(

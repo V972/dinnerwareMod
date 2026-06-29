@@ -11,12 +11,14 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.item.custom.TrayItem;
+import net.v972.dinnerware.registry.DinnerwareRegistryNames;
 
 public class ModCreativeModTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, DinnerwareCommon.MOD_ID);
 
-    public static final RegistryObject<CreativeModeTab> DINNERWARE_TAB = CREATIVE_MODE_TABS.register("dinnerware_tab",
+    public static final RegistryObject<CreativeModeTab> DINNERWARE_TAB = CREATIVE_MODE_TABS.register(
+            DinnerwareRegistryNames.CreativeTabs.DINNERWARE_TAB,
         () -> CreativeModeTab.builder()
             .icon(() -> new ItemStack(ModItems.ICON.get()))
             .title(Component.translatable("creativetab.dinnerware_tab"))
