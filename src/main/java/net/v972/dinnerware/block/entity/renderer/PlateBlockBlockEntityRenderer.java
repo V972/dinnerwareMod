@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
-import net.v972.dinnerware.util.DinnerwareHelper;
+import net.v972.dinnerware.util.DinnerwareRenderHelper;
 
 public class PlateBlockBlockEntityRenderer implements BlockEntityRenderer<PlateBlockBlockEntity> {
     public PlateBlockBlockEntityRenderer(BlockEntityRendererProvider.Context pContext) {
@@ -28,10 +28,10 @@ public class PlateBlockBlockEntityRenderer implements BlockEntityRenderer<PlateB
         Level beLevel = pBlockEntity.getLevel();
         int lightLevel = beLevel == null
                 ? pPackedLight
-                : DinnerwareHelper.getLightLevel(pBlockEntity.getLevel(), pBlockEntity.getBlockPos());
+                : DinnerwareRenderHelper.getLightLevel(pBlockEntity.getLevel(), pBlockEntity.getBlockPos());
 
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-        DinnerwareHelper.positionAndRenderPlateItems(pPoseStack, pBuffer, itemRenderer,
+        DinnerwareRenderHelper.positionAndRenderPlateItems(pPoseStack, pBuffer, itemRenderer,
                 stacks, nonEmptyCount, facing, beLevel, lightLevel);
     }
 }

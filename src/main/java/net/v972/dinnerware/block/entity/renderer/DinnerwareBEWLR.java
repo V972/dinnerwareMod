@@ -17,8 +17,8 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.item.custom.PlateBlockBlockItem;
-import net.v972.dinnerware.util.DinnerwareHelper;
 import net.v972.dinnerware.util.DinnerwareInventoryHelper;
+import net.v972.dinnerware.util.DinnerwareRenderHelper;
 import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
 
@@ -69,7 +69,7 @@ public class DinnerwareBEWLR extends BlockEntityWithoutLevelRenderer {
         NonNullList<ItemStack> stacks = DinnerwareInventoryHelper.plateContentFromNBT(stack.getTag());
         int nonEmptyCount = DinnerwareInventoryHelper.getNonEmptySlotsCount(stacks);
 
-        DinnerwareHelper.positionAndRenderPlateItems(poseStack, buffer, itemRenderer, stacks, nonEmptyCount, facing, null, packedLight);
+        DinnerwareRenderHelper.positionAndRenderPlateItems(poseStack, buffer, itemRenderer, stacks, nonEmptyCount, facing, null, packedLight);
     }
 
     private void renderTray(ItemStack pStack, ItemDisplayContext pDisplayContext, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
@@ -80,7 +80,7 @@ public class DinnerwareBEWLR extends BlockEntityWithoutLevelRenderer {
         Direction facing = Direction.SOUTH;
         NonNullList<ItemStack> stacks = DinnerwareInventoryHelper.trayContentFromNBT(pStack.getTag());
 
-        DinnerwareHelper.positionAndRenderTrayItems(pPoseStack, pBuffer, itemRenderer,
+        DinnerwareRenderHelper.positionAndRenderTrayItems(pPoseStack, pBuffer, itemRenderer,
                 stacks, facing, pDisplayContext, null, pPackedLight);
     }
 }
