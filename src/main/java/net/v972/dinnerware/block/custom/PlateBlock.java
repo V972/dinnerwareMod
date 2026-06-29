@@ -47,6 +47,7 @@ import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import net.v972.dinnerware.config.CommonConfig;
 import net.v972.dinnerware.item.ModItems;
 import net.v972.dinnerware.item.custom.TrayItem;
+import net.v972.dinnerware.platform.PlatformHooks;
 import net.v972.dinnerware.util.DinnerwareHelper;
 import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
@@ -268,7 +269,8 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
                 } else if ((pPlayer.isCrouching() ||
                            pPlateEntity.isEmpty())) {
                     if (!pLevel.isClientSide()) {
-                        NetworkHooks.openScreen(
+                        PlatformHooks.openPlateMenu(
+                        //NetworkHooks.openScreen(
                                 (ServerPlayer) pPlayer,
                                 pPlateEntity,
                                 pPos);

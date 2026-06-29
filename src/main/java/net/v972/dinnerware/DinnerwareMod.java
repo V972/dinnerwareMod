@@ -16,8 +16,12 @@ public class DinnerwareMod
 
     public DinnerwareMod(FMLJavaModLoadingContext context)
     {
+        DinnerwareForgeBootstrap.registerPlatformHooks();
+
         DinnerwareCommon.init();
+
         IEventBus modEventBus = DinnerwareForgeBootstrap.getModEventBus(context);
+
         DinnerwareForgeBootstrap.registerRegistries(modEventBus);
         DinnerwareForgeBootstrap.registerModEventHandlers(modEventBus);
         DinnerwareForgeBootstrap.registerConfigs(context);

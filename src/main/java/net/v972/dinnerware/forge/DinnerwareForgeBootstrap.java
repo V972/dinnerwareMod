@@ -5,6 +5,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.v972.dinnerware.forge.config.DinnerwareForgeConfigs;
 import net.v972.dinnerware.forge.registry.DinnerwareForgeRegistries;
+import net.v972.dinnerware.platform.PlatformHooks;
 
 public final class DinnerwareForgeBootstrap {
     private DinnerwareForgeBootstrap() {
@@ -28,5 +29,11 @@ public final class DinnerwareForgeBootstrap {
 
     public static void registerModEventHandlers(IEventBus modEventBus) {
         modEventBus.addListener(DinnerwareForgeLifecycleEvents::commonSetup);
+    }
+
+    // ========================================
+
+    public static void registerPlatformHooks() {
+        PlatformHooks.setPlatform(new DinnerwareForgePlatform());
     }
 }
