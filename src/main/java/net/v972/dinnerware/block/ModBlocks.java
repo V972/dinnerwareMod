@@ -24,15 +24,14 @@ public class ModBlocks {
 
     // ========================================
 
-    public static final RegistryObject<Block> PLATE_BLOCK_BEDROCK = BLOCKS.register(PlateDefinition.BEDROCK.block(),
-        () -> new PlateBlock(PlateDefinition.BEDROCK.material(),
-            BlockBehaviour.Properties.copy(PlateDefinition.BEDROCK.material())
-                .isValidSpawn((state, getter, pos, entityType) -> false)
-                .isRedstoneConductor((state, level, pos) -> false)
-                .isSuffocating((state, level, pos) -> false)
-                .isViewBlocking((state, level, pos) -> false)
-                .pushReaction(PushReaction.BLOCK)
-        ));
+    public static final RegistryObject<Block> PLATE_BLOCK_BEDROCK = registerPlateBlock(PlateDefinition.BEDROCK,
+        BlockBehaviour.Properties.copy(PlateDefinition.BEDROCK.material())
+            .isValidSpawn((state, getter, pos, entityType) -> false)
+            .isRedstoneConductor((state, level, pos) -> false)
+            .isSuffocating((state, level, pos) -> false)
+            .isViewBlocking((state, level, pos) -> false)
+            .pushReaction(PushReaction.BLOCK)
+    );
 
     public static final RegistryObject<Block> PLATE_BLOCK_QUARTZ = registerPlateBlock(PlateDefinition.QUARTZ,
             Ingredient.of(Tags.Items.GEMS_QUARTZ), 1);
