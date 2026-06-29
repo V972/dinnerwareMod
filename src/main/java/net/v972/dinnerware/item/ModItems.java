@@ -170,17 +170,17 @@ public class ModItems {
     }
 
     public static Item[] getSurvivalPlateItemsArray() {
-        return Stream.of(getPlateItemsArray())
+        return Stream.of(getKnownPlateItemsArray())
             .filter(plate -> plate != PLATE_ITEM_BEDROCK.get())
             .toArray(Item[]::new);
     }
 
-    public static Set<Item> getPlateItemsSet() {
-        return Stream.of(getPlateItemsArray())
+    public static Set<Item> getKnownPlateItemsSet() {
+        return Stream.of(getKnownPlateItemsArray())
             .collect(Collectors.toSet());
     }
 
-    public static PlateBlockBlockItem[] getPlateItemsArray() {
+    public static PlateBlockBlockItem[] getKnownPlateItemsArray() {
         return new PlateBlockBlockItem[] {
             PLATE_ITEM_BEDROCK.get(),
 

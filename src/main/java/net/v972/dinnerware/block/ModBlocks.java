@@ -1,8 +1,6 @@
 package net.v972.dinnerware.block;
 
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
@@ -15,10 +13,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.block.custom.PlateBlock;
-import net.v972.dinnerware.item.ModItems;
 import net.v972.dinnerware.registry.PlateDefinition;
 
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 
@@ -110,15 +106,15 @@ public class ModBlocks {
 
     // ========================================
 
-    public static Block[] getKnownBlocksArray() {
+    public static Block[] getKnownPlateBlocksArray() {
         return BLOCKS.getEntries().stream().map(RegistryObject::get).toArray(Block[]::new);
     }
 
-    public static Iterable<Block> getKnownBlocks() {
+    public static Iterable<Block> getKnownPlateBlocksIterable() {
         return BLOCKS.getEntries().stream().map(RegistryObject::get)::iterator;
     }
 
-    public static Iterable<Pair<Block, Ingredient>> getTerracottaDyeingMap() {
+    public static Iterable<Pair<Block, Ingredient>> getTerracottaPlateBlocksDyeingMap() {
         return Stream.of(
             new Pair<>(PLATE_BLOCK_WHITE_TERRACOTTA.get(), Ingredient.of(Tags.Items.DYES_WHITE)),
             new Pair<>(PLATE_BLOCK_ORANGE_TERRACOTTA.get(), Ingredient.of(Tags.Items.DYES_ORANGE)),

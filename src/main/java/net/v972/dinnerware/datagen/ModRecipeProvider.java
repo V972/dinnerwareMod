@@ -30,7 +30,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> pWriter) {
-        for (Block block : ModBlocks.getKnownBlocks()) {
+        for (Block block : ModBlocks.getKnownPlateBlocksIterable()) {
             PlateBlock plateBlock = (PlateBlock)block;
 
             var craftingItems =
@@ -63,7 +63,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .save(pWriter);
         }
 
-        for (Pair<Block, Ingredient> blockIngredientPair : ModBlocks.getTerracottaDyeingMap()) {
+        for (Pair<Block, Ingredient> blockIngredientPair : ModBlocks.getTerracottaPlateBlocksDyeingMap()) {
             PlateBlock plateBlock = (PlateBlock)blockIngredientPair.getFirst();
             Block baseTerracottaPlate = ModBlocks.PLATE_BLOCK_TERRACOTTA.get();
             Ingredient dyeItems = blockIngredientPair.getSecond();

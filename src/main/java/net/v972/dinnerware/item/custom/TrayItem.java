@@ -117,7 +117,7 @@ public class TrayItem extends Item {
             ItemStack trayStack = contextPlayer.getItemInHand(pContext.getHand());
 
             Block clickedBlock = contextLevel.getBlockState(pos).getBlock();
-            if (Arrays.asList(ModBlocks.getKnownBlocksArray()).contains(clickedBlock)) {
+            if (Arrays.asList(ModBlocks.getKnownPlateBlocksArray()).contains(clickedBlock)) {
 
                 if (((PlateBlock)clickedBlock).MATERIAL == Blocks.BEDROCK && !contextPlayer.isCreative()) {
                     return InteractionResult.FAIL;

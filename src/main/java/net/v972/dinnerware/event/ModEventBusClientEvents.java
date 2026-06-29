@@ -25,7 +25,7 @@ public class ModEventBusClientEvents {
         // Registers the "DinnerwareBEWLR" to the given item sets
         DinnerwareBEWLRManager.register(
             Stream.concat(
-                ModItems.getPlateItemsSet().stream(),
+                ModItems.getKnownPlateItemsSet().stream(),
                 ModItems.getTrayItemsSet().stream()
             ).collect(Collectors.toSet()),
             DinnerwareBEWLR::new

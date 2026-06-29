@@ -115,7 +115,7 @@ public class DinnerwareHelper {
             listTag.stream()
                 .map(tag -> ItemStack.of((CompoundTag)tag).getItem())
                 .collect(Collectors.toSet());
-        Set<Item> allPlatesSet = ModItems.getPlateItemsSet();
+        Set<Item> allPlatesSet = ModItems.getKnownPlateItemsSet();
         plateItemsSet.retainAll(allPlatesSet);
         return !plateItemsSet.isEmpty();
     }

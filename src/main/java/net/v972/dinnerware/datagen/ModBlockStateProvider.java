@@ -21,7 +21,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        for(Block block : ModBlocks.getKnownBlocks()) {
+        for(Block block : ModBlocks.getKnownPlateBlocksIterable()) {
             PlateBlock plateBlock = (PlateBlock)block;
 
             ModelFile model = DinnerwareHelper.getPlateModelWithMaterial(plateBlock, models());

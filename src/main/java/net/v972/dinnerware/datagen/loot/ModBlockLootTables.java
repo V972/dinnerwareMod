@@ -14,13 +14,13 @@ public class ModBlockLootTables extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
-        for(Block block : ModBlocks.getKnownBlocks()) {
+        for(Block block : ModBlocks.getKnownPlateBlocksIterable()) {
             this.add(block, this::createNameableBlockEntityTable);
         }
     }
 
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        return ModBlocks.getKnownBlocks();
+        return ModBlocks.getKnownPlateBlocksIterable();
     }
 }

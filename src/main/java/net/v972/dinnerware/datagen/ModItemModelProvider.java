@@ -25,7 +25,7 @@ public class ModItemModelProvider extends ItemModelProvider {
     protected void registerModels() {
         simpleItem(ModItems.ICON);
 
-        for (PlateBlockBlockItem item : ModItems.getPlateItemsArray()) {
+        for (PlateBlockBlockItem item : ModItems.getKnownPlateItemsArray()) {
             Block material = ((PlateBlock) item.getBlock()).MATERIAL;
             ResourceLocation finalTexture = DinnerwareHelper.getTextureForModel(material);
             getBuilder(item.toString())

@@ -316,7 +316,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         pLevel.removeBlock(pPos, false);
 
         pPlayer.awardStat(Stats.BLOCK_MINED.get(this));
-        for (Block plateType : ModBlocks.getKnownBlocks()) {
+        for (Block plateType : ModBlocks.getKnownPlateBlocksIterable()) {
             pPlayer.getCooldowns().addCooldown(plateType.asItem(), 5);
         }
         if (didAddToTray) {

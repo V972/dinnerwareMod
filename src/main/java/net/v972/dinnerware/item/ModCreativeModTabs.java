@@ -23,7 +23,7 @@ public class ModCreativeModTabs {
             .icon(() -> new ItemStack(ModItems.ICON.get()))
             .title(Component.translatable("creativetab.dinnerware_tab"))
             .displayItems((pParameters, pOutput) -> {
-                for(Block block : ModBlocks.getKnownBlocks()) {
+                for(Block block : ModBlocks.getKnownPlateBlocksIterable()) {
                     pOutput.accept(block);
                 }
 

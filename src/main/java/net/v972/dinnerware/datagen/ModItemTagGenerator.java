@@ -26,9 +26,9 @@ public class ModItemTagGenerator extends ItemTagsProvider {
             .add(ModItems.TRAY_GOLD.get());
 
         this.tag(ModTags.Items.PLATES_REGULAR)
-                .add(ModItems.getPlateItemsArray());
+                .add(ModItems.getKnownPlateItemsArray());
         this.tag(ModTags.Items.PLATES)
-                .add(ModItems.getPlateItemsArray());
+                .add(ModItems.getKnownPlateItemsArray());
 
         this.tag(ModTags.Items.PLATES_ONE_TRAY_LIST)
                 .add(ModItems.getSurvivalPlateItemsArray());
