@@ -11,6 +11,7 @@ import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.item.custom.PlateBlockBlockItem;
 import net.v972.dinnerware.item.custom.TrayItem;
 import net.v972.dinnerware.registry.DinnerwareRegistryNames;
+import net.v972.dinnerware.registry.PlateDefinition;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ public class ModItems {
             () -> new TrayItem(Blocks.GOLD_BLOCK, new Item.Properties().stacksTo(1)));
 
 
-    public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_BEDROCK = ITEMS.register("bedrock_plate",
+    public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_BEDROCK = ITEMS.register(PlateDefinition.BEDROCK.item(),
             () -> new PlateBlockBlockItem(ModBlocks.PLATE_BLOCK_BEDROCK.get(), new Item.Properties()));
 
     public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_QUARTZ = ITEMS.register("quartz_plate",

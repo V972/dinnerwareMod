@@ -17,6 +17,7 @@ import net.minecraftforge.registries.RegistryObject;
 import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.item.ModItems;
+import net.v972.dinnerware.registry.PlateDefinition;
 
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -28,9 +29,9 @@ public class ModBlocks {
 
     // ========================================
 
-    public static final RegistryObject<Block> PLATE_BLOCK_BEDROCK = BLOCKS.register("bedrock_plate_block",
-            () -> new PlateBlock(Blocks.BEDROCK,
-                    BlockBehaviour.Properties.copy(Blocks.BEDROCK)
+    public static final RegistryObject<Block> PLATE_BLOCK_BEDROCK = BLOCKS.register(PlateDefinition.BEDROCK.block(),
+            () -> new PlateBlock(PlateDefinition.BEDROCK.material(),
+                    BlockBehaviour.Properties.copy(PlateDefinition.BEDROCK.material())
                             .isValidSpawn((state, getter, pos, entityType) -> false)
                             .isRedstoneConductor((state, level, pos) -> false)
                             .isSuffocating((state, level, pos) -> false)
@@ -51,7 +52,7 @@ public class ModBlocks {
             () -> new PlateBlock(Blocks.DIAMOND_BLOCK, Ingredient.of(Tags.Items.GEMS_DIAMOND), 1, getDefaultPlateProperties()));
 
     public static final RegistryObject<Block> PLATE_BLOCK_OBSIDIAN = BLOCKS.register("obsidian_plate_block",
-            () -> new PlateBlock(Blocks.OBSIDIAN, getDefaultPlateProperties()));
+            () -> new PlateBlock(Blocks.OBSIDIAN, getDefaultPlateProperties().pushReaction(PushReaction.BLOCK)));
 
     public static final RegistryObject<Block> PLATE_BLOCK_POLISHED_BLACKSTONE = BLOCKS.register("polished_blackstone_plate_block",
             () -> new PlateBlock(Blocks.POLISHED_BLACKSTONE, getDefaultPlateProperties()));
