@@ -1,9 +1,6 @@
 package net.v972.dinnerware.item.custom;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.AnimationUtils;
-import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -15,10 +12,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionHand;
+//import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+//import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
+//import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.decoration.HangingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -33,7 +31,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.advancement.ModCriterionTriggers;
 import net.v972.dinnerware.block.ModBlocks;
@@ -51,7 +48,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -88,12 +84,12 @@ public class TrayItem extends Item {
 //            return InteractionResultHolder.consume(trayStack);
 //        }
 //    }
-
+//
 //    @Override
 //    public int getUseDuration(ItemStack stack) {
 //        return 72000;
 //    }
-
+//
 //    @Override
 //    public void releaseUsing(@NotNull ItemStack pStack, Level pLevel, @NotNull LivingEntity pLivingEntity, int pTimeCharged) {
 //        if (pLevel.isClientSide) {
@@ -530,38 +526,6 @@ public class TrayItem extends Item {
             ModCriterionTriggers.MANUAL_TRIGGER.trigger(pServerPlayer,
                 ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, "one_tray_to_hold_them_all"));
         }
-    }
-
-    // =============================
-
-    @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions() {
-            private static final HumanoidModel.ArmPose TRAY_ARMS_POSE_IDLE = HumanoidModel.ArmPose.create("TRAY_ARMS_POSE_IDLE", true,
-                (model, entity, arm) -> {
-                    float ageInTicks = entity.tickCount + TrayItem.getPartialTick();
-
-                    model.rightArm.xRot = -((float)Math.PI / 8F);
-                    AnimationUtils.bobModelPart(model.rightArm, ageInTicks, -1.0F); // * -1 from regular
-
-                    model.leftArm.xRot  = -((float)Math.PI / 8F);
-                    AnimationUtils.bobModelPart(model.leftArm, ageInTicks, 1.0F); // * -1 from regular
-                }
-            );
-
-            @Override
-            public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
-                if (!itemStack.isEmpty()) return TRAY_ARMS_POSE_IDLE;
-
-                return HumanoidModel.ArmPose.EMPTY;
-            }
-        });
-    }
-
-    /** @return The current partialTick. */
-    public static float getPartialTick() {
-        Minecraft mc = Minecraft.getInstance();
-        return mc.isPaused() ? mc.pausePartialTick : mc.getFrameTime();
     }
 
     // =============================

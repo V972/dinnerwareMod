@@ -40,7 +40,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.network.NetworkHooks;
 import net.v972.dinnerware.block.ModBlocks;
 import net.v972.dinnerware.block.entity.ModBlockEntities;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
@@ -270,7 +269,6 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
                            pPlateEntity.isEmpty())) {
                     if (!pLevel.isClientSide()) {
                         PlatformHooks.openPlateMenu(
-                        //NetworkHooks.openScreen(
                                 (ServerPlayer) pPlayer,
                                 pPlateEntity,
                                 pPos);

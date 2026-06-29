@@ -6,7 +6,8 @@
   "refmap": "dinnerware.refmap.json",
   "mixins": [],
   "client": [
-    "ItemRendererMixin"
+    "ItemRendererMixin",
+    "HumanoidModelMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -13,6 +13,8 @@ import net.v972.dinnerware.block.entity.ModBlockEntities;
 import net.v972.dinnerware.block.entity.renderer.DinnerwareBEWLR;
 import net.v972.dinnerware.block.entity.renderer.DinnerwareBEWLRManager;
 import net.v972.dinnerware.block.entity.renderer.PlateBlockBlockEntityRenderer;
+import net.v972.dinnerware.client.animation.DinnerwareItemAnimations;
+import net.v972.dinnerware.client.animation.TrayThirdPersonAnimationProvider;
 //import net.v972.dinnerware.client.hud.TrayItemHud;
 import net.v972.dinnerware.item.ModItems;
 import net.v972.dinnerware.screen.ModMenuTypes;
@@ -37,6 +39,16 @@ public final class DinnerwareForgeClientBootstrap {
                         ModItems.getTrayItemsSet().stream()
                 ).collect(Collectors.toSet()),
                 DinnerwareBEWLR::new
+        );
+
+        registerItemAnimations();
+    }
+
+    private static void registerItemAnimations() {
+        TrayThirdPersonAnimationProvider trayAnimationProvider = new TrayThirdPersonAnimationProvider();
+
+        ModItems.getTrayItemsSet().forEach(item ->
+                DinnerwareItemAnimations.registerThirdPerson(item.asItem(), trayAnimationProvider)
         );
     }
 
