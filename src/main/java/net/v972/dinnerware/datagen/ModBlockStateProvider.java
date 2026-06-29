@@ -24,7 +24,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         for(Block block : ModBlocks.getKnownPlateBlocksIterable()) {
             PlateBlock plateBlock = (PlateBlock)block;
 
-            ModelFile model = DinnerwareHelper.getPlateModelWithMaterial(plateBlock, models());
+            ModelFile model = DinnerwareDatagenHelper.getPlateModelWithMaterial(plateBlock, models());
 
             this.getVariantBuilder(plateBlock)
                 .forAllStatesExcept(state ->

@@ -14,7 +14,6 @@ import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.item.ModItems;
 import net.v972.dinnerware.item.custom.PlateBlockBlockItem;
 import net.v972.dinnerware.item.custom.TrayItem;
-import net.v972.dinnerware.util.DinnerwareHelper;
 
 public class ModItemModelProvider extends ItemModelProvider {
     public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
@@ -27,7 +26,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         for (PlateBlockBlockItem item : ModItems.getKnownPlateItemsArray()) {
             Block material = ((PlateBlock) item.getBlock()).MATERIAL;
-            ResourceLocation finalTexture = DinnerwareHelper.getTextureForModel(material);
+            ResourceLocation finalTexture = DinnerwareDatagenHelper.getTextureForModel(material);
             getBuilder(item.toString())
                 .parent(new ModelFile.ExistingModelFile(
                     ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, ITEM_FOLDER + "/plate"),
@@ -37,7 +36,7 @@ public class ModItemModelProvider extends ItemModelProvider {
         }
 
         for (TrayItem item : ModItems.getTrayItemsArray()) {
-            ResourceLocation finalTexture = DinnerwareHelper.getTextureForModel(item.MATERIAL);
+            ResourceLocation finalTexture = DinnerwareDatagenHelper.getTextureForModel(item.MATERIAL);
             ResourceLocation parentModelLoc = ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, ITEM_FOLDER + "/tray");
             getBuilder(item.toString())
                 .parent(new ModelFile.ExistingModelFile(parentModelLoc, existingFileHelper))
@@ -48,7 +47,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     private ItemModelBuilder simpleItem(RegistryObject<Item> item) {
         return withExistingParent(item.getId().getPath(),
-                ResourceLocation.fromNamespaceAndPath("minecraft","item/generated")).texture("layer0",
-                ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID,"item/" + item.getId().getPath()));
+            ResourceLocation.fromNamespaceAndPath("minecraft","item/generated")).texture("layer0",
+            ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID,"item/" + item.getId().getPath()));
     }
 }
