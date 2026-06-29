@@ -10,37 +10,19 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.model.generators.BlockModelProvider;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.client.model.generators.ModelProvider;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.v972.dinnerware.DinnerwareCommon;
-import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.config.ClientConfig;
 import net.v972.dinnerware.config.CommonConfig;
-import net.v972.dinnerware.item.ModItems;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.OptionalInt;
-import java.util.Set;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class DinnerwareHelper {
 
@@ -85,87 +67,6 @@ public class DinnerwareHelper {
     public static @NotNull String getBlockId(Block block) {
         String[] pathComponents = block.getDescriptionId().split("\\.");
         return pathComponents[pathComponents.length-1];
-    }
-
-    public static OptionalInt getFirstNonEmptySlot(NonNullList<ItemStack> pList) {
-        return IntStream.range(0, pList.size())
-                .filter(i -> !pList.get(i).isEmpty())
-                .findFirst();
-    }
-
-    public static int getNonEmptySlotsCount(NonNullList<ItemStack> pList) {
-        return (int)IntStream
-            .range(0, pList.size())
-            .filter(i -> !pList.get(i).isEmpty())
-            .count();
-    }
-
-    public static boolean hasPlateInside(ItemStack pStack) {
-        if (!pStack.is(ModTags.Items.PLATES)) return false;
-
-        CompoundTag nbt = pStack.getTag();
-        if (nbt == null || nbt.isEmpty()) return false;
-
-        nbt = nbt.getCompound("BlockEntityTag").getCompound("Inventory");
-
-        if (nbt.isEmpty() || nbt.contains("Items")) return false;
-
-        ListTag listTag = nbt.getList("Items", 10);
-        Set<Item> plateItemsSet =
-            listTag.stream()
-                .map(tag -> ItemStack.of((CompoundTag)tag).getItem())
-                .collect(Collectors.toSet());
-        Set<Item> allPlatesSet = ModItems.getKnownPlateItemsSet();
-        plateItemsSet.retainAll(allPlatesSet);
-        return !plateItemsSet.isEmpty();
-    }
-
-    public static NonNullList<ItemStack> plateContentFromNBT(CompoundTag pTag) {
-        NonNullList<ItemStack> result = NonNullList.withSize(3, ItemStack.EMPTY);
-
-        if (pTag != null) {
-            CompoundTag nbt = pTag.getCompound("BlockEntityTag").getCompound("Inventory");
-
-            if (nbt.isEmpty()) return result;
-
-            if (nbt.contains("Size", Tag.TAG_INT))
-                result = NonNullList.withSize(nbt.getInt("Size"), ItemStack.EMPTY);
-            ListTag tagList = nbt.getList("Items", Tag.TAG_COMPOUND);
-            for (int i = 0; i < tagList.size(); i++)
-            {
-                CompoundTag itemTags = tagList.getCompound(i);
-                int slot = itemTags.getInt("Slot");
-
-                if (slot >= 0 && slot < result.size())
-                {
-                    result.set(slot, ItemStack.of(itemTags));
-                }
-            }
-        }
-
-        return result;
-    }
-
-    // ===============================================================
-
-    public static NonNullList<ItemStack> trayContentFromNBT(CompoundTag pTag) {
-        if (pTag != null && pTag.contains("Items")) {
-            ListTag tagList = pTag.getList("Items", 10);
-
-            int listSize = tagList.size();
-            if (listSize == 0) return NonNullList.withSize(64, ItemStack.EMPTY);
-
-            NonNullList<ItemStack> result = NonNullList.withSize(listSize, ItemStack.EMPTY);
-            for (int i = 0; i < tagList.size(); i++)
-            {
-                CompoundTag itemTags = tagList.getCompound(i);
-                result.set(listSize - (i + 1), ItemStack.of(itemTags));
-            }
-
-            return result;
-        }
-
-        return NonNullList.withSize(64, ItemStack.EMPTY);
     }
 
     // ===============================================================
@@ -282,7 +183,7 @@ public class DinnerwareHelper {
                                              @Nullable Level pLevel, int pLightLevel) {
         switch (pNonEmptyCount) {
             case 1 -> {
-                int firstNonEmptySlot = getFirstNonEmptySlot(pStacks).orElse(-1);
+                int firstNonEmptySlot = DinnerwareInventoryHelper.getFirstNonEmptySlot(pStacks).orElse(-1);
                 renderItem(
                         pPoseStack, pItemRenderer, pBuffer,
                         pStacks.get(firstNonEmptySlot), pFacing, pLevel, pLightLevel,
