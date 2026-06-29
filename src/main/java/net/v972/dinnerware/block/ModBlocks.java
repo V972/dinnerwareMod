@@ -38,121 +38,75 @@ public class ModBlocks {
                 .pushReaction(PushReaction.BLOCK)
         ));
 
-    public static final RegistryObject<Block> PLATE_BLOCK_QUARTZ = BLOCKS.register(PlateDefinition.QUARTZ.block(),
-        () -> new PlateBlock(PlateDefinition.QUARTZ.material(), Ingredient.of(Tags.Items.GEMS_QUARTZ), 1, getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_CHISELED_QUARTZ = BLOCKS.register(PlateDefinition.CHISELED_QUARTZ.block(),
-        () -> new PlateBlock(PlateDefinition.CHISELED_QUARTZ.material(), getDefaultPlateProperties()));
+    public static final RegistryObject<Block> PLATE_BLOCK_QUARTZ = registerPlateBlock(PlateDefinition.QUARTZ,
+            Ingredient.of(Tags.Items.GEMS_QUARTZ), 1);
+    public static final RegistryObject<Block> PLATE_BLOCK_CHISELED_QUARTZ = registerPlateBlock(PlateDefinition.CHISELED_QUARTZ);
 
-    public static final RegistryObject<Block> PLATE_BLOCK_IRON = BLOCKS.register(PlateDefinition.IRON.block(),
-        () -> new PlateBlock(PlateDefinition.IRON.material(), Ingredient.of(Tags.Items.INGOTS_IRON), 1, getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_GOLD = BLOCKS.register(PlateDefinition.GOLD.block(),
-        () -> new PlateBlock(PlateDefinition.GOLD.material(), Ingredient.of(Tags.Items.INGOTS_GOLD), 1, getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_DIAMOND = BLOCKS.register(PlateDefinition.DIAMOND.block(),
-        () -> new PlateBlock(PlateDefinition.DIAMOND.material(), Ingredient.of(Tags.Items.GEMS_DIAMOND), 1, getDefaultPlateProperties()));
+    public static final RegistryObject<Block> PLATE_BLOCK_IRON = registerPlateBlock(PlateDefinition.IRON,
+            Ingredient.of(Tags.Items.INGOTS_IRON), 1);
+    public static final RegistryObject<Block> PLATE_BLOCK_GOLD = registerPlateBlock(PlateDefinition.GOLD,
+            Ingredient.of(Tags.Items.INGOTS_GOLD), 1);
+    public static final RegistryObject<Block> PLATE_BLOCK_DIAMOND = registerPlateBlock(PlateDefinition.DIAMOND,
+            Ingredient.of(Tags.Items.GEMS_DIAMOND), 1);
 
-    public static final RegistryObject<Block> PLATE_BLOCK_OBSIDIAN = BLOCKS.register(PlateDefinition.OBSIDIAN.block(),
-        () -> new PlateBlock(PlateDefinition.OBSIDIAN.material(), getDefaultPlateProperties().pushReaction(PushReaction.BLOCK)));
+    public static final RegistryObject<Block> PLATE_BLOCK_OBSIDIAN = registerPlateBlock(PlateDefinition.OBSIDIAN,
+            getDefaultPlateProperties().pushReaction(PushReaction.BLOCK));
 
-    public static final RegistryObject<Block> PLATE_BLOCK_POLISHED_BLACKSTONE = BLOCKS.register(PlateDefinition.POLISHED_BLACKSTONE.block(),
-        () -> new PlateBlock(PlateDefinition.POLISHED_BLACKSTONE.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_CHISELED_NETHER_BRICKS = BLOCKS.register(PlateDefinition.CHISELED_NETHER_BRICKS.block(),
-        () -> new PlateBlock(PlateDefinition.CHISELED_NETHER_BRICKS.material(), Ingredient.of(Tags.Items.INGOTS_NETHER_BRICK), 1, getDefaultPlateProperties()));
+    public static final RegistryObject<Block> PLATE_BLOCK_POLISHED_BLACKSTONE = registerPlateBlock(PlateDefinition.POLISHED_BLACKSTONE);
+    public static final RegistryObject<Block> PLATE_BLOCK_CHISELED_NETHER_BRICKS = registerPlateBlock(PlateDefinition.CHISELED_NETHER_BRICKS,
+            Ingredient.of(Tags.Items.INGOTS_NETHER_BRICK), 1);
 
-    public static final RegistryObject<Block> PLATE_BLOCK_PURPUR = BLOCKS.register(PlateDefinition.PURPUR.block(),
-        () -> new PlateBlock(PlateDefinition.PURPUR.material(), Ingredient.of(Items.POPPED_CHORUS_FRUIT), 1, getDefaultPlateProperties()));
+    public static final RegistryObject<Block> PLATE_BLOCK_PURPUR = registerPlateBlock(PlateDefinition.PURPUR,
+            Ingredient.of(Items.POPPED_CHORUS_FRUIT), 1);
 
-    public static final RegistryObject<Block> PLATE_BLOCK_OAK = BLOCKS.register(PlateDefinition.OAK.block(),
-        () -> new PlateBlock(PlateDefinition.OAK.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_BIRCH = BLOCKS.register(PlateDefinition.BIRCH.block(),
-        () -> new PlateBlock(PlateDefinition.BIRCH.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_SPRUCE = BLOCKS.register(PlateDefinition.SPRUCE.block(),
-        () -> new PlateBlock(PlateDefinition.SPRUCE.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_JUNGLE = BLOCKS.register(PlateDefinition.JUNGLE.block(),
-        () -> new PlateBlock(PlateDefinition.JUNGLE.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_ACACIA = BLOCKS.register(PlateDefinition.ACACIA.block(),
-        () -> new PlateBlock(PlateDefinition.ACACIA.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_DARK_OAK = BLOCKS.register(PlateDefinition.DARK_OAK.block(),
-        () -> new PlateBlock(PlateDefinition.DARK_OAK.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_CHERRY = BLOCKS.register(PlateDefinition.CHERRY.block(),
-        () -> new PlateBlock(PlateDefinition.CHERRY.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_MANGROVE = BLOCKS.register(PlateDefinition.MANGROVE.block(),
-        () -> new PlateBlock(PlateDefinition.MANGROVE.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_BAMBOO = BLOCKS.register(PlateDefinition.BAMBOO.block(),
-        () -> new PlateBlock(PlateDefinition.BAMBOO.material(), getDefaultPlateProperties()));
+    public static final RegistryObject<Block> PLATE_BLOCK_OAK = registerPlateBlock(PlateDefinition.OAK);
+    public static final RegistryObject<Block> PLATE_BLOCK_BIRCH = registerPlateBlock(PlateDefinition.BIRCH);
+    public static final RegistryObject<Block> PLATE_BLOCK_SPRUCE = registerPlateBlock(PlateDefinition.SPRUCE);
+    public static final RegistryObject<Block> PLATE_BLOCK_JUNGLE = registerPlateBlock(PlateDefinition.JUNGLE);
+    public static final RegistryObject<Block> PLATE_BLOCK_ACACIA = registerPlateBlock(PlateDefinition.ACACIA);
+    public static final RegistryObject<Block> PLATE_BLOCK_DARK_OAK = registerPlateBlock(PlateDefinition.DARK_OAK);
+    public static final RegistryObject<Block> PLATE_BLOCK_CHERRY = registerPlateBlock(PlateDefinition.CHERRY);
+    public static final RegistryObject<Block> PLATE_BLOCK_MANGROVE = registerPlateBlock(PlateDefinition.MANGROVE);
+    public static final RegistryObject<Block> PLATE_BLOCK_BAMBOO = registerPlateBlock(PlateDefinition.BAMBOO);
 
-    public static final RegistryObject<Block> PLATE_BLOCK_CRIMSON = BLOCKS.register(PlateDefinition.CRIMSON.block(),
-        () -> new PlateBlock(PlateDefinition.CRIMSON.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_WARPED = BLOCKS.register(PlateDefinition.WARPED.block(),
-        () -> new PlateBlock(PlateDefinition.WARPED.material(), getDefaultPlateProperties()));
+    public static final RegistryObject<Block> PLATE_BLOCK_CRIMSON = registerPlateBlock(PlateDefinition.CRIMSON);
+    public static final RegistryObject<Block> PLATE_BLOCK_WARPED = registerPlateBlock(PlateDefinition.WARPED);
 
-    public static final RegistryObject<Block> PLATE_BLOCK_TERRACOTTA = BLOCKS.register(PlateDefinition.TERRACOTTA.block(),
-        () -> new PlateBlock(PlateDefinition.TERRACOTTA.material(), getDefaultPlateProperties()));
+    public static final RegistryObject<Block> PLATE_BLOCK_TERRACOTTA =  registerPlateBlock(PlateDefinition.TERRACOTTA);
 
-    public static final RegistryObject<Block> PLATE_BLOCK_WHITE_TERRACOTTA = BLOCKS.register(PlateDefinition.WHITE_TERRACOTTA.block(),
-        () -> new PlateBlock(PlateDefinition.WHITE_TERRACOTTA.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_ORANGE_TERRACOTTA = BLOCKS.register(PlateDefinition.ORANGE_TERRACOTTA.block(),
-        () -> new PlateBlock(PlateDefinition.ORANGE_TERRACOTTA.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_MAGENTA_TERRACOTTA = BLOCKS.register(PlateDefinition.MAGENTA_TERRACOTTA.block(),
-        () -> new PlateBlock(PlateDefinition.MAGENTA_TERRACOTTA.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_LIGHT_BLUE_TERRACOTTA = BLOCKS.register(PlateDefinition.LIGHT_BLUE_TERRACOTTA.block(),
-        () -> new PlateBlock(PlateDefinition.LIGHT_BLUE_TERRACOTTA.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_YELLOW_TERRACOTTA = BLOCKS.register(PlateDefinition.YELLOW_TERRACOTTA.block(),
-        () -> new PlateBlock(PlateDefinition.YELLOW_TERRACOTTA.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_LIME_TERRACOTTA = BLOCKS.register(PlateDefinition.LIME_TERRACOTTA.block(),
-        () -> new PlateBlock(PlateDefinition.LIME_TERRACOTTA.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_PINK_TERRACOTTA = BLOCKS.register(PlateDefinition.PINK_TERRACOTTA.block(),
-        () -> new PlateBlock(PlateDefinition.PINK_TERRACOTTA.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_GRAY_TERRACOTTA = BLOCKS.register(PlateDefinition.GRAY_TERRACOTTA.block(),
-        () -> new PlateBlock(PlateDefinition.GRAY_TERRACOTTA.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_LIGHT_GRAY_TERRACOTTA = BLOCKS.register(PlateDefinition.LIGHT_GRAY_TERRACOTTA.block(),
-        () -> new PlateBlock(PlateDefinition.LIGHT_GRAY_TERRACOTTA.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_CYAN_TERRACOTTA = BLOCKS.register(PlateDefinition.CYAN_TERRACOTTA.block(),
-        () -> new PlateBlock(PlateDefinition.CYAN_TERRACOTTA.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_PURPLE_TERRACOTTA = BLOCKS.register(PlateDefinition.PURPLE_TERRACOTTA.block(),
-        () -> new PlateBlock(PlateDefinition.PURPLE_TERRACOTTA.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_BLUE_TERRACOTTA = BLOCKS.register(PlateDefinition.BLUE_TERRACOTTA.block(),
-        () -> new PlateBlock(PlateDefinition.BLUE_TERRACOTTA.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_BROWN_TERRACOTTA = BLOCKS.register(PlateDefinition.BROWN_TERRACOTTA.block(),
-        () -> new PlateBlock(PlateDefinition.BROWN_TERRACOTTA.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_GREEN_TERRACOTTA = BLOCKS.register(PlateDefinition.GREEN_TERRACOTTA.block(),
-        () -> new PlateBlock(PlateDefinition.GREEN_TERRACOTTA.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_RED_TERRACOTTA = BLOCKS.register(PlateDefinition.RED_TERRACOTTA.block(),
-        () -> new PlateBlock(PlateDefinition.RED_TERRACOTTA.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_BLACK_TERRACOTTA = BLOCKS.register(PlateDefinition.BLACK_TERRACOTTA.block(),
-        () -> new PlateBlock(PlateDefinition.BLACK_TERRACOTTA.material(), getDefaultPlateProperties()));
+    public static final RegistryObject<Block> PLATE_BLOCK_WHITE_TERRACOTTA = registerPlateBlock(PlateDefinition.WHITE_TERRACOTTA);
+    public static final RegistryObject<Block> PLATE_BLOCK_ORANGE_TERRACOTTA = registerPlateBlock(PlateDefinition.ORANGE_TERRACOTTA);
+    public static final RegistryObject<Block> PLATE_BLOCK_MAGENTA_TERRACOTTA = registerPlateBlock(PlateDefinition.MAGENTA_TERRACOTTA);
+    public static final RegistryObject<Block> PLATE_BLOCK_LIGHT_BLUE_TERRACOTTA = registerPlateBlock(PlateDefinition.LIGHT_BLUE_TERRACOTTA);
+    public static final RegistryObject<Block> PLATE_BLOCK_YELLOW_TERRACOTTA = registerPlateBlock(PlateDefinition.YELLOW_TERRACOTTA);
+    public static final RegistryObject<Block> PLATE_BLOCK_LIME_TERRACOTTA = registerPlateBlock(PlateDefinition.LIME_TERRACOTTA);
+    public static final RegistryObject<Block> PLATE_BLOCK_PINK_TERRACOTTA = registerPlateBlock(PlateDefinition.PINK_TERRACOTTA);
+    public static final RegistryObject<Block> PLATE_BLOCK_GRAY_TERRACOTTA = registerPlateBlock(PlateDefinition.GRAY_TERRACOTTA);
+    public static final RegistryObject<Block> PLATE_BLOCK_LIGHT_GRAY_TERRACOTTA = registerPlateBlock(PlateDefinition.LIGHT_GRAY_TERRACOTTA);
+    public static final RegistryObject<Block> PLATE_BLOCK_CYAN_TERRACOTTA = registerPlateBlock(PlateDefinition.CYAN_TERRACOTTA);
+    public static final RegistryObject<Block> PLATE_BLOCK_PURPLE_TERRACOTTA = registerPlateBlock(PlateDefinition.PURPLE_TERRACOTTA);
+    public static final RegistryObject<Block> PLATE_BLOCK_BLUE_TERRACOTTA = registerPlateBlock(PlateDefinition.BLUE_TERRACOTTA);
+    public static final RegistryObject<Block> PLATE_BLOCK_BROWN_TERRACOTTA = registerPlateBlock(PlateDefinition.BROWN_TERRACOTTA);
+    public static final RegistryObject<Block> PLATE_BLOCK_GREEN_TERRACOTTA = registerPlateBlock(PlateDefinition.GREEN_TERRACOTTA);
+    public static final RegistryObject<Block> PLATE_BLOCK_RED_TERRACOTTA = registerPlateBlock(PlateDefinition.RED_TERRACOTTA);
+    public static final RegistryObject<Block> PLATE_BLOCK_BLACK_TERRACOTTA = registerPlateBlock(PlateDefinition.BLACK_TERRACOTTA);
 
-    public static final RegistryObject<Block> PLATE_BLOCK_WHITE_CONCRETE = BLOCKS.register(PlateDefinition.WHITE_CONCRETE.block(),
-        () -> new PlateBlock(PlateDefinition.WHITE_CONCRETE.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_ORANGE_CONCRETE = BLOCKS.register(PlateDefinition.ORANGE_CONCRETE.block(),
-        () -> new PlateBlock(PlateDefinition.ORANGE_CONCRETE.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_MAGENTA_CONCRETE = BLOCKS.register(PlateDefinition.MAGENTA_CONCRETE.block(),
-        () -> new PlateBlock(PlateDefinition.MAGENTA_CONCRETE.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_LIGHT_BLUE_CONCRETE = BLOCKS.register(PlateDefinition.LIGHT_BLUE_CONCRETE.block(),
-        () -> new PlateBlock(PlateDefinition.LIGHT_BLUE_CONCRETE.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_YELLOW_CONCRETE = BLOCKS.register(PlateDefinition.YELLOW_CONCRETE.block(),
-        () -> new PlateBlock(PlateDefinition.YELLOW_CONCRETE.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_LIME_CONCRETE = BLOCKS.register(PlateDefinition.LIME_CONCRETE.block(),
-        () -> new PlateBlock(PlateDefinition.LIME_CONCRETE.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_PINK_CONCRETE = BLOCKS.register(PlateDefinition.PINK_CONCRETE.block(),
-        () -> new PlateBlock(PlateDefinition.PINK_CONCRETE.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_GRAY_CONCRETE = BLOCKS.register(PlateDefinition.GRAY_CONCRETE.block(),
-        () -> new PlateBlock(PlateDefinition.GRAY_CONCRETE.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_LIGHT_GRAY_CONCRETE = BLOCKS.register(PlateDefinition.LIGHT_GRAY_CONCRETE.block(),
-        () -> new PlateBlock(PlateDefinition.LIGHT_GRAY_CONCRETE.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_CYAN_CONCRETE = BLOCKS.register(PlateDefinition.CYAN_CONCRETE.block(),
-        () -> new PlateBlock(PlateDefinition.CYAN_CONCRETE.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_PURPLE_CONCRETE = BLOCKS.register(PlateDefinition.PURPLE_CONCRETE.block(),
-        () -> new PlateBlock(PlateDefinition.PURPLE_CONCRETE.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_BLUE_CONCRETE = BLOCKS.register(PlateDefinition.BLUE_CONCRETE.block(),
-        () -> new PlateBlock(PlateDefinition.BLUE_CONCRETE.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_BROWN_CONCRETE = BLOCKS.register(PlateDefinition.BROWN_CONCRETE.block(),
-        () -> new PlateBlock(PlateDefinition.BROWN_CONCRETE.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_GREEN_CONCRETE = BLOCKS.register(PlateDefinition.GREEN_CONCRETE.block(),
-        () -> new PlateBlock(PlateDefinition.GREEN_CONCRETE.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_RED_CONCRETE = BLOCKS.register(PlateDefinition.RED_CONCRETE.block(),
-        () -> new PlateBlock(PlateDefinition.RED_CONCRETE.material(), getDefaultPlateProperties()));
-    public static final RegistryObject<Block> PLATE_BLOCK_BLACK_CONCRETE = BLOCKS.register(PlateDefinition.BLACK_CONCRETE.block(),
-        () -> new PlateBlock(PlateDefinition.BLACK_CONCRETE.material(), getDefaultPlateProperties()));
+    public static final RegistryObject<Block> PLATE_BLOCK_WHITE_CONCRETE = registerPlateBlock(PlateDefinition.WHITE_CONCRETE);
+    public static final RegistryObject<Block> PLATE_BLOCK_ORANGE_CONCRETE = registerPlateBlock(PlateDefinition.ORANGE_CONCRETE);
+    public static final RegistryObject<Block> PLATE_BLOCK_MAGENTA_CONCRETE = registerPlateBlock(PlateDefinition.MAGENTA_CONCRETE);
+    public static final RegistryObject<Block> PLATE_BLOCK_LIGHT_BLUE_CONCRETE = registerPlateBlock(PlateDefinition.LIGHT_BLUE_CONCRETE);
+    public static final RegistryObject<Block> PLATE_BLOCK_YELLOW_CONCRETE = registerPlateBlock(PlateDefinition.YELLOW_CONCRETE);
+    public static final RegistryObject<Block> PLATE_BLOCK_LIME_CONCRETE = registerPlateBlock(PlateDefinition.LIME_CONCRETE);
+    public static final RegistryObject<Block> PLATE_BLOCK_PINK_CONCRETE = registerPlateBlock(PlateDefinition.PINK_CONCRETE);
+    public static final RegistryObject<Block> PLATE_BLOCK_GRAY_CONCRETE = registerPlateBlock(PlateDefinition.GRAY_CONCRETE);
+    public static final RegistryObject<Block> PLATE_BLOCK_LIGHT_GRAY_CONCRETE = registerPlateBlock(PlateDefinition.LIGHT_GRAY_CONCRETE);
+    public static final RegistryObject<Block> PLATE_BLOCK_CYAN_CONCRETE = registerPlateBlock(PlateDefinition.CYAN_CONCRETE);
+    public static final RegistryObject<Block> PLATE_BLOCK_PURPLE_CONCRETE = registerPlateBlock(PlateDefinition.PURPLE_CONCRETE);
+    public static final RegistryObject<Block> PLATE_BLOCK_BLUE_CONCRETE = registerPlateBlock(PlateDefinition.BLUE_CONCRETE);
+    public static final RegistryObject<Block> PLATE_BLOCK_BROWN_CONCRETE = registerPlateBlock(PlateDefinition.BROWN_CONCRETE);
+    public static final RegistryObject<Block> PLATE_BLOCK_GREEN_CONCRETE = registerPlateBlock(PlateDefinition.GREEN_CONCRETE);
+    public static final RegistryObject<Block> PLATE_BLOCK_RED_CONCRETE = registerPlateBlock(PlateDefinition.RED_CONCRETE);
+    public static final RegistryObject<Block> PLATE_BLOCK_BLACK_CONCRETE = registerPlateBlock(PlateDefinition.BLACK_CONCRETE);
 
     // ========================================
 
@@ -187,21 +141,41 @@ public class ModBlocks {
 
     // ========================================
 
-    private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
-        RegistryObject<T> toReturn = BLOCKS.register(name, block);
-        ModItems.ITEMS.register(name, () -> new BlockItem(toReturn.get(), new Item.Properties()));
-        return toReturn;
+    private static RegistryObject<Block> registerPlateBlock(PlateDefinition definition) {
+        return BLOCKS.register(definition.block(),
+            () -> new PlateBlock(definition.material(), getDefaultPlateProperties()));
+    }
+
+    private static RegistryObject<Block> registerPlateBlock(
+        PlateDefinition definition,
+        Ingredient pCraftMaterial,
+        int pCraftingAmount
+    ) {
+        return BLOCKS.register(definition.block(),
+            () -> new PlateBlock(
+                definition.material(),
+                pCraftMaterial,
+                pCraftingAmount,
+                getDefaultPlateProperties()));
+    }
+
+    private static RegistryObject<Block> registerPlateBlock(
+        PlateDefinition definition,
+        BlockBehaviour.Properties properties
+    ) {
+        return BLOCKS.register(definition.block(),
+            () -> new PlateBlock(definition.material(), properties));
     }
 
     private static BlockBehaviour.Properties getDefaultPlateProperties() {
         return BlockBehaviour.Properties.of()
-                .strength(0.3F)
-                .isValidSpawn((state, getter, pos, entityType) -> false)
-                .isRedstoneConductor((state, level, pos) -> false)
-                .isSuffocating((state, level, pos) -> false)
-                .isViewBlocking((state, level, pos) -> false)
-                .pushReaction(PushReaction.DESTROY)
-                .instabreak()
+            .strength(0.3F)
+            .isValidSpawn((state, getter, pos, entityType) -> false)
+            .isRedstoneConductor((state, level, pos) -> false)
+            .isSuffocating((state, level, pos) -> false)
+            .isViewBlocking((state, level, pos) -> false)
+            .pushReaction(PushReaction.DESTROY)
+            .instabreak()
         ;
     }
 
