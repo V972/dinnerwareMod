@@ -9,12 +9,12 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.items.SlotItemHandler;
 import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.advancement.ModCriterionTriggers;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import net.v972.dinnerware.config.CommonConfig;
+import net.v972.dinnerware.inventory.PlateInventoryContainer;
+import net.v972.dinnerware.screen.slot.PlateInventorySlot;
 import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,6 +25,7 @@ public class PlateMenu extends AbstractContainerMenu {
     public final PlateBlockBlockEntity blockEntity;
     private final Level level;
     private final ContainerData data;
+    private final PlateInventoryContainer plateInventory;
     private final List<Integer> targetIndexCache = new ArrayList<>();
 
     public PlateMenu(int containerId, Inventory inv, FriendlyByteBuf buffer) {
@@ -34,31 +35,35 @@ public class PlateMenu extends AbstractContainerMenu {
     public PlateMenu(int containerId, Inventory inv, BlockEntity blockEntity, ContainerData data) {
         super(ModMenuTypes.PLATE_MENU.get(), containerId);
 
-        AbstractContainerMenu.checkContainerSize(inv, PlateBlockBlockEntity.SLOT_COUNT);
-        this.blockEntity = ((PlateBlockBlockEntity)blockEntity);
+        this.blockEntity = ((PlateBlockBlockEntity) blockEntity);
+        this.plateInventory = new PlateInventoryContainer(
+            this.blockEntity.getInventory(),
+            this.blockEntity::stillValidForPlayer
+        );
+
+        AbstractContainerMenu.checkContainerSize(this.plateInventory, PlateBlockBlockEntity.SLOT_COUNT);
+
         this.level = inv.player.level();
         this.data = data;
 
         this.addPlayerInventory(inv);
         this.addPlayerHotbar(inv);
 
-        this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iItemHandler -> {
-            boolean rightSlotFirst = CommonConfig.RIGHT_TO_LEFT.get();
-            // | right -> left | left -> right |
-            // |       2       |       2       |
-            // |     1   0     |     0   1     |
-            this.addSlot(new SlotItemHandler(iItemHandler, 0, rightSlotFirst ? 100 : 60, 49));
-            this.addSlot(new SlotItemHandler(iItemHandler, 1, rightSlotFirst ? 60 : 100, 49));
+        boolean rightSlotFirst = CommonConfig.RIGHT_TO_LEFT.get();
+        // | right -> left | left -> right |
+        // |       2       |       2       |
+        // |     1   0     |     0   1     |
+        this.addSlot(new PlateInventorySlot(this.plateInventory, 0, rightSlotFirst ? 100 : 60, 49));
+        this.addSlot(new PlateInventorySlot(this.plateInventory, 1, rightSlotFirst ? 60 : 100, 49));
 
-            this.addSlot(new SlotItemHandler(iItemHandler, 2, 80, 31));
-        });
+        this.addSlot(new PlateInventorySlot(this.plateInventory, 2, 80, 31));
 
         this.addDataSlots(this.data);
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
     // must assign a slot number to each of the slots used by the GUI.
-    // For this container, we can see both the tile inventory's slots as well as the player inventory slots and the hotbar.
+    // For this container, we can see both the tile inventory's slots and the player inventory slots and the hotbar.
     // Each time we add a Slot to the container, it automatically increases the slotIndex, which means
     //  0 - 8 = hotbar slots (which will map to the InventoryPlayer slot numbers 0 - 8)
     //  9 - 35 = player inventory slots (which map to the InventoryPlayer slot numbers 9 - 35)
@@ -70,7 +75,7 @@ public class PlateMenu extends AbstractContainerMenu {
     private static final int VANILLA_SLOT_COUNT = HOTBAR_SLOT_COUNT + PLAYER_INVENTORY_SLOT_COUNT;
     private static final int VANILLA_FIRST_SLOT_INDEX = 0;
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
-    private static final int TE_INVENTORY_SLOT_COUNT = 3;
+    private static final int TE_INVENTORY_SLOT_COUNT = PlateBlockBlockEntity.SLOT_COUNT;
     @Override
     public @NotNull ItemStack quickMoveStack(@NotNull Player player, int index) {
         Slot sourceSlot = this.slots.get(index);
@@ -173,13 +178,13 @@ public class PlateMenu extends AbstractContainerMenu {
         }
     }
 
+    public int getRoundRobinSelectedSlot() {
+        return this.data.get(0);
+    }
+
     @Override
     public boolean stillValid(@NotNull Player player) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()), player, blockEntity.getBlock(level));
-    }
-
-    public int getRoundRobinSelectedSlot() {
-        return this.data.get(0);
     }
 
     private void addPlayerInventory(Inventory playerInventory) {

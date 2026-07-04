@@ -78,6 +78,22 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
 
     // ========================================
 
+    public PlateInventory getInventory() {
+        return this.inventory;
+    }
+
+    public boolean stillValidForPlayer(@NotNull Player player) {
+        if (this.level == null || this.level.getBlockEntity(this.worldPosition) != this) {
+            return false;
+        }
+
+        return player.distanceToSqr(
+            this.worldPosition.getX() + 0.5D,
+            this.worldPosition.getY() + 0.5D,
+            this.worldPosition.getZ() + 0.5D
+        ) <= 64.0D;
+    }
+
     @NotNull
     @Override
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
