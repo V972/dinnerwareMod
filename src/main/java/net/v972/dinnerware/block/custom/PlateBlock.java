@@ -170,7 +170,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new PlateBlockBlockEntity(pPos, pState);
+        return ModBlockEntities.PLATE_BLOCK_BE.get().create(pPos, pState);
     }
 
     @Override

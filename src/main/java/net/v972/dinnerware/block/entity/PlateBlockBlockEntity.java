@@ -1,7 +1,6 @@
 package net.v972.dinnerware.block.entity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
@@ -23,12 +22,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.IItemHandler;
 import net.v972.dinnerware.config.CommonConfig;
-import net.v972.dinnerware.forge.inventory.ForgePlateInventoryItemHandler;
 import net.v972.dinnerware.inventory.PlateInventory;
 import net.v972.dinnerware.screen.PlateMenu;
 import org.jetbrains.annotations.NotNull;
@@ -50,8 +44,6 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     private boolean doDropContent = true;
 
     private final PlateInventory inventory = new PlateInventory(SLOT_COUNT, this::inventoryChanged);
-    private final LazyOptional<IItemHandler> itemHandler =
-            LazyOptional.of(() -> new ForgePlateInventoryItemHandler(this.inventory));
 
     protected final ContainerData containerData;
 
@@ -92,22 +84,6 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
             this.worldPosition.getY() + 0.5D,
             this.worldPosition.getZ() + 0.5D
         ) <= 64.0D;
-    }
-
-    @NotNull
-    @Override
-    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return itemHandler.cast();
-        } else {
-            return super.getCapability(cap, side);
-        }
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        itemHandler.invalidate();
     }
 
     private void inventoryChanged() {
