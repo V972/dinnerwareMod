@@ -17,9 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SuspiciousStewItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -29,16 +27,14 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 import net.v972.dinnerware.config.CommonConfig;
+import net.v972.dinnerware.forge.inventory.ForgePlateInventoryItemHandler;
+import net.v972.dinnerware.inventory.PlateInventory;
 import net.v972.dinnerware.screen.PlateMenu;
-import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.OptionalInt;
-import java.util.stream.IntStream;
 
 public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, Nameable {
 
@@ -53,8 +49,9 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
 
     private boolean doDropContent = true;
 
-    private final ItemStackHandler items = createItemHandler();
-    private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(() -> items);
+    private final PlateInventory inventory = new PlateInventory(SLOT_COUNT, this::inventoryChanged);
+    private final LazyOptional<IItemHandler> itemHandler =
+            LazyOptional.of(() -> new ForgePlateInventoryItemHandler(this.inventory));
 
     protected final ContainerData containerData;
 
@@ -97,34 +94,21 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
         itemHandler.invalidate();
     }
 
-    @Nonnull
-    private ItemStackHandler createItemHandler() {
-        return new ItemStackHandler(SLOT_COUNT) {
-            @Override
-            protected void onContentsChanged(int slot) {
-                setChanged();
-                if (level == null) System.out.println("Level is null in onContentsChanged() for slot " + slot);
-                else level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
-            }
+    private void inventoryChanged() {
+        setChanged();
 
-            @Override
-            public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-                return CommonConfig.ONLY_FOOD_ON_PLATE.get()
-                    ? canPlaceItemOnPlate(stack)
-                    : super.isItemValid(slot, stack);
-            }
+        if (level == null) {
+            System.out.println("Level is null in inventoryChanged()");
+            return;
+        }
 
-            @Override
-            public int getSlotLimit(int slot) {
-                return CommonConfig.MAX_PLATE_STACK_SIZE.get();
-            }
-        };
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 
     // ========================================
 
     @Override
-    public @Nullable AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
+    public @Nullable AbstractContainerMenu createMenu(int pContainerId, @NotNull Inventory pPlayerInventory, @NotNull Player pPlayer) {
         return new PlateMenu(pContainerId, pPlayerInventory, this, this.containerData);
     }
 
@@ -135,13 +119,13 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     // ========================================
 
     @Override
-    public void load(CompoundTag pTag) {
+    public void load(@NotNull CompoundTag pTag) {
         super.load(pTag);
         loadClientData(pTag);
     }
 
     @Override
-    protected void saveAdditional(CompoundTag pTag) {
+    protected void saveAdditional(@NotNull CompoundTag pTag) {
         super.saveAdditional(pTag);
         saveClientData(pTag);
     }
@@ -182,7 +166,11 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     private void saveClientData(CompoundTag pTag) {
         if (pTag == null)
             pTag = new CompoundTag();
-        pTag.put(ITEMS_TAG, items.serializeNBT());
+
+        CompoundTag inventoryTag = new CompoundTag();
+        this.inventory.save(inventoryTag);
+        pTag.put(ITEMS_TAG, inventoryTag);
+
         if (this.name != null) {
             pTag.putString("CustomName", Component.Serializer.toJson(this.name));
         }
@@ -194,7 +182,7 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
                 this.name = Component.Serializer.fromJson(pTag.getString("CustomName"));
             }
             if (pTag.contains(ITEMS_TAG)) {
-                items.deserializeNBT(pTag.getCompound(ITEMS_TAG));
+                this.inventory.load(pTag.getCompound(ITEMS_TAG));
             }
         }
     }
@@ -202,12 +190,12 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     // ========================================
 
     @Override
-    public Component getName() {
+    public @NotNull Component getName() {
         return this.name != null ? this.name : this.getDefaultName();
     }
 
     @Override
-    public Component getDisplayName() {
+    public @NotNull Component getDisplayName() {
         return this.getName();
     }
 
@@ -239,7 +227,11 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
         ItemStack itemstack = new ItemStack(getBlock());
         if (!this.isEmpty() && pWithContent) {
             CompoundTag compoundtag = new CompoundTag();
-            compoundtag.put(ITEMS_TAG, items.serializeNBT());
+
+            CompoundTag inventoryTag = new CompoundTag();
+            this.inventory.save(inventoryTag);
+            compoundtag.put(ITEMS_TAG, inventoryTag);
+
             BlockItem.setBlockEntityData(itemstack, this.getType(), compoundtag);
         }
 
@@ -253,53 +245,33 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     // ========================================
 
     public int getInventorySize() {
-        return this.items.getSlots();
+        return this.inventory.getSlotCount();
     }
 
     public boolean isEmpty() {
-        for(int i = 0; i < items.getSlots(); i++) {
-            if (!items.getStackInSlot(i).isEmpty()) return false;
-        }
-        return true;
+        return this.inventory.isEmpty();
     }
 
     public int getNonEmptySlotsCount() {
-        return (int)IntStream
-            .range(0, SLOT_COUNT)
-            .filter(i -> !items.getStackInSlot(i).isEmpty())
-            .count();
+        return this.inventory.getNonEmptySlotsCount();
     }
 
     public OptionalInt getFirstNonEmptySlot(boolean validateBlacklist) {
-        return IntStream.range(0, SLOT_COUNT)
-            .filter(i ->
-                !items.getStackInSlot(i).isEmpty() &&
-                (!validateBlacklist || !CommonConfig.isInFoodBlacklist(items.getStackInSlot(i)))
-            )
-            .findFirst();
+        return this.inventory.getFirstNonEmptySlot(validateBlacklist);
     }
 
     public boolean hasPlateInside() {
-        for(int i = 0; i < items.getSlots(); i++) {
-            if (items.getStackInSlot(i).is(ModTags.Items.PLATES)) return true;
-        }
-        return false;
+        return this.inventory.hasPlateInside();
     }
 
     ///  Returns **a copy** of the item stacks in all slots
     public NonNullList<ItemStack> getInventoryStacks() {
-        NonNullList<ItemStack> result = NonNullList.withSize(items.getSlots(), ItemStack.EMPTY);
-
-        for(int i = 0; i < items.getSlots(); i++) {
-            result.set(i, items.getStackInSlot(i).copy());
-        }
-
-        return result;
+        return this.inventory.getStackCopies();
     }
 
     ///  Returns **a copy** of the item stack in the slot
     public ItemStack getStackInSlot(int pSlot) {
-        return items.getStackInSlot(pSlot).copy();
+        return this.inventory.getStackCopyInSlot(pSlot);
     }
 
     public ItemStack extractItem(int pIndex) {
@@ -307,50 +279,39 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     }
 
     public ItemStack extractItem(int pIndex, int pCount) {
-        return items.extractItem(pIndex, pCount, false);
+        return this.inventory.extractItem(pIndex, pCount, false);
     }
 
     public void clearContent() {
-        for(int i = 0; i < items.getSlots(); i++) {
-            items.setStackInSlot(i, ItemStack.EMPTY);
-        }
+        this.inventory.clearContent();
     }
 
     public void dropContents() {
-        Containers.dropContents(this.getLevel(), getBlockPos(), getInventoryStacks());
-        this.clearContent();
-    }
+        if (this.level == null) return;
 
-    private boolean canPlaceItemOnPlate(ItemStack pStack) {
-        return
-            !CommonConfig.ONLY_FOOD_ON_PLATE.get() ||
-            (
-                pStack.isEdible() &&
-                !(pStack.getItem() instanceof BowlFoodItem) &&
-                !(pStack.getItem() instanceof SuspiciousStewItem)
-            ) ||
-            pStack.is(ModTags.Items.ADDITIONAL_FOOD);
+        Containers.dropContents(this.level, getBlockPos(), getInventoryStacks());
+        this.clearContent();
     }
 
     // ========================================
 
     private int advanceRoundRobinEatingSlot() {
-        int newSlot = (roundRobinCurrentSlot + 1) % 3;
+        int newSlot = (roundRobinCurrentSlot + 1) % SLOT_COUNT;
 
-        if (items.getStackInSlot(newSlot).isEmpty() ||
-            CommonConfig.isInFoodBlacklist(items.getStackInSlot(newSlot))
+        if (getStackInSlot(newSlot).isEmpty() ||
+                CommonConfig.isInFoodBlacklist(getStackInSlot(newSlot))
         ) {
-            newSlot = (newSlot + 1) % 3;
+            newSlot = (newSlot + 1) % SLOT_COUNT;
         } else return newSlot;
 
-        if (items.getStackInSlot(newSlot).isEmpty() ||
-            CommonConfig.isInFoodBlacklist(items.getStackInSlot(newSlot))
+        if (getStackInSlot(newSlot).isEmpty() ||
+                CommonConfig.isInFoodBlacklist(getStackInSlot(newSlot))
         ) {
-            newSlot = (newSlot + 1) % 3;
+            newSlot = (newSlot + 1) % SLOT_COUNT;
         } else return newSlot;
 
-        if (items.getStackInSlot(newSlot).isEmpty() ||
-            CommonConfig.isInFoodBlacklist(items.getStackInSlot(newSlot))
+        if (getStackInSlot(newSlot).isEmpty() ||
+                CommonConfig.isInFoodBlacklist(getStackInSlot(newSlot))
         ) {
             return 0;
         }
@@ -370,18 +331,18 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
         return eatingAttemptClicks;
     }
 
-    /// 1 - one item in any slot;
-    /// 2 - main and side dish slots;
-    /// 3 - all slots;
-    /// 4 - main dish slot and extra dish slot;
+    /// 1 - one item in any slot;<br>
+    /// 2 - main and side dish slots;<br>
+    /// 3 - all slots;<br>
+    /// 4 - main dish slot and extra dish slot;<br>
     /// 5 - side dish slot and extra dish slot;
     public int getSlotStacksPositions() {
         int result = this.getNonEmptySlotsCount();
 
-        if (result == 2 && !items.getStackInSlot(2).isEmpty()) {
+        if (result == 2 && !getStackInSlot(2).isEmpty()) {
             result *= 2; // 4
 
-            if (!items.getStackInSlot(1).isEmpty())
+            if (!getStackInSlot(1).isEmpty())
                 result += 1; // 5
         }
 

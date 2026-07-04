@@ -44,8 +44,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> PLATE_BLOCK_DIAMOND = registerPlateBlock(PlateDefinition.DIAMOND,
             Ingredient.of(Tags.Items.GEMS_DIAMOND), 1);
 
-    public static final RegistryObject<Block> PLATE_BLOCK_OBSIDIAN = registerPlateBlock(PlateDefinition.OBSIDIAN,
-            getDefaultPlateProperties().pushReaction(PushReaction.BLOCK));
+    public static final RegistryObject<Block> PLATE_BLOCK_OBSIDIAN = registerPlateBlock(PlateDefinition.OBSIDIAN);
 
     public static final RegistryObject<Block> PLATE_BLOCK_POLISHED_BLACKSTONE = registerPlateBlock(PlateDefinition.POLISHED_BLACKSTONE);
     public static final RegistryObject<Block> PLATE_BLOCK_CHISELED_NETHER_BRICKS = registerPlateBlock(PlateDefinition.CHISELED_NETHER_BRICKS,
