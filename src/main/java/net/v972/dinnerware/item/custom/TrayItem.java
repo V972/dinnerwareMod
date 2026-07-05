@@ -37,7 +37,6 @@ import net.v972.dinnerware.block.DinnerwareBlocks;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import net.v972.dinnerware.config.DinnerwareConfig;
-//import net.v972.dinnerware.forge.client.hud.ForgeTrayItemHud;
 import net.v972.dinnerware.item.DinnerwareItems;
 import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
