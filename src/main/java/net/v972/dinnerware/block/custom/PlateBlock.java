@@ -22,6 +22,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -188,13 +190,26 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
 
     @Override
     public void attack(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer) {
-        BlockEntity blockentity = pLevel.getBlockEntity(pPos);
-        if(blockentity instanceof PlateBlockBlockEntity pPlateEntity &&
-            pPlayer.isShiftKeyDown() &&
-            !pPlateEntity.isEmpty() &&
-            this.MATERIAL != Blocks.BEDROCK
-        ) {
-            pickUpPlate(pPlateEntity, pPlayer, pLevel, pPos);
+        BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+
+        if (!(blockEntity instanceof PlateBlockBlockEntity plateEntity)) {
+            super.attack(pState, pLevel, pPos, pPlayer);
+            return;
+        }
+
+        if (plateEntity.isEmpty() || this.MATERIAL == Blocks.BEDROCK) {
+            super.attack(pState, pLevel, pPos, pPlayer);
+            return;
+        }
+
+        if (pPlayer.isShiftKeyDown()) {
+            pickUpPlate(plateEntity, pPlayer, pLevel, pPos);
+            return;
+        }
+
+        if (hasSilkTouch(pPlayer.getMainHandItem())) {
+            breakPlateWithContents(plateEntity, pPlayer, pLevel, pPos);
+            return;
         }
 
         super.attack(pState, pLevel, pPos, pPlayer);
@@ -281,6 +296,31 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         //}
 
         //return InteractionResult.sidedSuccess(pLevel.isClientSide());
+    }
+
+    private static boolean hasSilkTouch(ItemStack stack) {
+        return EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0;
+    }
+
+    private static void breakPlateWithContents(
+            PlateBlockBlockEntity plateEntity,
+            Player player,
+            Level level,
+            BlockPos pos
+    ) {
+        if (level.isClientSide) return;
+
+        ItemStack plateStack = plateEntity.getItem(true);
+
+        plateEntity.doNotDropContent();
+
+        level.removeBlock(pos, false);
+        popResource(level, pos, plateStack);
+
+        player.awardStat(Stats.BLOCK_MINED.get(plateEntity.getBlock()));
+        player.causeFoodExhaustion(0.005F);
+
+        level.gameEvent(player, GameEvent.BLOCK_DESTROY, pos);
     }
 
     private InteractionResult pickUpPlate(PlateBlockBlockEntity pPlateEntity, Player pPlayer, Level pLevel, BlockPos pPos) {
