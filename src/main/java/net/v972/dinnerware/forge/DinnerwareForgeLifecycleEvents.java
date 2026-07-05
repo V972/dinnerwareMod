@@ -13,6 +13,7 @@ public final class DinnerwareForgeLifecycleEvents {
     public static void commonSetup(final FMLCommonSetupEvent event) {
         DinnerwareCommon.commonSetup();
         ModCriterionTriggers.init();
+        event.enqueueWork(DinnerwareCommon::registerDispenserBehaviors);
     }
 
     @SubscribeEvent

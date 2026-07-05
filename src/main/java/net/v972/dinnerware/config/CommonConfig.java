@@ -96,6 +96,15 @@ public class CommonConfig
             )
             .define("trayMergeMatchingItem", false);
 
+    public static final ForgeConfigSpec.BooleanValue DISPENSERS_PLACE_PLATES = BUILDER
+            .comment(
+                    "\n" +
+                    "If set to true, dispensers will place plate blocks.\n" +
+                    "Disable this if another mod (e.g Quark) provides similar behavior.\n" +
+                    "Default: true"
+            )
+            .define("dispensersPlacePlates", true);
+
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
 

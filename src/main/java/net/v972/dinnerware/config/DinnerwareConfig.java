@@ -39,6 +39,10 @@ public final class DinnerwareConfig {
         return CommonConfig.TRAY_MERGE_MATCHING_ITEM.get();
     }
 
+    public static boolean dispensersPlacePlates() {
+        return CommonConfig.DISPENSERS_PLACE_PLATES.get();
+    }
+
     public static boolean isInFoodBlacklist(ItemStack stack) {
         return CommonConfig.isInFoodBlacklist(stack);
     }
