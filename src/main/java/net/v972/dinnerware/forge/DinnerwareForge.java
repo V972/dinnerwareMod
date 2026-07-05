@@ -1,20 +1,14 @@
-package net.v972.dinnerware;
+package net.v972.dinnerware.forge;
 
-import com.mojang.logging.LogUtils;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.v972.dinnerware.forge.DinnerwareForgeBootstrap;
-import org.slf4j.Logger;
+import net.v972.dinnerware.DinnerwareCommon;
 
 @Mod(DinnerwareCommon.MOD_ID)
-public class DinnerwareMod
+public class DinnerwareForge
 {
-    public static final String MOD_ID = DinnerwareCommon.MOD_ID;
-    private static final Logger LOGGER = LogUtils.getLogger();
-
-    public DinnerwareMod(FMLJavaModLoadingContext context)
+    public DinnerwareForge(FMLJavaModLoadingContext context)
     {
         DinnerwareForgeBootstrap.registerPlatformHooks();
 
@@ -26,9 +20,5 @@ public class DinnerwareMod
         DinnerwareForgeBootstrap.registerModEventHandlers(modEventBus);
         DinnerwareForgeBootstrap.registerConfigs(context);
         DinnerwareForgeBootstrap.registerForgeEventHandlers();
-    }
-
-    private void addCreative(BuildCreativeModeTabContentsEvent event) {
-
     }
 }
