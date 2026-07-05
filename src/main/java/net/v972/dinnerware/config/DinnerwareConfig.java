@@ -4,7 +4,21 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public final class DinnerwareConfig {
+    private static DinnerwareConfigBackend backend;
+
     private DinnerwareConfig() {
+    }
+
+    public static void setBackend(DinnerwareConfigBackend backend) {
+        DinnerwareConfig.backend = backend;
+    }
+
+    private static DinnerwareConfigBackend backend() {
+        if (backend == null) {
+            throw new IllegalStateException("Dinnerware config backend has not been initialized");
+        }
+
+        return backend;
     }
 
     // ---------------------------------------------------------------------
@@ -12,43 +26,43 @@ public final class DinnerwareConfig {
     // ---------------------------------------------------------------------
 
     public static int maxPlateStackSize() {
-        return CommonConfig.MAX_PLATE_STACK_SIZE.get();
+        return backend().maxPlateStackSize();
     }
 
     public static boolean allowOvereating() {
-        return CommonConfig.ALLOW_OVEREATING.get();
+        return backend().allowOvereating();
     }
 
     public static boolean onlyFoodOnPlate() {
-        return CommonConfig.ONLY_FOOD_ON_PLATE.get();
+        return backend().onlyFoodOnPlate();
     }
 
     public static boolean fragilePlates() {
-        return CommonConfig.FRAGILE_PLATES.get();
+        return backend().fragilePlates();
     }
 
     public static boolean rightToLeft() {
-        return CommonConfig.RIGHT_TO_LEFT.get();
+        return backend().rightToLeft();
     }
 
     public static DinnerwareEatingMode eatingMode() {
-        return CommonConfig.EATING_MODE.get();
+        return backend().eatingMode();
     }
 
     public static boolean trayMergeMatchingItem() {
-        return CommonConfig.TRAY_MERGE_MATCHING_ITEM.get();
+        return backend().trayMergeMatchingItem();
     }
 
     public static boolean dispensersPlacePlates() {
-        return CommonConfig.DISPENSERS_PLACE_PLATES.get();
-    }
-
-    public static boolean isInFoodBlacklist(ItemStack stack) {
-        return CommonConfig.isInFoodBlacklist(stack);
+        return backend().dispensersPlacePlates();
     }
 
     public static boolean isInFoodBlacklist(Item item) {
-        return CommonConfig.isInFoodBlacklist(item);
+        return backend().isInFoodBlacklist(item);
+    }
+
+    public static boolean isInFoodBlacklist(ItemStack stack) {
+        return backend().isInFoodBlacklist(stack);
     }
 
     // ---------------------------------------------------------------------
@@ -56,18 +70,18 @@ public final class DinnerwareConfig {
     // ---------------------------------------------------------------------
 
     public static int maxTrayTooltipLines() {
-        return ClientConfig.MAX_TRAY_TOOLTIP_LINES.get();
+        return backend().maxTrayTooltipLines();
     }
 
     public static boolean trayDynamicPlateOffset() {
-        return ClientConfig.TRAY_DYNAMIC_PLATE_OFFSET.get();
+        return backend().trayDynamicPlateOffset();
     }
 
-//    public static int trayGuiXOffset() {
-//        return ClientConfig.TRAY_GUI_X.get();
-//    }
-//
-//    public static int trayGuiYOffset() {
-//        return ClientConfig.TRAY_GUI_Y.get();
-//    }
+    public static int trayGuiX() {
+        return backend().trayGuiX();
+    }
+
+    public static int trayGuiY() {
+        return backend().trayGuiY();
+    }
 }
