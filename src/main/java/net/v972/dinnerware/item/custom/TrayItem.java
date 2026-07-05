@@ -33,12 +33,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.advancement.ModCriterionTriggers;
-import net.v972.dinnerware.block.ModBlocks;
+import net.v972.dinnerware.block.DinnerwareBlocks;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 //import net.v972.dinnerware.client.hud.TrayItemHud;
 import net.v972.dinnerware.config.DinnerwareConfig;
-import net.v972.dinnerware.item.ModItems;
+import net.v972.dinnerware.item.DinnerwareItems;
 import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
 
@@ -112,7 +112,7 @@ public class TrayItem extends Item {
             ItemStack trayStack = contextPlayer.getItemInHand(pContext.getHand());
 
             Block clickedBlock = contextLevel.getBlockState(pos).getBlock();
-            if (Arrays.asList(ModBlocks.getKnownPlateBlocksArray()).contains(clickedBlock)) {
+            if (Arrays.asList(DinnerwareBlocks.getKnownPlateBlocksArray()).contains(clickedBlock)) {
 
                 if (((PlateBlock)clickedBlock).MATERIAL == Blocks.BEDROCK && !contextPlayer.isCreative()) {
                     return InteractionResult.FAIL;
@@ -329,14 +329,14 @@ public class TrayItem extends Item {
 
     public static void playRemoveOneSound(Entity pEntity, boolean pInInventory) {
         if (pInInventory) {
-            pEntity.playSound(SoundEvents.BUNDLE_REMOVE_ONE, //ModSounds.trayMetalUnload(),
+            pEntity.playSound(SoundEvents.BUNDLE_REMOVE_ONE, //trayMetalUnload(),
                 0.8F, 0.8F + pEntity.level().getRandom().nextFloat() * 0.4F);
         }
     }
 
     public static void playInsertSound(Entity pEntity, boolean pInInventory) {
         pEntity.playSound(pInInventory
-                ? SoundEvents.BUNDLE_INSERT //ModSounds.trayMetalLoad()
+                ? SoundEvents.BUNDLE_INSERT //trayMetalLoad()
                 : SoundEvents.ITEM_PICKUP,
             0.8F, 0.8F + pEntity.level().getRandom().nextFloat() * 0.4F);
     }
@@ -517,7 +517,7 @@ public class TrayItem extends Item {
             listTag.stream()
                 .map(tag -> ItemStack.of((CompoundTag)tag).getItem())
                 .collect(Collectors.toSet());
-        return trayItemsSet.containsAll(List.of(ModItems.getSurvivalPlateItemsArray()));
+        return trayItemsSet.containsAll(List.of(DinnerwareItems.getSurvivalPlateItemsArray()));
     }
 
     public static void checkAndAwardTheOneTrayAdvancement(ItemStack pStack, Player pPlayer) {

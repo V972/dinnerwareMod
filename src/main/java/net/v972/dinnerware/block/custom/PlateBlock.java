@@ -42,12 +42,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.v972.dinnerware.block.ModBlocks;
-import net.v972.dinnerware.block.entity.ModBlockEntities;
+import net.v972.dinnerware.block.DinnerwareBlocks;
+import net.v972.dinnerware.block.entity.DinnerwareBlockEntities;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import net.v972.dinnerware.config.DinnerwareConfig;
 import net.v972.dinnerware.config.DinnerwareEatingMode;
-import net.v972.dinnerware.item.ModItems;
+import net.v972.dinnerware.item.DinnerwareItems;
 import net.v972.dinnerware.item.custom.TrayItem;
 import net.v972.dinnerware.platform.PlatformHooks;
 import net.v972.dinnerware.util.DinnerwareHelper;
@@ -173,7 +173,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return ModBlockEntities.plateBlockEntityType().create(pPos, pState);
+        return DinnerwareBlockEntities.plateBlockEntityType().create(pPos, pState);
     }
 
     @Override
@@ -219,11 +219,11 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     @Override
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
         if (pLevel.isClientSide) {
-            pLevel.getBlockEntity(pPos, ModBlockEntities.plateBlockEntityType()).ifPresent((be) -> {
+            pLevel.getBlockEntity(pPos, DinnerwareBlockEntities.plateBlockEntityType()).ifPresent((be) -> {
                 be.fromItem(pStack);
             });
         } else if (pStack.hasCustomHoverName()) {
-            pLevel.getBlockEntity(pPos, ModBlockEntities.plateBlockEntityType()).ifPresent((be) -> {
+            pLevel.getBlockEntity(pPos, DinnerwareBlockEntities.plateBlockEntityType()).ifPresent((be) -> {
                 be.setCustomName(pStack.getHoverName());
             });
         }
@@ -356,11 +356,11 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         pLevel.removeBlock(pPos, false);
 
         pPlayer.awardStat(Stats.BLOCK_MINED.get(this));
-        for (Block plateType : ModBlocks.getKnownPlateBlocksIterable()) {
+        for (Block plateType : DinnerwareBlocks.getKnownPlateBlocksIterable()) {
             pPlayer.getCooldowns().addCooldown(plateType.asItem(), 5);
         }
         if (didAddToTray) {
-            for (TrayItem item : ModItems.getTrayItemsArray()) {
+            for (TrayItem item : DinnerwareItems.getTrayItemsArray()) {
                 pPlayer.getCooldowns().addCooldown(item, 5);
             }
             TrayItem.checkAndAwardTheOneTrayAdvancement(selectedItemStack, pPlayer);

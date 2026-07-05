@@ -3,13 +3,12 @@ package net.v972.dinnerware.datagen;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.v972.dinnerware.DinnerwareCommon;
-import net.v972.dinnerware.block.ModBlocks;
+import net.v972.dinnerware.forge.registry.ForgeModBlocks;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.client.model.generators.BlockStateProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.v972.dinnerware.block.custom.PlateBlock;
-import net.v972.dinnerware.util.DinnerwareHelper;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
@@ -21,7 +20,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        for(Block block : ModBlocks.getKnownPlateBlocksIterable()) {
+        for(Block block : ForgeModBlocks.getKnownPlateBlocksIterable()) {
             PlateBlock plateBlock = (PlateBlock)block;
 
             ModelFile model = DinnerwareDatagenHelper.getPlateModelWithMaterial(plateBlock, models());

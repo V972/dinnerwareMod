@@ -6,7 +6,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.v972.dinnerware.item.ModItems;
+import net.v972.dinnerware.item.DinnerwareItems;
 
 import java.util.OptionalInt;
 import java.util.Set;
@@ -45,7 +45,7 @@ public final class DinnerwareInventoryHelper {
             listTag.stream()
                 .map(tag -> ItemStack.of((CompoundTag) tag).getItem())
                 .collect(Collectors.toSet());
-        Set<Item> allPlatesSet = ModItems.getKnownPlateItemsSet();
+        Set<Item> allPlatesSet = DinnerwareItems.getKnownPlateItemsSet();
         plateItemsSet.retainAll(allPlatesSet);
         return !plateItemsSet.isEmpty();
     }

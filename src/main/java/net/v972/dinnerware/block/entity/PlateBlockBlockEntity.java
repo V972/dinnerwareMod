@@ -49,7 +49,7 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     protected final ContainerData containerData;
 
     public PlateBlockBlockEntity(BlockPos pPos, BlockState pBlockState) {
-        super(ModBlockEntities.plateBlockEntityType(), pPos, pBlockState);
+        super(DinnerwareBlockEntities.plateBlockEntityType(), pPos, pBlockState);
         eatingAttemptClicks = 0;
         roundRobinCurrentSlot = 0;
         this.containerData = new ContainerData() {

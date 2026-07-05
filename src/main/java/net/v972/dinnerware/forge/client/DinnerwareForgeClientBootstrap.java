@@ -9,15 +9,15 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.v972.dinnerware.DinnerwareCommon;
-import net.v972.dinnerware.block.entity.ModBlockEntities;
+import net.v972.dinnerware.forge.registry.ForgeModBlockEntities;
 import net.v972.dinnerware.block.entity.renderer.DinnerwareBEWLR;
 import net.v972.dinnerware.block.entity.renderer.DinnerwareBEWLRManager;
 import net.v972.dinnerware.block.entity.renderer.PlateBlockBlockEntityRenderer;
 import net.v972.dinnerware.client.animation.DinnerwareItemAnimations;
 import net.v972.dinnerware.client.animation.TrayThirdPersonAnimationProvider;
 //import net.v972.dinnerware.client.hud.TrayItemHud;
-import net.v972.dinnerware.item.ModItems;
-import net.v972.dinnerware.screen.ModMenuTypes;
+import net.v972.dinnerware.forge.registry.ForgeModItems;
+import net.v972.dinnerware.forge.registry.ForgeModMenuTypes;
 import net.v972.dinnerware.screen.PlateScreen;
 
 import java.util.stream.Collectors;
@@ -30,15 +30,15 @@ public final class DinnerwareForgeClientBootstrap {
 
     @SubscribeEvent
     public static void onClientSetup(final FMLClientSetupEvent event) {
-        MenuScreens.register(ModMenuTypes.plateMenu(), PlateScreen::new);
+        MenuScreens.register(ForgeModMenuTypes.plateMenu(), PlateScreen::new);
 
         // Registers the "DinnerwareBEWLR" to the given item sets
         DinnerwareBEWLRManager.register(
-                Stream.concat(
-                        ModItems.getKnownPlateItemsSet().stream(),
-                        ModItems.getTrayItemsSet().stream()
-                ).collect(Collectors.toSet()),
-                DinnerwareBEWLR::new
+            Stream.concat(
+                ForgeModItems.getKnownPlateItemsSet().stream(),
+                ForgeModItems.getTrayItemsSet().stream()
+            ).collect(Collectors.toSet()),
+            DinnerwareBEWLR::new
         );
 
         registerItemAnimations();
@@ -47,14 +47,14 @@ public final class DinnerwareForgeClientBootstrap {
     private static void registerItemAnimations() {
         TrayThirdPersonAnimationProvider trayAnimationProvider = new TrayThirdPersonAnimationProvider();
 
-        ModItems.getTrayItemsSet().forEach(item ->
-                DinnerwareItemAnimations.registerThirdPerson(item.asItem(), trayAnimationProvider)
+        ForgeModItems.getTrayItemsSet().forEach(item ->
+            DinnerwareItemAnimations.registerThirdPerson(item.asItem(), trayAnimationProvider)
         );
     }
 
     @SubscribeEvent
     public static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(ModBlockEntities.plateBlockEntityType(), PlateBlockBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(ForgeModBlockEntities.plateBlockEntityType(), PlateBlockBlockEntityRenderer::new);
     }
 
 //    @SubscribeEvent

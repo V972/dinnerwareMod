@@ -2,7 +2,7 @@ package net.v972.dinnerware.datagen;
 
 import net.minecraft.world.level.block.Blocks;
 import net.v972.dinnerware.DinnerwareCommon;
-import net.v972.dinnerware.block.ModBlocks;
+import net.v972.dinnerware.forge.registry.ForgeModBlocks;
 import net.v972.dinnerware.util.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -21,7 +21,7 @@ public class ModBlockTagGenerator extends BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
         this.tag(BlockTags.GUARDED_BY_PIGLINS)
-                .add(ModBlocks.PLATE_BLOCK_GOLD.get());
+                .add(ForgeModBlocks.PLATE_BLOCK_GOLD.get());
 
         this.tag(ModTags.Blocks.PLATE_SOFT_BREAKERS)
                 .add(Blocks.END_ROD)

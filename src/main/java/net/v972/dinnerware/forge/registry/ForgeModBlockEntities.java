@@ -1,4 +1,4 @@
-package net.v972.dinnerware.block.entity;
+package net.v972.dinnerware.forge.registry;
 
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -6,11 +6,11 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.v972.dinnerware.DinnerwareCommon;
-import net.v972.dinnerware.block.ModBlocks;
+import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import net.v972.dinnerware.forge.block.entity.ForgePlateBlockBlockEntity;
 import net.v972.dinnerware.registry.DinnerwareRegistryNames;
 
-public class ModBlockEntities {
+public class ForgeModBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, DinnerwareCommon.MOD_ID);
 
@@ -18,7 +18,7 @@ public class ModBlockEntities {
         BLOCK_ENTITIES.register(DinnerwareRegistryNames.BlockEntities.PLATE_BLOCK,
             () -> BlockEntityType.Builder.<PlateBlockBlockEntity>of(
                 ForgePlateBlockBlockEntity::new,
-                ModBlocks.getKnownPlateBlocksArray()
+                ForgeModBlocks.getKnownPlateBlocksArray()
             ).build(null)
         );
 

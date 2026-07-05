@@ -1,4 +1,4 @@
-package net.v972.dinnerware.sound;
+package net.v972.dinnerware.forge.registry;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -9,7 +9,7 @@ import net.minecraftforge.registries.RegistryObject;
 import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.registry.DinnerwareRegistryNames;
 
-public class ModSounds {
+public class ForgeModSounds {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS =
             DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, DinnerwareCommon.MOD_ID);
 

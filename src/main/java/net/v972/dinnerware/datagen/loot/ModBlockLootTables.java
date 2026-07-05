@@ -3,7 +3,7 @@ package net.v972.dinnerware.datagen.loot;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
-import net.v972.dinnerware.block.ModBlocks;
+import net.v972.dinnerware.forge.registry.ForgeModBlocks;
 
 import java.util.Set;
 
@@ -14,13 +14,13 @@ public class ModBlockLootTables extends BlockLootSubProvider {
 
     @Override
     protected void generate() {
-        for(Block block : ModBlocks.getKnownPlateBlocksIterable()) {
+        for(Block block : ForgeModBlocks.getKnownPlateBlocksIterable()) {
             this.add(block, this::createNameableBlockEntityTable);
         }
     }
 
     @Override
     protected Iterable<Block> getKnownBlocks() {
-        return ModBlocks.getKnownPlateBlocksIterable();
+        return ForgeModBlocks.getKnownPlateBlocksIterable();
     }
 }

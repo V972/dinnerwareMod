@@ -33,7 +33,7 @@ public class PlateMenu extends AbstractContainerMenu {
     }
 
     public PlateMenu(int containerId, Inventory inv, BlockEntity blockEntity, ContainerData data) {
-        super(ModMenuTypes.plateMenu(), containerId);
+        super(DinnerwareMenuTypes.plateMenu(), containerId);
 
         this.blockEntity = ((PlateBlockBlockEntity) blockEntity);
         this.plateInventory = new PlateInventoryContainer(

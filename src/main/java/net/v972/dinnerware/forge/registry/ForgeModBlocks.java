@@ -1,4 +1,4 @@
-package net.v972.dinnerware.block;
+package net.v972.dinnerware.forge.registry;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.item.Items;
@@ -18,7 +18,7 @@ import net.v972.dinnerware.registry.PlateDefinition;
 import java.util.stream.Stream;
 
 
-public class ModBlocks {
+public class ForgeModBlocks {
     public static final DeferredRegister<Block> BLOCKS =
         DeferredRegister.create(ForgeRegistries.BLOCKS, DinnerwareCommon.MOD_ID);
 

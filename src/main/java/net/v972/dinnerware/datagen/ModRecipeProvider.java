@@ -11,9 +11,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import net.v972.dinnerware.DinnerwareCommon;
-import net.v972.dinnerware.block.ModBlocks;
+import net.v972.dinnerware.forge.registry.ForgeModBlocks;
 import net.v972.dinnerware.block.custom.PlateBlock;
-import net.v972.dinnerware.item.ModItems;
+import net.v972.dinnerware.forge.registry.ForgeModItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
@@ -30,7 +30,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> pWriter) {
-        for (Block block : ModBlocks.getKnownPlateBlocksIterable()) {
+        for (Block block : ForgeModBlocks.getKnownPlateBlocksIterable()) {
             PlateBlock plateBlock = (PlateBlock)block;
 
             var craftingItems =
@@ -45,7 +45,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 plateBlock, plateBlock.CRAFTING_AMOUNT);
 
             // special case for iron to NOT override vanilla bucket
-            if (plateBlock == ModBlocks.PLATE_BLOCK_IRON.get()) {
+            if (plateBlock == ForgeModBlocks.PLATE_BLOCK_IRON.get()) {
                 recipe
                     .pattern("MMM");
             } else {
@@ -63,9 +63,9 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .save(pWriter);
         }
 
-        for (Pair<Block, Ingredient> blockIngredientPair : ModBlocks.getTerracottaPlateBlocksDyeingMap()) {
+        for (Pair<Block, Ingredient> blockIngredientPair : ForgeModBlocks.getTerracottaPlateBlocksDyeingMap()) {
             PlateBlock plateBlock = (PlateBlock)blockIngredientPair.getFirst();
-            Block baseTerracottaPlate = ModBlocks.PLATE_BLOCK_TERRACOTTA.get();
+            Block baseTerracottaPlate = ForgeModBlocks.PLATE_BLOCK_TERRACOTTA.get();
             Ingredient dyeItems = blockIngredientPair.getSecond();
 
             Item[] unlockItems =
@@ -100,14 +100,14 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 );
         }
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.TRAY_IRON.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ForgeModItems.TRAY_IRON.get())
                 .pattern("IPI")
                 .define('P', Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE)
                 .define('I', Tags.Items.INGOTS_IRON)
                 .unlockedBy("has_iron_ingot", has(Tags.Items.INGOTS_IRON))
                 .save(pWriter);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ModItems.TRAY_GOLD.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ForgeModItems.TRAY_GOLD.get())
                 .pattern("IPI")
                 .define('P', Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE)
                 .define('I', Tags.Items.INGOTS_GOLD)

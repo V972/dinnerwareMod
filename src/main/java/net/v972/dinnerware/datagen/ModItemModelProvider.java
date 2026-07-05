@@ -11,7 +11,7 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.RegistryObject;
 import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.block.custom.PlateBlock;
-import net.v972.dinnerware.item.ModItems;
+import net.v972.dinnerware.forge.registry.ForgeModItems;
 import net.v972.dinnerware.item.custom.PlateBlockBlockItem;
 import net.v972.dinnerware.item.custom.TrayItem;
 
@@ -22,9 +22,9 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        simpleItem(ModItems.ICON);
+        simpleItem(ForgeModItems.ICON);
 
-        for (PlateBlockBlockItem item : ModItems.getKnownPlateItemsArray()) {
+        for (PlateBlockBlockItem item : ForgeModItems.getKnownPlateItemsArray()) {
             Block material = ((PlateBlock) item.getBlock()).MATERIAL;
             ResourceLocation finalTexture = DinnerwareDatagenHelper.getTextureForModel(material);
             getBuilder(item.toString())
@@ -35,7 +35,7 @@ public class ModItemModelProvider extends ItemModelProvider {
             ).texture("particle", finalTexture);
         }
 
-        for (TrayItem item : ModItems.getTrayItemsArray()) {
+        for (TrayItem item : ForgeModItems.getTrayItemsArray()) {
             ResourceLocation finalTexture = DinnerwareDatagenHelper.getTextureForModel(item.MATERIAL);
             ResourceLocation parentModelLoc = ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, ITEM_FOLDER + "/tray");
             getBuilder(item.toString())

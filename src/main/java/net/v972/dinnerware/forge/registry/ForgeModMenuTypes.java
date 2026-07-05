@@ -1,4 +1,4 @@
-package net.v972.dinnerware.screen;
+package net.v972.dinnerware.forge.registry;
 
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
@@ -10,8 +10,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.registry.DinnerwareRegistryNames;
+import net.v972.dinnerware.screen.PlateMenu;
 
-public class ModMenuTypes {
+public class ForgeModMenuTypes {
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(ForgeRegistries.MENU_TYPES, DinnerwareCommon.MOD_ID);
 
