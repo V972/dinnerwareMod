@@ -9,13 +9,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.v972.dinnerware.DinnerwareCommon;
+//import net.v972.dinnerware.forge.client.hud.ForgeTrayItemHud;
 import net.v972.dinnerware.forge.registry.ForgeModBlockEntities;
 import net.v972.dinnerware.block.entity.renderer.DinnerwareBEWLR;
 import net.v972.dinnerware.block.entity.renderer.DinnerwareBEWLRManager;
 import net.v972.dinnerware.block.entity.renderer.PlateBlockBlockEntityRenderer;
 import net.v972.dinnerware.client.animation.DinnerwareItemAnimations;
 import net.v972.dinnerware.client.animation.TrayThirdPersonAnimationProvider;
-//import net.v972.dinnerware.client.hud.TrayItemHud;
 import net.v972.dinnerware.forge.registry.ForgeModItems;
 import net.v972.dinnerware.forge.registry.ForgeModMenuTypes;
 import net.v972.dinnerware.screen.PlateScreen;
@@ -60,6 +60,6 @@ public final class DinnerwareForgeClientBootstrap {
 //    @SubscribeEvent
 //    public static void registerOverlays(RegisterGuiOverlaysEvent event) {
 //        event.registerAbove(VanillaGuiOverlay.HOTBAR.id(), "tray_overlay",
-//            TrayItemHud.getInstance());
+//            ForgeTrayItemHud.getInstance());
 //    }
 }

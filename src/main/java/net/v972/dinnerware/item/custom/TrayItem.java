@@ -36,8 +36,8 @@ import net.v972.dinnerware.advancement.ModCriterionTriggers;
 import net.v972.dinnerware.block.DinnerwareBlocks;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
-//import net.v972.dinnerware.client.hud.TrayItemHud;
 import net.v972.dinnerware.config.DinnerwareConfig;
+//import net.v972.dinnerware.forge.client.hud.ForgeTrayItemHud;
 import net.v972.dinnerware.item.DinnerwareItems;
 import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
@@ -76,7 +76,7 @@ public class TrayItem extends Item {
 //        } else {
 //            //same as startUsingItem but client only so it does not slow
 //            if (pLevel.isClientSide) {
-//                //TrayItemHud.getInstance().setUsingItem(SlotReference.hand(pUsedHand), pPlayer);
+//                ForgeTrayItemHud.getInstance().setUsingItem(SlotReference.hand(pUsedHand), pPlayer);
 //            }
 //            playRemoveOneSound(pPlayer);
 //            pPlayer.startUsingItem(pUsedHand);
@@ -92,7 +92,7 @@ public class TrayItem extends Item {
 //    @Override
 //    public void releaseUsing(@NotNull ItemStack pStack, Level pLevel, @NotNull LivingEntity pLivingEntity, int pTimeCharged) {
 //        if (pLevel.isClientSide) {
-//            //TrayItemHud.getInstance().setUsingItem(SlotReference.EMPTY, pLivingEntity);
+//            //ForgeTrayItemHud.getInstance().setUsingItem(SlotReference.EMPTY, pLivingEntity);
 //        }
 //        playInsertSound(pLivingEntity);
 //        pLivingEntity.swing(pLivingEntity.getUsedItemHand());

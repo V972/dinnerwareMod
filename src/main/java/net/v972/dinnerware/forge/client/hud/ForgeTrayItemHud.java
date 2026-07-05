@@ -1,4 +1,4 @@
-package net.v972.dinnerware.client.hud;
+package net.v972.dinnerware.forge.client.hud;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -13,14 +13,12 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.v972.dinnerware.config.DinnerwareConfig;
 import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import net.v972.dinnerware.item.custom.TrayItem;
@@ -28,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class TrayItemHud implements IGuiOverlay {
+public class ForgeTrayItemHud implements IGuiOverlay {
 
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(
             DinnerwareCommon.MOD_ID, "textures/gui/tray_hud.png");
@@ -36,15 +34,15 @@ public class TrayItemHud implements IGuiOverlay {
     //deadlock prevention
     private static class Holder {
         //this can't never ever be null
-        private static final TrayItemHud INSTANCE = makeInstance();
+        private static final ForgeTrayItemHud INSTANCE = makeInstance();
     }
 
-    public static TrayItemHud getInstance() {
+    public static ForgeTrayItemHud getInstance() {
         return Holder.INSTANCE;
     }
 
-    public static TrayItemHud makeInstance() {
-        return new TrayItemHud(Minecraft.getInstance());
+    public static ForgeTrayItemHud makeInstance() {
+        return new ForgeTrayItemHud(Minecraft.getInstance());
     }
 
     protected final Minecraft mc;
@@ -53,7 +51,7 @@ public class TrayItemHud implements IGuiOverlay {
     private TrayItem itemUsed;
     //private SlotReference stackSlot;
 
-    protected TrayItemHud(Minecraft minecraft) {
+    protected ForgeTrayItemHud(Minecraft minecraft) {
         this.mc = minecraft;
     }
 
