@@ -1,8 +1,6 @@
 package net.v972.dinnerware.forge.config;
 
 import net.minecraft.world.item.Item;
-import net.v972.dinnerware.config.ClientConfig;
-import net.v972.dinnerware.config.CommonConfig;
 import net.v972.dinnerware.config.DinnerwareConfigBackend;
 import net.v972.dinnerware.config.DinnerwareEatingMode;
 
@@ -14,66 +12,66 @@ public final class ForgeDinnerwareConfigBackend implements DinnerwareConfigBacke
 
     @Override
     public int maxPlateStackSize() {
-        return CommonConfig.MAX_PLATE_STACK_SIZE.get();
+        return ForgeCommonConfig.MAX_PLATE_STACK_SIZE.get();
     }
 
     @Override
     public boolean allowOvereating() {
-        return CommonConfig.ALLOW_OVEREATING.get();
+        return ForgeCommonConfig.ALLOW_OVEREATING.get();
     }
 
     @Override
     public boolean onlyFoodOnPlate() {
-        return CommonConfig.ONLY_FOOD_ON_PLATE.get();
+        return ForgeCommonConfig.ONLY_FOOD_ON_PLATE.get();
     }
 
     @Override
     public boolean fragilePlates() {
-        return CommonConfig.FRAGILE_PLATES.get();
+        return ForgeCommonConfig.FRAGILE_PLATES.get();
     }
 
     @Override
     public boolean rightToLeft() {
-        return CommonConfig.RIGHT_TO_LEFT.get();
+        return ForgeCommonConfig.RIGHT_TO_LEFT.get();
     }
 
     @Override
     public DinnerwareEatingMode eatingMode() {
-        return CommonConfig.EATING_MODE.get();
+        return ForgeCommonConfig.EATING_MODE.get();
     }
 
     @Override
     public boolean trayMergeMatchingItem() {
-        return CommonConfig.TRAY_MERGE_MATCHING_ITEM.get();
+        return ForgeCommonConfig.TRAY_MERGE_MATCHING_ITEM.get();
     }
 
     @Override
     public boolean dispensersPlacePlates() {
-        return CommonConfig.DISPENSERS_PLACE_PLATES.get();
+        return ForgeCommonConfig.DISPENSERS_PLACE_PLATES.get();
     }
 
     @Override
     public boolean isInFoodBlacklist(Item item) {
-        return CommonConfig.isInFoodBlacklist(item);
+        return ForgeCommonConfig.isInFoodBlacklist(item);
     }
 
     @Override
     public int maxTrayTooltipLines() {
-        return ClientConfig.MAX_TRAY_TOOLTIP_LINES.get();
+        return ForgeClientConfig.MAX_TRAY_TOOLTIP_LINES.get();
     }
 
     @Override
     public boolean trayDynamicPlateOffset() {
-        return ClientConfig.TRAY_DYNAMIC_PLATE_OFFSET.get();
+        return ForgeClientConfig.TRAY_DYNAMIC_PLATE_OFFSET.get();
     }
 
     @Override
     public int trayGuiX() {
-        return 0; // return ClientConfig.TRAY_GUI_X.get();
+        return 0; // return ForgeClientConfig.TRAY_GUI_X.get();
     }
 
     @Override
     public int trayGuiY() {
-        return 0; // return ClientConfig.TRAY_GUI_Y.get();
+        return 0; // return ForgeClientConfig.TRAY_GUI_Y.get();
     }
 }

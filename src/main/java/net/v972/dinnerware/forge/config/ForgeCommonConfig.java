@@ -1,4 +1,4 @@
-package net.v972.dinnerware.config;
+package net.v972.dinnerware.forge.config;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -8,11 +8,12 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.v972.dinnerware.DinnerwareCommon;
+import net.v972.dinnerware.config.DinnerwareEatingMode;
 
 import java.util.List;
 
 @Mod.EventBusSubscriber(modid = DinnerwareCommon.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class CommonConfig
+public class ForgeCommonConfig
 {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
@@ -53,7 +54,7 @@ public class CommonConfig
             .defineListAllowEmpty("foodBlacklist", List.of(
                     "artifacts:everlasting_beef",
                     "artifacts:eternal_steak"
-            ), CommonConfig::validateItemName);
+            ), ForgeCommonConfig::validateItemName);
 
     public static final ForgeConfigSpec.BooleanValue FRAGILE_PLATES = BUILDER
             .comment(

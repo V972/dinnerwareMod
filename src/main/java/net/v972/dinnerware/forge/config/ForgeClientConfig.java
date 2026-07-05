@@ -1,4 +1,4 @@
-package net.v972.dinnerware.config;
+package net.v972.dinnerware.forge.config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.common.Mod;
@@ -6,7 +6,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.v972.dinnerware.DinnerwareCommon;
 
 @Mod.EventBusSubscriber(modid = DinnerwareCommon.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public class ClientConfig
+public class ForgeClientConfig
 {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
