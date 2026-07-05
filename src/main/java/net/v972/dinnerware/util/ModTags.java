@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.Block;
 public class ModTags {
 
     public static class Blocks {
-
+        public static final TagKey<Block> PLATE_SOFT_BREAKERS = tag("plate_soft_breakers");
 
         private static TagKey<Block> tag(String name) {
             return BlockTags.create(ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, name));

@@ -178,7 +178,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
 
     @Override
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
-        if (pState.getBlock() != pNewState.getBlock()) {
+        if (!pState.is(pNewState.getBlock())) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
             if (blockEntity instanceof PlateBlockBlockEntity plateEntity) {
                 if(plateEntity.isDoDropContent())
@@ -303,25 +303,24 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         return EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0;
     }
 
-    private static void breakPlateWithContents(
-            PlateBlockBlockEntity plateEntity,
-            Player player,
-            Level level,
-            BlockPos pos
-    ) {
-        if (level.isClientSide) return;
+    public static void dropPlateStackWithContents(PlateBlockBlockEntity pPlateEntity, Level pLevel, BlockPos pPos) {
+        ItemStack plateStack = pPlateEntity.getItem(true);
+        pPlateEntity.doNotDropContent();
+        popResource(pLevel, pPos, plateStack);
+    }
 
-        ItemStack plateStack = plateEntity.getItem(true);
+    private static void breakPlateWithContents(PlateBlockBlockEntity pPlateEntity, Player pPlayer, Level pLevel, BlockPos pPos) {
+        if (pLevel.isClientSide) return;
 
-        plateEntity.doNotDropContent();
+        Block block = pLevel.getBlockState(pPos).getBlock();
 
-        level.removeBlock(pos, false);
-        popResource(level, pos, plateStack);
+        dropPlateStackWithContents(pPlateEntity, pLevel, pPos);
+        pLevel.removeBlock(pPos, false);
 
-        player.awardStat(Stats.BLOCK_MINED.get(plateEntity.getBlock()));
-        player.causeFoodExhaustion(0.005F);
+        pPlayer.awardStat(Stats.BLOCK_MINED.get(block));
+        pPlayer.causeFoodExhaustion(0.005F);
 
-        level.gameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+        pLevel.gameEvent(pPlayer, GameEvent.BLOCK_DESTROY, pPos);
     }
 
     private InteractionResult pickUpPlate(PlateBlockBlockEntity pPlateEntity, Player pPlayer, Level pLevel, BlockPos pPos) {
