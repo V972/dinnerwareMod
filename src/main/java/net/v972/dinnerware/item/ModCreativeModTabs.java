@@ -20,7 +20,7 @@ public class ModCreativeModTabs {
     public static final RegistryObject<CreativeModeTab> DINNERWARE_TAB = CREATIVE_MODE_TABS.register(
             DinnerwareRegistryNames.CreativeTabs.DINNERWARE_TAB,
         () -> CreativeModeTab.builder()
-            .icon(() -> new ItemStack(ModItems.ICON.get()))
+            .icon(() -> new ItemStack(ModItems.icon()))
             .title(Component.translatable("creativetab.dinnerware_tab"))
             .displayItems((pParameters, pOutput) -> {
                 for(Block block : ModBlocks.getKnownPlateBlocksIterable()) {

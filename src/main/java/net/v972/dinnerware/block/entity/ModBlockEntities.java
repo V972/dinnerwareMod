@@ -25,4 +25,8 @@ public class ModBlockEntities {
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);
     }
+
+    public static BlockEntityType<PlateBlockBlockEntity> plateBlockEntityType() {
+        return PLATE_BLOCK_BE.get();
+    }
 }

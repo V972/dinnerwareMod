@@ -25,4 +25,8 @@ public class ModMenuTypes {
     public static void register(IEventBus eventBus) {
         MENUS.register(eventBus);
     }
+
+    public static MenuType<PlateMenu> plateMenu() {
+        return PLATE_MENU.get();
+    }
 }

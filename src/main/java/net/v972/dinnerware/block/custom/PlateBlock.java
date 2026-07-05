@@ -173,7 +173,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
 
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return ModBlockEntities.PLATE_BLOCK_BE.get().create(pPos, pState);
+        return ModBlockEntities.plateBlockEntityType().create(pPos, pState);
     }
 
     @Override
@@ -219,11 +219,11 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     @Override
     public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
         if (pLevel.isClientSide) {
-            pLevel.getBlockEntity(pPos, ModBlockEntities.PLATE_BLOCK_BE.get()).ifPresent((be) -> {
+            pLevel.getBlockEntity(pPos, ModBlockEntities.plateBlockEntityType()).ifPresent((be) -> {
                 be.fromItem(pStack);
             });
         } else if (pStack.hasCustomHoverName()) {
-            pLevel.getBlockEntity(pPos, ModBlockEntities.PLATE_BLOCK_BE.get()).ifPresent((be) -> {
+            pLevel.getBlockEntity(pPos, ModBlockEntities.plateBlockEntityType()).ifPresent((be) -> {
                 be.setCustomName(pStack.getHoverName());
             });
         }

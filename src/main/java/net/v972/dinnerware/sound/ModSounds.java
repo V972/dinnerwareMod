@@ -25,4 +25,12 @@ public class ModSounds {
     public static void register(IEventBus eventBus) {
         SOUND_EVENTS.register(eventBus);
     }
+
+    public static SoundEvent trayMetalLoad() {
+        return TRAY_METAL_LOAD.get();
+    }
+
+    public static SoundEvent trayMetalUnload() {
+        return TRAY_METAL_UNLOAD.get();
+    }
 }

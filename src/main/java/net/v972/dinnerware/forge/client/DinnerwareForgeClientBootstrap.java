@@ -30,7 +30,7 @@ public final class DinnerwareForgeClientBootstrap {
 
     @SubscribeEvent
     public static void onClientSetup(final FMLClientSetupEvent event) {
-        MenuScreens.register(ModMenuTypes.PLATE_MENU.get(), PlateScreen::new);
+        MenuScreens.register(ModMenuTypes.plateMenu(), PlateScreen::new);
 
         // Registers the "DinnerwareBEWLR" to the given item sets
         DinnerwareBEWLRManager.register(
@@ -54,7 +54,7 @@ public final class DinnerwareForgeClientBootstrap {
 
     @SubscribeEvent
     public static void registerBlockEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(ModBlockEntities.PLATE_BLOCK_BE.get(), PlateBlockBlockEntityRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.plateBlockEntityType(), PlateBlockBlockEntityRenderer::new);
     }
 
 //    @SubscribeEvent

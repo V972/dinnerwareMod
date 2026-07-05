@@ -329,14 +329,14 @@ public class TrayItem extends Item {
 
     public static void playRemoveOneSound(Entity pEntity, boolean pInInventory) {
         if (pInInventory) {
-            pEntity.playSound(SoundEvents.BUNDLE_REMOVE_ONE, //ModSounds.TRAY_METAL_UNLOAD.get(),
+            pEntity.playSound(SoundEvents.BUNDLE_REMOVE_ONE, //ModSounds.trayMetalUnload(),
                 0.8F, 0.8F + pEntity.level().getRandom().nextFloat() * 0.4F);
         }
     }
 
     public static void playInsertSound(Entity pEntity, boolean pInInventory) {
         pEntity.playSound(pInInventory
-                ? SoundEvents.BUNDLE_INSERT //ModSounds.TRAY_METAL_LOAD.get()
+                ? SoundEvents.BUNDLE_INSERT //ModSounds.trayMetalLoad()
                 : SoundEvents.ITEM_PICKUP,
             0.8F, 0.8F + pEntity.level().getRandom().nextFloat() * 0.4F);
     }
