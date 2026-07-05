@@ -6,7 +6,7 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.BowlFoodItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SuspiciousStewItem;
-import net.v972.dinnerware.config.CommonConfig;
+import net.v972.dinnerware.config.DinnerwareConfig;
 import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,7 +45,7 @@ public final class PlateInventory {
         return IntStream.range(0, getSlotCount())
             .filter(i ->
                 !getStackInSlot(i).isEmpty() &&
-                (!validateBlacklist || !CommonConfig.isInFoodBlacklist(getStackInSlot(i)))
+                (!validateBlacklist || !DinnerwareConfig.isInFoodBlacklist(getStackInSlot(i)))
             )
             .findFirst();
     }
@@ -184,12 +184,12 @@ public final class PlateInventory {
 
     public int getSlotLimit(int slot) {
         validateSlot(slot);
-        return CommonConfig.MAX_PLATE_STACK_SIZE.get();
+        return DinnerwareConfig.maxPlateStackSize();
     }
 
     private boolean canPlaceItemOnPlate(ItemStack stack) {
         return
-            !CommonConfig.ONLY_FOOD_ON_PLATE.get() ||
+            !DinnerwareConfig.onlyFoodOnPlate() ||
                 (stack.isEdible() &&
                 !(stack.getItem() instanceof BowlFoodItem) &&
                 !(stack.getItem() instanceof SuspiciousStewItem)

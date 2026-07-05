@@ -8,7 +8,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.v972.dinnerware.DinnerwareCommon;
-import net.v972.dinnerware.config.CommonConfig;
+import net.v972.dinnerware.config.DinnerwareConfig;
+import net.v972.dinnerware.config.DinnerwareEatingMode;
+import org.jetbrains.annotations.NotNull;
 
 public class PlateScreen extends AbstractContainerScreen<PlateMenu> {
     private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(
@@ -37,15 +39,15 @@ public class PlateScreen extends AbstractContainerScreen<PlateMenu> {
         pGuiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
 
         // slot selection
-        if (CommonConfig.EATING_MODE.get() == CommonConfig.EATING_MODES.ROUND_ROBIN) {
+        if (DinnerwareConfig.eatingMode() == DinnerwareEatingMode.ROUND_ROBIN) {
             int selectedSlot = menu.getRoundRobinSelectedSlot();
             if (selectedSlot > -1) {
                 ResourceLocation widgets = ResourceLocation.fromNamespaceAndPath(
                         "minecraft", "textures/gui/widgets.png");
 
                 int xOffset = switch (selectedSlot) {
-                  case 0 -> CommonConfig.RIGHT_TO_LEFT.get() ? 96 : 56;
-                  case 1 -> CommonConfig.RIGHT_TO_LEFT.get() ? 56 : 96;
+                  case 0 -> DinnerwareConfig.rightToLeft() ? 96 : 56;
+                  case 1 -> DinnerwareConfig.rightToLeft() ? 56 : 96;
                   case 2 -> 76;
                   default -> throw new IllegalStateException("Unexpected value: " + selectedSlot);
                 };
@@ -62,7 +64,7 @@ public class PlateScreen extends AbstractContainerScreen<PlateMenu> {
     }
 
     @Override
-    public void render(GuiGraphics pGuiGraphics, int mouseX, int mouseY, float delta) {
+    public void render(@NotNull GuiGraphics pGuiGraphics, int mouseX, int mouseY, float delta) {
         renderBackground(pGuiGraphics);
         super.render(pGuiGraphics, mouseX, mouseY, delta);
         renderTooltip(pGuiGraphics, mouseX, mouseY);

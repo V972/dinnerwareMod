@@ -75,7 +75,7 @@ public class CommonConfig
             )
             .define("rightToLeft", false);
 
-    public static final ForgeConfigSpec.EnumValue<EATING_MODES> EATING_MODE = BUILDER
+    public static final ForgeConfigSpec.EnumValue<DinnerwareEatingMode> EATING_MODE = BUILDER
             .comment(
                     "\n" +
                     "The mode in which the food will be eaten off of a plate. \n" +
@@ -84,7 +84,7 @@ public class CommonConfig
                     " AIMING:      the food is eaten depending on where and crosshair is aimed at the time of right-click; \n" +
                     "Default: AIMING"
             )
-            .defineEnum("eatingMode", EATING_MODES.AIMING);
+            .defineEnum("eatingMode", DinnerwareEatingMode.AIMING);
 
     public static final ForgeConfigSpec.BooleanValue TRAY_MERGE_MATCHING_ITEM = BUILDER
             .comment(
@@ -115,11 +115,5 @@ public class CommonConfig
     public static boolean isInFoodBlacklist(final Item item) {
         var rLoc = ForgeRegistries.ITEMS.getKey(item);
         return rLoc != null && FOOD_BLACKLIST.get().contains(rLoc.toString());
-    }
-
-    public enum EATING_MODES {
-        QUEUE,
-        ROUND_ROBIN,
-        AIMING
     }
 }

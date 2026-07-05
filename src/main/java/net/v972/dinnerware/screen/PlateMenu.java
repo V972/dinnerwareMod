@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.advancement.ModCriterionTriggers;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
-import net.v972.dinnerware.config.CommonConfig;
+import net.v972.dinnerware.config.DinnerwareConfig;
 import net.v972.dinnerware.inventory.PlateInventoryContainer;
 import net.v972.dinnerware.screen.slot.PlateInventorySlot;
 import net.v972.dinnerware.util.ModTags;
@@ -49,7 +49,7 @@ public class PlateMenu extends AbstractContainerMenu {
         this.addPlayerInventory(inv);
         this.addPlayerHotbar(inv);
 
-        boolean rightSlotFirst = CommonConfig.RIGHT_TO_LEFT.get();
+        boolean rightSlotFirst = DinnerwareConfig.rightToLeft();
         // | right -> left | left -> right |
         // |       2       |       2       |
         // |     1   0     |     0   1     |

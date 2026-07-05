@@ -13,8 +13,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
-import net.v972.dinnerware.config.ClientConfig;
-import net.v972.dinnerware.config.CommonConfig;
+import net.v972.dinnerware.config.DinnerwareConfig;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -38,7 +37,7 @@ public final class DinnerwareRenderHelper {
         // we calculate a counter-offset to make top plates be roughly under the crosshair. That being said,
         // plate tower that's so tall you can't see is still funny af, so we stop countering at 16,
         // because at that point you need to get your screen filled to get the message, buddy.
-        if (ClientConfig.TRAY_DYNAMIC_PLATE_OFFSET.get() && //trayDynamicPlateOffset &&
+        if (DinnerwareConfig.trayDynamicPlateOffset() && //trayDynamicPlateOffset &&
             (pDisplayContext == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND ||
             pDisplayContext == ItemDisplayContext.FIRST_PERSON_LEFT_HAND)) {
 
@@ -177,7 +176,7 @@ public final class DinnerwareRenderHelper {
                 (PoseStack p) -> {}, slot
             );
         } else {
-            boolean rtl = CommonConfig.RIGHT_TO_LEFT.get();
+            boolean rtl = DinnerwareConfig.rightToLeft();
 
             ItemStack mainDish = pStacks.get(0);
             renderItem(
@@ -200,7 +199,7 @@ public final class DinnerwareRenderHelper {
     private static void positionThreeItems(PoseStack pPoseStack, ItemRenderer pItemRenderer, MultiBufferSource pBuffer,
                                            NonNullList<ItemStack> pStacks, Direction facing, @javax.annotation.Nullable Level pLevel, int pLightLevel) {
 
-        boolean rtl = CommonConfig.RIGHT_TO_LEFT.get();
+        boolean rtl = DinnerwareConfig.rightToLeft();
 
         for (int pSlot = 0; pSlot < pStacks.size(); pSlot++) {
             float yLevel = switch (pSlot) {

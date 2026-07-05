@@ -22,7 +22,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.v972.dinnerware.config.CommonConfig;
+import net.v972.dinnerware.config.DinnerwareConfig;
+import net.v972.dinnerware.config.DinnerwareEatingMode;
 import net.v972.dinnerware.inventory.PlateInventory;
 import net.v972.dinnerware.screen.PlateMenu;
 import org.jetbrains.annotations.NotNull;
@@ -291,19 +292,19 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
         int newSlot = (roundRobinCurrentSlot + 1) % SLOT_COUNT;
 
         if (getStackInSlot(newSlot).isEmpty() ||
-                CommonConfig.isInFoodBlacklist(getStackInSlot(newSlot))
+                DinnerwareConfig.isInFoodBlacklist(getStackInSlot(newSlot))
         ) {
             newSlot = (newSlot + 1) % SLOT_COUNT;
         } else return newSlot;
 
         if (getStackInSlot(newSlot).isEmpty() ||
-                CommonConfig.isInFoodBlacklist(getStackInSlot(newSlot))
+                DinnerwareConfig.isInFoodBlacklist(getStackInSlot(newSlot))
         ) {
             newSlot = (newSlot + 1) % SLOT_COUNT;
         } else return newSlot;
 
         if (getStackInSlot(newSlot).isEmpty() ||
-                CommonConfig.isInFoodBlacklist(getStackInSlot(newSlot))
+                DinnerwareConfig.isInFoodBlacklist(getStackInSlot(newSlot))
         ) {
             return 0;
         }
@@ -343,7 +344,7 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
 
     public void eatFromSlot(int pSlot) {
         this.extractItem(pSlot);
-        if (CommonConfig.EATING_MODE.get() == CommonConfig.EATING_MODES.ROUND_ROBIN)
+        if (DinnerwareConfig.eatingMode() == DinnerwareEatingMode.ROUND_ROBIN)
             eatingAttemptClick();
     }
 
