@@ -79,6 +79,7 @@ minecraft {
             mods {
                 "${mod_id}" {
                     source sourceSets.main
+                    source project(':common').sourceSets.main
                 }
             }
         }
@@ -130,6 +131,8 @@ repositories {
 }
 
 dependencies {
+    implementation project(':common')
+
     // Specify the version of Minecraft to use.
     // Any artifact can be supplied so long as it has a "userdev" classifier artifact and is a compatible patcher artifact.
     // The "userdev" classifier will be requested and setup by ForgeGradle.
@@ -176,6 +179,9 @@ tasks.named('processResources', ProcessResources).configure {
 
 // Example for how to get properties into the manifest for reading at runtime.
 tasks.named('jar', Jar).configure {
+    dependsOn project(':common').tasks.named('classes')
+    from project(':common').sourceSets.main.output
+
     manifest {
         attributes([
                 'Specification-Title'     : mod_id,

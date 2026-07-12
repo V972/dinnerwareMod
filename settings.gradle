@@ -21,4 +21,4 @@ plugins {
 }
 
 rootProject.name = 'dinnerware'
-include 'forge'
+include 'common', 'forge'
