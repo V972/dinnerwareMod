@@ -23,6 +23,7 @@ bin/
 
 # Minecraft / Forge / development runs
 run/
+**/runs/
 run-*/
 run-data/
 logs/
