@@ -1,5 +1,17 @@
 plugins {
     id 'java-library'
+    id 'net.neoforged.moddev.legacyforge' version '2.0.141'
+}
+
+repositories {
+    maven {
+        url = 'https://repo.spongepowered.org/repository/maven-public/'
+    }
+}
+
+dependencies {
+    compileOnly 'org.spongepowered:mixin:0.8.5'
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
 }
 
 java {
@@ -9,4 +21,40 @@ java {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+}
+
+legacyForge {
+    mcpVersion = minecraft_version
+
+    parchment {
+        minecraftVersion = '1.20.1'
+        mappingsVersion = '2023.06.26'
+    }
+}
+
+configurations {
+    commonJava {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+
+    commonResources {
+        canBeResolved = false
+        canBeConsumed = true
+    }
+}
+
+artifacts {
+    commonJava file('src/main/java')
+
+    commonResources file('src/main/resources')
+    commonResources file('src/generated/resources')
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDir 'src/generated/resources'
+        }
+    }
 }

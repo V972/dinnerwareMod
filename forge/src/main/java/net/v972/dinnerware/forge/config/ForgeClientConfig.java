@@ -12,20 +12,20 @@ public class ForgeClientConfig
 
     public static final ForgeConfigSpec.IntValue MAX_TRAY_TOOLTIP_LINES = BUILDER
             .comment(
-                    "\n" +
-                    "Number of item stacks to show in tray's tooltip. \n" +
-                    "The rest will be omitted under \"and N more...\". \n" +
-                    "Default: 5"
+                "\n" +
+                "Number of item stacks to show in tray tooltip. \n" +
+                "The rest will be omitted under \"and N more...\". \n" +
+                "Default: 5"
             )
             .defineInRange("maxTrayTooltipLines", 5, 1, 64);
 
     public static final ForgeConfigSpec.BooleanValue TRAY_DYNAMIC_PLATE_OFFSET = BUILDER
             .comment(
-                    "\n" +
-                    "If enabled plates towers between ~5 and ~16 will render on the same height. \n" +
-                    "Otherwise, the rendering height will not be corrected. \n" +
-                    "Only affects first person perspective. \n" +
-                    "Default: true"
+                "\n" +
+                "If enabled plates towers between ~5 and ~16 will render on the same height. \n" +
+                "Otherwise, the rendering height will not be corrected. \n" +
+                "Only affects first person perspective. \n" +
+                "Default: true"
             )
             .define("trayDynamicPlateOffset", true);
 

@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
 import net.v972.dinnerware.DinnerwareCommon;
+import net.v972.dinnerware.DinnerwareConstants;
 import net.v972.dinnerware.forge.registry.ForgeModBlocks;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.forge.registry.ForgeModItems;
@@ -84,8 +85,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                         "has_" + DinnerwareHelper.getBlockId(plateBlock) + "_ingredients_dyeing",
                         InventoryChangeTrigger.TriggerInstance.hasItems(unlockItems)
                 )
-                .save(pWriter, ResourceLocation.fromNamespaceAndPath(
-                        DinnerwareCommon.MOD_ID, DinnerwareHelper.getBlockId(plateBlock) + "_from_dyeing")
+                .save(pWriter, DinnerwareConstants.id(DinnerwareHelper.getBlockId(plateBlock) + "_from_dyeing")
                 );
 
             ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, plateBlock, 1)
@@ -95,8 +95,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                         "has_" + DinnerwareHelper.getBlockId(plateBlock) + "_ingredients_dyeing",
                         InventoryChangeTrigger.TriggerInstance.hasItems(unlockItems)
                 )
-                .save(pWriter, ResourceLocation.fromNamespaceAndPath(
-                        DinnerwareCommon.MOD_ID, DinnerwareHelper.getBlockId(plateBlock) + "_from_dyeing_single")
+                .save(pWriter, DinnerwareConstants.id(DinnerwareHelper.getBlockId(plateBlock) + "_from_dyeing_single")
                 );
         }
 

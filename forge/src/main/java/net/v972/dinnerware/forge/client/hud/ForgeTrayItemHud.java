@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.v972.dinnerware.DinnerwareCommon;
+import net.v972.dinnerware.DinnerwareConstants;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import net.v972.dinnerware.item.custom.TrayItem;
 import org.jetbrains.annotations.Nullable;
@@ -28,8 +28,7 @@ import java.util.List;
 
 public class ForgeTrayItemHud implements IGuiOverlay {
 
-    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(
-            DinnerwareCommon.MOD_ID, "textures/gui/tray_hud.png");
+    private static final ResourceLocation TEXTURE = DinnerwareConstants.id("textures/gui/tray_hud.png");
 
     //deadlock prevention
     private static class Holder {

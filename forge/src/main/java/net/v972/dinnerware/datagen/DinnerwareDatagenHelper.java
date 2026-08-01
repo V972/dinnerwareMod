@@ -8,7 +8,7 @@ import net.minecraftforge.client.model.generators.BlockModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.client.model.generators.ModelProvider;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.v972.dinnerware.DinnerwareCommon;
+import net.v972.dinnerware.DinnerwareConstants;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.util.DinnerwareHelper;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +21,7 @@ public final class DinnerwareDatagenHelper {
         ResourceLocation finalTexture = getTextureForModel(plateBlock.MATERIAL);
 
         ResourceLocation parentModelLoc =
-            ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID,
+            DinnerwareConstants.id(
                 plateBlock.MATERIAL instanceof RotatedPillarBlock &&
                 !plateBlock.MATERIAL.getDescriptionId().equals(Blocks.QUARTZ_BLOCK.getDescriptionId())
                     ? "plate_block_column"

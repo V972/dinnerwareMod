@@ -11,6 +11,7 @@ public class DinnerwareForge
     public DinnerwareForge(FMLJavaModLoadingContext context)
     {
         DinnerwareForgeBootstrap.registerPlatformHooks();
+        DinnerwareForgeBootstrap.registerNetwork();
 
         DinnerwareCommon.init();
 

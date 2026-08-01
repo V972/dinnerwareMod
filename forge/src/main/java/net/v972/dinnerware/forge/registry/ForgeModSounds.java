@@ -1,12 +1,12 @@
 package net.v972.dinnerware.forge.registry;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.v972.dinnerware.DinnerwareCommon;
+import net.v972.dinnerware.DinnerwareConstants;
 import net.v972.dinnerware.registry.DinnerwareRegistryNames;
 
 public class ForgeModSounds {
@@ -18,7 +18,7 @@ public class ForgeModSounds {
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(
-                ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, name)
+                DinnerwareConstants.id(name)
         ));
     }
 

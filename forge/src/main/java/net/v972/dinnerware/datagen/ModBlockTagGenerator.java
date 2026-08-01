@@ -2,11 +2,10 @@ package net.v972.dinnerware.datagen;
 
 import net.minecraft.world.level.block.Blocks;
 import net.v972.dinnerware.DinnerwareCommon;
-import net.v972.dinnerware.forge.registry.ForgeModBlocks;
+import net.v972.dinnerware.DinnerwareConstants;
 import net.v972.dinnerware.util.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.tags.BlockTags;
 import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
@@ -19,13 +18,15 @@ public class ModBlockTagGenerator extends BlockTagsProvider {
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider pProvider) {
-        this.tag(BlockTags.GUARDED_BY_PIGLINS)
-                .add(ForgeModBlocks.PLATE_BLOCK_GOLD.get());
+    public String getName() {
+        return "Common Block Tags: " + DinnerwareConstants.MOD_ID;
+    }
 
+    @Override
+    protected void addTags(HolderLookup.Provider pProvider) {
         this.tag(ModTags.Blocks.PLATE_SOFT_BREAKERS)
-                .add(Blocks.END_ROD)
-                .add(Blocks.SPONGE)
-                .add(Blocks.WET_SPONGE);
+            .add(Blocks.END_ROD)
+            .add(Blocks.SPONGE)
+            .add(Blocks.WET_SPONGE);
     }
 }

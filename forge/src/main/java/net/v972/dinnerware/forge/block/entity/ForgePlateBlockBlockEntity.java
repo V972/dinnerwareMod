@@ -2,6 +2,9 @@ package net.v972.dinnerware.forge.block.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -33,5 +36,20 @@ public class ForgePlateBlockBlockEntity extends PlateBlockBlockEntity {
     public void invalidateCaps() {
         super.invalidateCaps();
         itemHandler.invalidate();
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag pTag) {
+        if (pTag != null) {
+            loadClientData(pTag);
+        }
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        CompoundTag tag = pkt.getTag();
+        if (tag != null) {
+            loadClientData(tag);
+        }
     }
 }

@@ -4,8 +4,11 @@
   "minVersion": "0.8",
   "package": "net.v972.dinnerware.mixins",
   "refmap": "dinnerware.refmap.json",
-  "mixins": [],
+  "mixins": [
+    "AbstractContainerMenuAccessor"
+  ],
   "client": [
+    "MinecraftAccessor",
     "ItemRendererMixin",
     "HumanoidModelMixin"
   ],

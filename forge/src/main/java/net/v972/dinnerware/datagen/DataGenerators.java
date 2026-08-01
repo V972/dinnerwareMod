@@ -16,21 +16,27 @@ public class DataGenerators {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
-        PackOutput packOutput = generator.getPackOutput();
+
+        PackOutput forgeOutput = generator.getPackOutput();
+        PackOutput commonOutput = new PackOutput(DinnerwareDatagenPaths.commonOutput());
+
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
-        generator.addProvider(event.includeServer(), new ModRecipeProvider(packOutput));
-        generator.addProvider(event.includeServer(), ModLootTableProvider.create(packOutput));
+        generator.addProvider(event.includeServer(), new ModRecipeProvider(forgeOutput));
+        generator.addProvider(event.includeServer(), ModLootTableProvider.create(commonOutput));
 
-        generator.addProvider(event.includeClient(), new ModBlockStateProvider(packOutput, existingFileHelper));
-        generator.addProvider(event.includeClient(), new ModItemModelProvider(packOutput, existingFileHelper));
+        generator.addProvider(event.includeClient(), new ModBlockStateProvider(commonOutput, existingFileHelper));
+        generator.addProvider(event.includeClient(), new ModItemModelProvider(commonOutput, existingFileHelper));
 
-        generator.addProvider(event.includeServer(), new ModAdvancementProvider(packOutput, lookupProvider, existingFileHelper));
+        generator.addProvider(event.includeServer(), new ModAdvancementProvider(commonOutput, lookupProvider,existingFileHelper));
 
-        ModBlockTagGenerator blockTagGenerator = generator.addProvider(event.includeServer(),
-                new ModBlockTagGenerator(packOutput, lookupProvider, existingFileHelper));
-        generator.addProvider(event.includeServer(), new ModItemTagGenerator(packOutput, lookupProvider, blockTagGenerator.contentsGetter(), existingFileHelper));
-        generator.addProvider(event.includeServer(), new ModEntityTypeTagsGenerator(packOutput,lookupProvider, existingFileHelper));
+        ModBlockTagGenerator sharedBlockTags = generator.addProvider(event.includeServer(), new ModBlockTagGenerator(commonOutput, lookupProvider, existingFileHelper));
+        generator.addProvider(event.includeServer(), new ModItemTagGenerator(commonOutput, lookupProvider, sharedBlockTags.contentsGetter(), existingFileHelper));
+
+        ForgeBlockTagGenerator forgeBlockTags = generator.addProvider(event.includeServer(),new ForgeBlockTagGenerator(forgeOutput, lookupProvider, existingFileHelper));
+        generator.addProvider(event.includeServer(), new ForgeItemTagGenerator(forgeOutput, lookupProvider, forgeBlockTags.contentsGetter(), existingFileHelper));
+
+        generator.addProvider(event.includeServer(), new ModEntityTypeTagsGenerator(commonOutput, lookupProvider, existingFileHelper));
     }
 }

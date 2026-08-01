@@ -8,6 +8,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import net.v972.dinnerware.DinnerwareCommon;
+import net.v972.dinnerware.forge.item.ForgePlateBlockBlockItem;
 import net.v972.dinnerware.item.custom.PlateBlockBlockItem;
 import net.v972.dinnerware.item.custom.TrayItem;
 import net.v972.dinnerware.registry.DinnerwareRegistryNames;
@@ -255,7 +256,7 @@ public class ForgeModItems {
         RegistryObject<Block> block
     ) {
         return ITEMS.register(definition.item(),
-            () -> new PlateBlockBlockItem(block.get(), new Item.Properties()));
+            () -> new ForgePlateBlockBlockItem(block.get(), new Item.Properties()));
     }
 
     private static RegistryObject<PlateBlockBlockItem> registerPlateItem(
@@ -264,7 +265,7 @@ public class ForgeModItems {
         int burnTime
     ) {
         return ITEMS.register(definition.item(),
-            () -> new PlateBlockBlockItem(block.get(), new Item.Properties(), burnTime));
+            () -> new ForgePlateBlockBlockItem(block.get(), new Item.Properties(), burnTime));
     }
 
     // ========================================

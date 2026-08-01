@@ -5,6 +5,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.advancement.ModCriterionTriggers;
+import net.v972.dinnerware.forge.registry.ForgeModCriterionTriggers;
 
 public final class DinnerwareForgeLifecycleEvents {
     private DinnerwareForgeLifecycleEvents() {
@@ -12,7 +13,11 @@ public final class DinnerwareForgeLifecycleEvents {
 
     public static void commonSetup(final FMLCommonSetupEvent event) {
         DinnerwareCommon.commonSetup();
-        ModCriterionTriggers.init();
+        ForgeModCriterionTriggers.register();
+
+        ModCriterionTriggers.setManualTriggerSupplier(
+                ForgeModCriterionTriggers::manualTrigger
+        );
         event.enqueueWork(DinnerwareCommon::registerDispenserBehaviors);
     }
 

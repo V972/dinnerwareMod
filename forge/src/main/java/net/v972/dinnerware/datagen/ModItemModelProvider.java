@@ -10,6 +10,7 @@ import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.RegistryObject;
 import net.v972.dinnerware.DinnerwareCommon;
+import net.v972.dinnerware.DinnerwareConstants;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.forge.registry.ForgeModItems;
 import net.v972.dinnerware.item.custom.PlateBlockBlockItem;
@@ -29,7 +30,7 @@ public class ModItemModelProvider extends ItemModelProvider {
             ResourceLocation finalTexture = DinnerwareDatagenHelper.getTextureForModel(material);
             getBuilder(item.toString())
                 .parent(new ModelFile.ExistingModelFile(
-                    ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, ITEM_FOLDER + "/plate"),
+                    DinnerwareConstants.id(ITEM_FOLDER + "/plate"),
                     existingFileHelper
                 )
             ).texture("particle", finalTexture);
@@ -37,7 +38,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
         for (TrayItem item : ForgeModItems.getTrayItemsArray()) {
             ResourceLocation finalTexture = DinnerwareDatagenHelper.getTextureForModel(item.MATERIAL);
-            ResourceLocation parentModelLoc = ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID, ITEM_FOLDER + "/tray");
+            ResourceLocation parentModelLoc = DinnerwareConstants.id(ITEM_FOLDER + "/tray");
             getBuilder(item.toString())
                 .parent(new ModelFile.ExistingModelFile(parentModelLoc, existingFileHelper))
                 .texture("0", finalTexture)
@@ -48,6 +49,7 @@ public class ModItemModelProvider extends ItemModelProvider {
     private ItemModelBuilder simpleItem(RegistryObject<Item> item) {
         return withExistingParent(item.getId().getPath(),
             ResourceLocation.fromNamespaceAndPath("minecraft","item/generated")).texture("layer0",
-            ResourceLocation.fromNamespaceAndPath(DinnerwareCommon.MOD_ID,"item/" + item.getId().getPath()));
+                DinnerwareConstants.id("item/" + item.getId().getPath())
+        );
     }
 }
