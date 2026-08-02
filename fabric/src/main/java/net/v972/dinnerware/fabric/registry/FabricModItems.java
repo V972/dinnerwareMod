@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public final class FabricModItems {
     private static final Map<PlateDefinition, PlateBlockBlockItem> PLATE_ITEMS =
-            new EnumMap<>(PlateDefinition.class);
+        new EnumMap<>(PlateDefinition.class);
 
     private static Item icon;
     private static TrayItem ironTray;
@@ -30,9 +30,7 @@ public final class FabricModItems {
     }
 
     public static void register() {
-        if (registered) {
-            return;
-        }
+        if (registered) return;
 
         icon = registerItem(
             DinnerwareRegistryNames.Items.DINNERWARE_ICON,
@@ -70,6 +68,16 @@ public final class FabricModItems {
     public static Item icon() {
         ensureRegistered();
         return icon;
+    }
+
+    public static TrayItem ironTray() {
+        ensureRegistered();
+        return ironTray;
+    }
+
+    public static TrayItem goldTray() {
+        ensureRegistered();
+        return goldTray;
     }
 
     public static Item[] getTrayItemsArray() {

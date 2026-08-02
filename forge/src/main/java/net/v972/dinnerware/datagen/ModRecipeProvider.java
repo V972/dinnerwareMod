@@ -2,7 +2,6 @@ package net.v972.dinnerware.datagen;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -10,7 +9,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.Tags;
-import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.DinnerwareConstants;
 import net.v972.dinnerware.forge.registry.ForgeModBlocks;
 import net.v972.dinnerware.block.custom.PlateBlock;
@@ -31,13 +29,19 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
 
     @Override
     protected void buildRecipes(Consumer<FinishedRecipe> pWriter) {
+        generatePlateRecipes(pWriter);
+        generateTerracottaDyeingRecipes(pWriter);
+        generateTrayRecipes(pWriter);
+    }
+
+    private static void generatePlateRecipes(Consumer<FinishedRecipe> pWriter) {
         for (Block block : ForgeModBlocks.getKnownPlateBlocksIterable()) {
             PlateBlock plateBlock = (PlateBlock)block;
 
             var craftingItems =
-                    Arrays.stream(plateBlock.CRAFTING_MATERIAL.getItems())
-                    .map(ItemStack::getItem)
-                    .toArray(Item[]::new);
+                Arrays.stream(plateBlock.CRAFTING_MATERIAL.getItems())
+                .map(ItemStack::getItem)
+                .toArray(Item[]::new);
             // fallback because tags are being pissy
             if (craftingItems.length == 0 || Arrays.stream(craftingItems).allMatch(i -> i == Items.BARRIER)
             ) craftingItems = new Item[] { plateBlock.asItem() };
@@ -63,17 +67,20 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 )
                 .save(pWriter);
         }
+    }
+
+    private static void generateTerracottaDyeingRecipes(Consumer<FinishedRecipe> pWriter) {
+        Block baseTerracottaPlate = ForgeModBlocks.PLATE_BLOCK_TERRACOTTA.get();
 
         for (Pair<Block, Ingredient> blockIngredientPair : ForgeModBlocks.getTerracottaPlateBlocksDyeingMap()) {
             PlateBlock plateBlock = (PlateBlock)blockIngredientPair.getFirst();
-            Block baseTerracottaPlate = ForgeModBlocks.PLATE_BLOCK_TERRACOTTA.get();
             Ingredient dyeItems = blockIngredientPair.getSecond();
 
             Item[] unlockItems =
-                    Stream.concat(
-                        Arrays.stream(plateBlock.CRAFTING_MATERIAL.getItems()).map(ItemStack::getItem),
-                        Arrays.stream(dyeItems.getItems()).map(ItemStack::getItem)
-                    ).toArray(Item[]::new);
+                Stream.concat(
+                    Arrays.stream(plateBlock.CRAFTING_MATERIAL.getItems()).map(ItemStack::getItem),
+                    Arrays.stream(dyeItems.getItems()).map(ItemStack::getItem)
+                ).toArray(Item[]::new);
 
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, plateBlock, 8)
                 .pattern("BBB")
@@ -82,35 +89,35 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 .define('D', dyeItems)
                 .define('B', baseTerracottaPlate)
                 .unlockedBy(
-                        "has_" + DinnerwareHelper.getBlockId(plateBlock) + "_ingredients_dyeing",
-                        InventoryChangeTrigger.TriggerInstance.hasItems(unlockItems)
+                    "has_" + DinnerwareHelper.getBlockId(plateBlock) + "_ingredients_dyeing",
+                    InventoryChangeTrigger.TriggerInstance.hasItems(unlockItems)
                 )
-                .save(pWriter, DinnerwareConstants.id(DinnerwareHelper.getBlockId(plateBlock) + "_from_dyeing")
-                );
+                .save(pWriter, DinnerwareConstants.id(DinnerwareHelper.getBlockId(plateBlock) + "_from_dyeing"));
 
             ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, plateBlock, 1)
                 .requires(baseTerracottaPlate)
                 .requires(dyeItems)
                 .unlockedBy(
-                        "has_" + DinnerwareHelper.getBlockId(plateBlock) + "_ingredients_dyeing",
-                        InventoryChangeTrigger.TriggerInstance.hasItems(unlockItems)
+                    "has_" + DinnerwareHelper.getBlockId(plateBlock) + "_ingredients_dyeing",
+                    InventoryChangeTrigger.TriggerInstance.hasItems(unlockItems)
                 )
-                .save(pWriter, DinnerwareConstants.id(DinnerwareHelper.getBlockId(plateBlock) + "_from_dyeing_single")
-                );
+                .save(pWriter, DinnerwareConstants.id(DinnerwareHelper.getBlockId(plateBlock) + "_from_dyeing_single"));
         }
+    }
 
+    private static void generateTrayRecipes(Consumer<FinishedRecipe> pWriter) {
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ForgeModItems.TRAY_IRON.get())
-                .pattern("IPI")
-                .define('P', Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE)
-                .define('I', Tags.Items.INGOTS_IRON)
-                .unlockedBy("has_iron_ingot", has(Tags.Items.INGOTS_IRON))
-                .save(pWriter);
+            .pattern("IPI")
+            .define('P', Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE)
+            .define('I', Tags.Items.INGOTS_IRON)
+            .unlockedBy("has_iron_ingot", has(Tags.Items.INGOTS_IRON))
+            .save(pWriter);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ForgeModItems.TRAY_GOLD.get())
-                .pattern("IPI")
-                .define('P', Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE)
-                .define('I', Tags.Items.INGOTS_GOLD)
-                .unlockedBy("has_gold_ingot", has(Tags.Items.INGOTS_GOLD))
-                .save(pWriter);
+            .pattern("IPI")
+            .define('P', Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE)
+            .define('I', Tags.Items.INGOTS_GOLD)
+            .unlockedBy("has_gold_ingot", has(Tags.Items.INGOTS_GOLD))
+            .save(pWriter);
     }
 }

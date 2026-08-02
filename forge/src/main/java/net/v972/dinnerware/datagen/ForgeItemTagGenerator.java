@@ -25,6 +25,7 @@ public final class ForgeItemTagGenerator extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.@NotNull Provider pProvider) {
         this.tag(ItemTags.PIGLIN_LOVED)
+            .replace(false)
             .add(ForgeModItems.PLATE_ITEM_GOLD.get())
             .add(ForgeModItems.TRAY_GOLD.get());
     }

@@ -19,6 +19,9 @@
     ],
     "modmenu": [
       "net.v972.dinnerware.fabric.client.DinnerwareModMenuIntegration"
+    ],
+    "fabric-datagen": [
+      "net.v972.dinnerware.fabric.datagen.DinnerwareFabricDataGenerator"
     ]
   },
   "mixins": [

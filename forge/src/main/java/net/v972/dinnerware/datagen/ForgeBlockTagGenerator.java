@@ -23,6 +23,7 @@ public final class ForgeBlockTagGenerator extends BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         tag(BlockTags.GUARDED_BY_PIGLINS)
+            .replace(false)
             .add(ForgeModBlocks.PLATE_BLOCK_GOLD.get());
     }
 }

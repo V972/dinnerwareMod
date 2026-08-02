@@ -55,7 +55,7 @@ public class ModAdvancementProvider extends ForgeAdvancementProvider {
                 )
                 .addCriterion("got_diamond_plate",
                     InventoryChangeTrigger.TriggerInstance.hasItems(
-                            ForgeModItems.PLATE_ITEM_DIAMOND.get()
+                        ForgeModItems.PLATE_ITEM_DIAMOND.get()
                     )
                 )
                 .save(saver, DinnerwareConstants.id("get_diamond_plate"), existingFileHelper);
