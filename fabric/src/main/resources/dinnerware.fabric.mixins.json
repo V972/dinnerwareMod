@@ -4,7 +4,8 @@
   "minVersion": "0.8",
   "package": "net.v972.dinnerware.mixins",
   "mixins": [
-    "AbstractContainerMenuAccessor"
+    "AbstractContainerMenuAccessor",
+    "PistonBaseBlockMixin"
   ],
   "client": [
     "MinecraftAccessor",

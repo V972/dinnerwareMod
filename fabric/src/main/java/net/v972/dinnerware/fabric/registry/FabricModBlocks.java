@@ -98,6 +98,12 @@ public final class FabricModBlocks {
                     .pushReaction(PushReaction.BLOCK)
             );
 
+            case OBSIDIAN -> new PlateBlock(
+                definition.material(),
+                defaultPlateProperties()
+                    .pushReaction(PushReaction.BLOCK)
+            );
+
             case QUARTZ -> new PlateBlock(
                 definition.material(),
                 Ingredient.of(ConventionalItemTags.QUARTZ),
