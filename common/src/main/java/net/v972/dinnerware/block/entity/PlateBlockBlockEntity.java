@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.v972.dinnerware.config.DinnerwareConfig;
 import net.v972.dinnerware.config.DinnerwareEatingMode;
 import net.v972.dinnerware.inventory.PlateInventory;
+import net.v972.dinnerware.inventory.PlateInventoryContainer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,10 +39,10 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     @FunctionalInterface
     public interface MenuFactory {
         AbstractContainerMenu create(
-                int containerId,
-                Inventory playerInventory,
-                PlateBlockBlockEntity plateEntity,
-                ContainerData containerData
+            int containerId,
+            Inventory playerInventory,
+            PlateBlockBlockEntity plateEntity,
+            ContainerData containerData
         );
     }
 
@@ -71,7 +72,7 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     private boolean doDropContent = true;
 
     private final PlateInventory inventory = new PlateInventory(SLOT_COUNT, this::inventoryChanged);
-
+    private final PlateInventoryContainer inventoryContainer = new PlateInventoryContainer(inventory, player -> true);
     protected final ContainerData containerData;
 
     public PlateBlockBlockEntity(BlockPos pPos, BlockState pBlockState) {
@@ -121,7 +122,12 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
             return;
         }
 
-        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+        BlockState state = getBlockState();
+        level.sendBlockUpdated(worldPosition, state, state, Block.UPDATE_ALL);
+
+        if (!level.isClientSide) {
+            level.updateNeighbourForOutputSignal(worldPosition, state.getBlock());
+        }
     }
 
     // ========================================
@@ -295,6 +301,10 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
 
         Containers.dropContents(this.level, getBlockPos(), getInventoryStacks());
         this.clearContent();
+    }
+
+    public int getComparatorOutput() {
+        return AbstractContainerMenu.getRedstoneSignalFromContainer(inventoryContainer);
     }
 
     // ========================================

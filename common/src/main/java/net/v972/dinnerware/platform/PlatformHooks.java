@@ -51,4 +51,8 @@ public final class PlatformHooks {
        TrayAdvancementCheckSource source, ItemStack traySnapshot) {
         getPlatform().requestTrayAdvancementCheck(player, source, traySnapshot);
     }
+
+    public static void broadcastEatingParticles(ServerPlayer player, ItemStack foodStack) {
+        getPlatform().broadcastEatingParticles(player, foodStack);
+    }
 }

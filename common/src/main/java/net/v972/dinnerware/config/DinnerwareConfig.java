@@ -77,6 +77,8 @@ public final class DinnerwareConfig {
         return backend().trayDynamicPlateOffset();
     }
 
+    public static boolean showEatingParticles() { return backend().showEatingParticles(); }
+
     public static int trayGuiX() {
         return backend().trayGuiX();
     }

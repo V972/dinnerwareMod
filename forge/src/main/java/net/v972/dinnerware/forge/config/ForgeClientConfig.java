@@ -29,6 +29,14 @@ public class ForgeClientConfig
             )
             .define("trayDynamicPlateOffset", true);
 
+    public static final ForgeConfigSpec.BooleanValue SHOW_EATING_PARTICLES = BUILDER
+            .comment(
+                "\n" +
+                "Show food particles when eating from plates. \n" +
+                "Default: true"
+            )
+            .define("showEatingParticles", true);;
+
 //    public static final ForgeConfigSpec.IntValue TRAY_GUI_X = BUILDER
 //            .comment(
 //                    "\n" +

@@ -133,6 +133,9 @@
   "text.autoconfig.dinnerware-client.option.trayDynamicPlateOffset": "Dynamic Tray Plate Offset",
   "text.autoconfig.dinnerware-client.option.trayDynamicPlateOffset.@Tooltip": "If enabled plates towers between ~5 and ~16 will render on the same height.\nOtherwise, the rendering height will not be corrected.\nOnly affects first person perspective.\nDefault: true",
 
+  "text.autoconfig.dinnerware-client.option.showEatingParticles": "Eating particles",
+  "text.autoconfig.dinnerware-client.option.showEatingParticles.@Tooltip": "Shows food particles when eating from plates.\nDefault: true",
+
   "config.dinnerware.eating_mode.queue": "Queue",
   "config.dinnerware.eating_mode.round_robin": "Round Robin",
   "config.dinnerware.eating_mode.aiming": "Aiming"

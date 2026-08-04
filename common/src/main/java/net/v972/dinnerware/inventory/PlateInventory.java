@@ -79,14 +79,7 @@ public final class PlateInventory {
 
     public void setStackInSlot(int slot, @NotNull ItemStack stack) {
         validateSlot(slot);
-
-        ItemStack stackToStore = stack;
-        if (!stackToStore.isEmpty() && stackToStore.getCount() > getSlotLimit(slot)) {
-            stackToStore = stackToStore.copy();
-            stackToStore.setCount(getSlotLimit(slot));
-        }
-
-        this.items.set(slot, stackToStore);
+        this.items.set(slot, stack);
         changed();
     }
 

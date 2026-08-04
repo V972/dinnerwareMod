@@ -86,7 +86,7 @@ public class PlateMenu extends AbstractContainerMenu {
         // Check if the slot clicked is one of the vanilla container slots
         if (index < VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT) {
             // This is a vanilla container slot so merge the stack into the tile inventory
-            if (!this.moveItemStackTo(sourceStack, TE_INVENTORY_FIRST_SLOT_INDEX, TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT, false)) {
+            if (!moveItemStackToPlate(sourceStack)) {
                 return ItemStack.EMPTY;
             } else {
                 // Checks what successfully ended up in our slots
@@ -180,6 +180,30 @@ public class PlateMenu extends AbstractContainerMenu {
 
     public int getRoundRobinSelectedSlot() {
         return this.data.get(0);
+    }
+
+    private boolean moveItemStackToPlate(ItemStack sourceStack) {
+        int originalCount = sourceStack.getCount();
+
+        // Merge into matching occupied slots first.
+        for (int slot = 0; slot < plateInventory.getContainerSize() && !sourceStack.isEmpty(); slot++) {
+            ItemStack existing = plateInventory.getItem(slot);
+
+            if (!existing.isEmpty() && ItemStack.isSameItemSameTags(existing, sourceStack)) {
+                ItemStack remainder = plateInventory.insertItem(slot, sourceStack, false);
+                sourceStack.setCount(remainder.getCount());
+            }
+        }
+
+        // Then use empty slots.
+        for (int slot = 0; slot < plateInventory.getContainerSize() && !sourceStack.isEmpty(); slot++) {
+            if (plateInventory.getItem(slot).isEmpty()) {
+                ItemStack remainder = plateInventory.insertItem(slot, sourceStack, false);
+                sourceStack.setCount(remainder.getCount());
+            }
+        }
+
+        return sourceStack.getCount() < originalCount;
     }
 
     @Override

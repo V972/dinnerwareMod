@@ -21,4 +21,6 @@ public interface DinnerwarePlatform {
     void requestTrayAdvancementCheck(
         Player player, TrayAdvancementCheckSource source, ItemStack traySnapshot
     );
+
+    void broadcastEatingParticles(ServerPlayer player, ItemStack foodStack);
 }

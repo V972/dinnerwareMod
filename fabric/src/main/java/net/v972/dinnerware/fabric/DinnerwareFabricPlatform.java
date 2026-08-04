@@ -15,6 +15,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
 import net.v972.dinnerware.fabric.client.network.FabricClientNetworkRequests;
+import net.v972.dinnerware.fabric.network.FabricNetwork;
 import net.v972.dinnerware.platform.DinnerwarePlatform;
 import net.v972.dinnerware.platform.TrayAdvancementCheckSource;
 import org.jetbrains.annotations.NotNull;
@@ -73,5 +74,10 @@ public final class DinnerwareFabricPlatform implements DinnerwarePlatform {
         }
 
         FabricClientNetworkRequests.requestTrayAdvancementCheck(source, traySnapshot);
+    }
+
+    @Override
+    public void broadcastEatingParticles(ServerPlayer player, ItemStack foodStack) {
+        FabricNetwork.broadcastEatingParticles(player, foodStack);
     }
 }

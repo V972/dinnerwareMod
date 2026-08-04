@@ -74,6 +74,10 @@ public final class FabricDinnerwareConfigBackend
         return DinnerwareFabricConfigs.client().trayDynamicPlateOffset;
     }
 
+    public boolean showEatingParticles() {
+        return DinnerwareFabricConfigs.client().showEatingParticles;
+    }
+
     @Override
     public int trayGuiX() {
         return 0;

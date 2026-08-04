@@ -1,13 +1,16 @@
 package net.v972.dinnerware.screen.slot;
 
-import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.v972.dinnerware.inventory.PlateInventoryContainer;
 import org.jetbrains.annotations.NotNull;
 
 public class PlateInventorySlot extends Slot {
-    public PlateInventorySlot(Container container, int slot, int x, int y) {
+    private final PlateInventoryContainer plateContainer;
+
+    public PlateInventorySlot(PlateInventoryContainer container, int slot, int x, int y) {
         super(container, slot, x, y);
+        this.plateContainer = container;
     }
 
     @Override
@@ -17,11 +20,11 @@ public class PlateInventorySlot extends Slot {
 
     @Override
     public int getMaxStackSize() {
-        return this.container.getMaxStackSize();
+        return this.plateContainer.getSlotLimit(this.getContainerSlot());
     }
 
     @Override
     public int getMaxStackSize(@NotNull ItemStack stack) {
-        return Math.min(this.getMaxStackSize(), stack.getMaxStackSize());
+        return Math.min(getMaxStackSize(), stack.getMaxStackSize());
     }
 }

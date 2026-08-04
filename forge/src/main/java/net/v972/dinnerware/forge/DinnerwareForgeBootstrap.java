@@ -38,6 +38,7 @@ public final class DinnerwareForgeBootstrap {
 
     public static void registerModEventHandlers(IEventBus modEventBus) {
         modEventBus.addListener(DinnerwareForgeLifecycleEvents::commonSetup);
+        modEventBus.addListener(DinnerwareForgeLifecycleEvents::loadComplete);
     }
 
     public static void registerNetwork() {

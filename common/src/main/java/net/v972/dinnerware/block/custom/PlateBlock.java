@@ -56,7 +56,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.OptionalInt;
 
 public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
@@ -164,6 +163,18 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
         return DinnerwareBlockEntities.plateBlockEntityType().create(pPos, pState);
+    }
+
+    @Override
+    public boolean hasAnalogOutputSignal(@NotNull BlockState pState) {
+        return true;
+    }
+
+    @Override
+    public int getAnalogOutputSignal(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos) {
+        return pLevel.getBlockEntity(pPos) instanceof PlateBlockBlockEntity plateEntity
+            ? plateEntity.getComparatorOutput()
+            : 0;
     }
 
     @Override
@@ -289,6 +300,10 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         //return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }
 
+    public static void playBreakEffects(Level level, @Nullable Player excludedPlayer, BlockPos pos, BlockState state) {
+        if (!level.isClientSide) level.levelEvent(excludedPlayer, 2001, pos, Block.getId(state));
+    }
+
     private static boolean hasSilkTouch(ItemStack stack) {
         return EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0;
     }
@@ -302,9 +317,11 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     private static void breakPlateWithContents(PlateBlockBlockEntity pPlateEntity, Player pPlayer, Level pLevel, BlockPos pPos) {
         if (pLevel.isClientSide) return;
 
-        Block block = pLevel.getBlockState(pPos).getBlock();
+        BlockState state = pLevel.getBlockState(pPos);
+        Block block = state.getBlock();
 
         dropPlateStackWithContents(pPlateEntity, pLevel, pPos);
+        playBreakEffects(pLevel, pPlayer, pPos, state);
         pLevel.removeBlock(pPos, false);
 
         pPlayer.awardStat(Stats.BLOCK_MINED.get(block));
@@ -420,6 +437,10 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
                         pPos.getZ(),
                         PlatformHooks.getCraftingRemainingItem(itemStack));
                 }
+            }
+
+            if (!pLevel.isClientSide && pPlayer instanceof ServerPlayer serverPlayer) {
+                PlatformHooks.broadcastEatingParticles(serverPlayer, itemStack.copy());
             }
 
             itemStack.finishUsingItem(pLevel, pPlayer);

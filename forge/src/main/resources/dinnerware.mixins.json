@@ -5,7 +5,9 @@
   "package": "net.v972.dinnerware.mixins",
   "refmap": "dinnerware.refmap.json",
   "mixins": [
-    "AbstractContainerMenuAccessor"
+    "AbstractContainerMenuAccessor",
+    "LivingEntityAccessor",
+    "DispenserBlockAccessor"
   ],
   "client": [
     "MinecraftAccessor",

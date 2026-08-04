@@ -3,6 +3,7 @@ package net.v972.dinnerware.fabric.client.network;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.world.item.ItemStack;
+import net.v972.dinnerware.client.network.EatingParticleClientHandler;
 import net.v972.dinnerware.fabric.network.FabricNetwork;
 import net.v972.dinnerware.platform.TrayAdvancementCheckSource;
 
@@ -19,7 +20,17 @@ public final class FabricClientNetworkRequests {
         if (registered) return;
 
         ClientTickEvents.START_CLIENT_TICK.register(client ->
-                sendPendingTrayAdvancementCheck()
+            sendPendingTrayAdvancementCheck()
+        );
+
+        ClientPlayNetworking.registerGlobalReceiver(
+                FabricNetwork.EATING_PARTICLES,
+                (client, handler, buffer, responseSender) -> {
+                    int entityId = buffer.readVarInt();
+                    ItemStack foodStack = buffer.readItem();
+
+                    client.execute(() -> EatingParticleClientHandler.handle(entityId, foodStack));
+                }
         );
 
         registered = true;

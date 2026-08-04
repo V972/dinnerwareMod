@@ -27,6 +27,13 @@ public final class FabricClientConfig implements ConfigData {
     public boolean trayDynamicPlateOffset = true;
 
     @Comment("""
+        Show food particles when eating from plates.
+        Default: true
+        """)
+    @ConfigEntry.Gui.Tooltip
+    public boolean showEatingParticles = true;
+
+    @Comment("""
         Horizontal offset of the tray selection GUI.
         Currently unused.
         Default: 0

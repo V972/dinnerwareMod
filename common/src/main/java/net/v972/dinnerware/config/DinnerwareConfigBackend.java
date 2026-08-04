@@ -19,6 +19,7 @@ public interface DinnerwareConfigBackend {
 
     int maxTrayTooltipLines();
     boolean trayDynamicPlateOffset();
+    boolean showEatingParticles();
     int trayGuiX();
     int trayGuiY();
 }

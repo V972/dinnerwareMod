@@ -9,6 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkHooks;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import net.v972.dinnerware.forge.client.network.ForgeClientNetworkRequests;
+import net.v972.dinnerware.forge.network.ForgeNetwork;
 import net.v972.dinnerware.platform.DinnerwarePlatform;
 import net.v972.dinnerware.platform.TrayAdvancementCheckSource;
 import org.jetbrains.annotations.Nullable;
@@ -42,5 +43,10 @@ public final class DinnerwareForgePlatform implements DinnerwarePlatform {
         if (player.level().isClientSide) {
             ForgeClientNetworkRequests.requestTrayAdvancementCheck(source, traySnapshot);
         }
+    }
+
+    @Override
+    public void broadcastEatingParticles(ServerPlayer player, ItemStack foodStack) {
+        ForgeNetwork.broadcastEatingParticles(player, foodStack);
     }
 }

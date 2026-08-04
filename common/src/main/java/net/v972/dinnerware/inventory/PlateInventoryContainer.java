@@ -64,6 +64,14 @@ public final class PlateInventoryContainer implements Container {
         return inventory.canPlaceItem(slot, stack);
     }
 
+    public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
+        return inventory.insertItem(slot, stack, simulate);
+    }
+
+    public int getSlotLimit(int slot) {
+        return this.inventory.getSlotLimit(slot);
+    }
+
     @Override
     public int getMaxStackSize() {
         int limit = 64;

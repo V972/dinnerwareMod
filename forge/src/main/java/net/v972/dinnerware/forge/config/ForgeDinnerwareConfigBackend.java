@@ -65,6 +65,10 @@ public final class ForgeDinnerwareConfigBackend implements DinnerwareConfigBacke
         return ForgeClientConfig.TRAY_DYNAMIC_PLATE_OFFSET.get();
     }
 
+    public boolean showEatingParticles() {
+        return ForgeClientConfig.SHOW_EATING_PARTICLES.get();
+    }
+
     @Override
     public int trayGuiX() {
         return 0; // return ForgeClientConfig.TRAY_GUI_X.get();
