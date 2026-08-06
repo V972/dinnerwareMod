@@ -90,5 +90,53 @@
   "container.dinnerware.tray.more": "и ещё %s...",
 
   "subtitles.dinnerware.tray_metal_load": "Предмет положен на поднос",
-  "subtitles.dinnerware.tray_metal_unload": "Предмет взят с подноса"
+  "subtitles.dinnerware.tray_metal_unload": "Предмет взят с подноса",
+  
+  "config.dinnerware.selector.title": "Настройки Dinnerware",
+  "config.dinnerware.selector.common": "Общие настройки",
+  "config.dinnerware.selector.client": "Настройки клиента",
+
+  "text.autoconfig.dinnerware-common.title": "Dinnerware: Общие настройки",
+
+  "text.autoconfig.dinnerware-common.option.maxPlateStackSize": "Максимальный размер стака на тарелке",
+  "text.autoconfig.dinnerware-common.option.maxPlateStackSize.@Tooltip": "Максимальное количество предметов, которое может содержать один слот тарелки.\nНе изменяет максимальный размер стака предмета.\nПо умолчанию: 16",
+
+  "text.autoconfig.dinnerware-common.option.allowOvereating": "Разрешить переедание",
+  "text.autoconfig.dinnerware-common.option.allowOvereating.@Tooltip": "Если установлено значение true, игрок сможет продолжать есть с тарелки, даже если он не голоден.\nПоложительные и отрицательные эффекты еды всё равно применяются.\nПо умолчанию: false",
+
+  "text.autoconfig.dinnerware-common.option.onlyFoodOnPlate": "Только еда на тарелках",
+  "text.autoconfig.dinnerware-common.option.onlyFoodOnPlate.@Tooltip": "Если установлено значение true, на тарелки можно помещать только еду и предметы из тега \"dinnerware:additional_food\".\nВ противном случае можно положить любой предмет. Однако с отображением может не повезти.\nПо умолчанию: true",
+
+  "text.autoconfig.dinnerware-common.option.foodBlacklist": "Чёрный список еды",
+  "text.autoconfig.dinnerware-common.option.foodBlacklist.@Tooltip": "Список предметов, которые нельзя будет съесть, даже если они входят в тег \"dinnerware:additional_food\".\nПредметы из этого списка всё равно можно положить на тарелку.\nПо умолчанию: [\"artifacts:everlasting_beef\", \"artifacts:eternal_steak\"]",
+
+  "text.autoconfig.dinnerware-common.option.fragilePlates": "Хрупкие тарелки",
+  "text.autoconfig.dinnerware-common.option.fragilePlates.@Tooltip": "Если установлено значение true, тарелки будут разбиваться при различных обстоятельствах.\nНапример, если ходить по ним.\nСущности из тега \"fragile_plate_ignored\" игнорируются.\nПо умолчанию: false",
+
+  "text.autoconfig.dinnerware-common.option.rightToLeft": "Схема тарелки справа налево",
+  "text.autoconfig.dinnerware-common.option.rightToLeft.@Tooltip": "Если установлено значение true, нижний правый слот станет основным слотом тарелки.\nПо факту это зеркально отражает тарелку.\nБудьте осторожны при изменении этого параметра в мире, где уже есть тарелки.\nПо умолчанию: false",
+
+  "text.autoconfig.dinnerware-common.option.eatingMode": "Режим поедания",
+  "text.autoconfig.dinnerware-common.option.eatingMode.@Tooltip": "Способ, которым еда будет съедаться с тарелки.\nОчередь: сначала полностью съедается еда из слота Основного блюда, затем из слота Гарнира, затем из слота Дополнительного блюда;\nКарусель: каждое новое нажатие правой кнопкой мыши будет брать еду из нового слота. Нажатия без съедания еды также учитываются;\nПрицеливание: еда съедается в зависимости от того, куда направлен прицел в момент нажатия правой кнопкой мыши;\nПо умолчанию: AIMING",
+
+  "text.autoconfig.dinnerware-common.option.trayMergeMatchingItem": "Объединять одинаковые тарелки на подносах",
+  "text.autoconfig.dinnerware-common.option.trayMergeMatchingItem.@Tooltip": "Если установлено значение true, поднос будет работать как мешок:\nЕсли существует подходящий стак тарелок, поднятая тарелка будет объединена с ним.\nВ противном случае объединение происходит только с верхней тарелкой.\nПо умолчанию: false",
+
+  "text.autoconfig.dinnerware-common.option.dispensersPlacePlates": "Раздатчики устанавливают тарелки",
+  "text.autoconfig.dinnerware-common.option.dispensersPlacePlates.@Tooltip": "Если установлено значение true, раздатчики будут размещать блоки тарелок.\nОтключите эту опцию, если другой мод предоставляет похожее поведение.\nПо умолчанию: true",
+
+  "text.autoconfig.dinnerware-client.title": "Dinnerware: Настройки клиента",
+
+  "text.autoconfig.dinnerware-client.option.maxTrayTooltipLines": "Максимальное количество строк подсказки подноса",
+  "text.autoconfig.dinnerware-client.option.maxTrayTooltipLines.@Tooltip": "Количество стаков предметов, отображаемых в подсказке подноса.\nОстальные будут скрыты под надписью \"и ещё N...\".\nПо умолчанию: 5",
+
+  "text.autoconfig.dinnerware-client.option.trayDynamicPlateOffset": "Динамическое смещение тарелок на подносе",
+  "text.autoconfig.dinnerware-client.option.trayDynamicPlateOffset.@Tooltip": "Если включено, стопки из тарелок высотой примерно от 5 до 16 будут отображаться на одной высоте.\nВ противном случае высота отображения не будет корректироваться.\nВлияет только на вид от первого лица.\nПо умолчанию: true",
+
+  "text.autoconfig.dinnerware-client.option.showEatingParticles": "Частицы еды",
+  "text.autoconfig.dinnerware-client.option.showEatingParticles.@Tooltip": "Показывает частицы еды при поедании с тарелок.\nПо умолчанию: true",
+
+  "config.dinnerware.eating_mode.queue": "Очередь",
+  "config.dinnerware.eating_mode.round_robin": "Карусель",
+  "config.dinnerware.eating_mode.aiming": "Прицеливание"
 }

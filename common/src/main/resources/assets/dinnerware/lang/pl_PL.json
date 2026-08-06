@@ -90,5 +90,53 @@
   "container.dinnerware.tray.more": "i %s więcej...",
 
   "subtitles.dinnerware.tray_metal_load": "Przedmiot umieszczono na tacy",
-  "subtitles.dinnerware.tray_metal_unload": "Przedmiot zdjęto z tacy"
+  "subtitles.dinnerware.tray_metal_unload": "Przedmiot zdjęto z tacy",
+  
+  "config.dinnerware.selector.title": "Ustawienia Dinnerware",
+  "config.dinnerware.selector.common": "Ogólne ustawienia",
+  "config.dinnerware.selector.client": "Ustawienia klienta",
+
+  "text.autoconfig.dinnerware-common.title": "Dinnerware: Ogólne ustawienia",
+
+  "text.autoconfig.dinnerware-common.option.maxPlateStackSize": "Maksymalna liczba przedmiotów w slocie talerza",
+  "text.autoconfig.dinnerware-common.option.maxPlateStackSize.@Tooltip": "Maksymalna liczba przedmiotów, które może pomieścić jeden slot talerza.\nNie zmienia maksymalnej liczby sztuk danego przedmiotu w stosie.\nDomyślne: 16",
+
+  "text.autoconfig.dinnerware-common.option.allowOvereating": "Zezwalaj na przejadanie się",
+  "text.autoconfig.dinnerware-common.option.allowOvereating.@Tooltip": "Jeśli ustawiono wartość true, gracz może nadal jeść z talerza, nawet jeśli nie jest głodny.\nPozytywne i negatywne efekty jedzenia są nadal stosowane.\nDomyślnie: false",
+
+  "text.autoconfig.dinnerware-common.option.onlyFoodOnPlate": "Tylko jedzenie na talerzach",
+  "text.autoconfig.dinnerware-common.option.onlyFoodOnPlate.@Tooltip": "Jeśli ustawiono wartość true, tylko przedmioty jedzenia oraz przedmioty z tagu \"dinnerware:additional_food\" są dozwolone na talerzach.\nW przeciwnym razie umieścić można dowolny przedmiot. Renderowanie może wyglądać inaczej.\nDomyślnie: true",
+
+  "text.autoconfig.dinnerware-common.option.foodBlacklist": "Czarna lista jedzenia",
+  "text.autoconfig.dinnerware-common.option.foodBlacklist.@Tooltip": "Lista przedmiotów, których spożywanie będzie zabronione, nawet jeśli należą one do tagu \"dinnerware:additional_food\".\nWymienione tutaj przedmioty nadal można umieścić na talerzu.\nDomyślnie: [\"artifacts:everlasting_beef\", \"artifacts:eternal_steak\"]",
+
+  "text.autoconfig.dinnerware-common.option.fragilePlates": "Kruche talerze",
+  "text.autoconfig.dinnerware-common.option.fragilePlates.@Tooltip": "Jeśli ustawiono wartość true, talerze pękają w różnych okolicznościach.\nNa przykład podczas chodzenia po nich.\nByty w ramach tagu \"fragile_plate_ignored\" będą ignorowane.\nDomyślnie: false",
+
+  "text.autoconfig.dinnerware-common.option.rightToLeft": "Układ talerza od prawej do lewej",
+  "text.autoconfig.dinnerware-common.option.rightToLeft.@Tooltip": "Jeśli ustawiono wartość true, slot w prawym dolnym rogu staje się głównym slotem talerza.\nPowoduje lustrzane odbicie układu talerza.\nNależy zachować ostrożność podczas wprowadzania tej zmiany w przypadku już istnienia talerzy w świecie.\nDomyślnie: false",
+
+  "text.autoconfig.dinnerware-common.option.eatingMode": "Tryb jedzenia",
+  "text.autoconfig.dinnerware-common.option.eatingMode.@Tooltip": "Sposób, w jaki jedzenie będzie spożywane z talerza.\nKOLEJKA: najpierw zjadana jest cała zawartość slotu Głównego dania, potem slotu Drugiego dania, a zatem ze slotu Extra dania;\nKARUZELA: każde kolejne kliknięcie prawym przyciskiem myszy spowoduje pobranie jedzenia z nowego slotu. Kliknięcia, podczas których nic nie zostało zjedzone, również są liczone;\nCELOWANIE: jedzenie jest spożywane w zależności od tego, gdzie w danym momencie znajduje się celownik podczas kliknięcia prawym przyciskiem myszy;\nDomyślnie: CELOWANIE",
+
+  "text.autoconfig.dinnerware-common.option.trayMergeMatchingItem": "Połączenie identycznych talerzy na tacy",
+  "text.autoconfig.dinnerware-common.option.trayMergeMatchingItem.@Tooltip": "Jeśli ustawiono wartość true, taca będzie działać jak sakwa:\nJeśli istnieje stos identycznych talerzy, podniesiony talerz zostanie do niego dołączony.\nW przeciwnym razie talerz zostanie dołączony wyłącznie do najwyżej położonego talerza.\nDomyślnie: false",
+
+  "text.autoconfig.dinnerware-common.option.dispensersPlacePlates": "Dozownik umieszcza bloki talerzy",
+  "text.autoconfig.dinnerware-common.option.dispensersPlacePlates.@Tooltip": "Jeśli ustawiono wartość true, dozowniki będą umieszczać bloki talerzy.\nTę opcję można wyłączyć, jeśli inny mod zapewnia podobne działanie.\nDomyślnie: true",
+
+  "text.autoconfig.dinnerware-client.title": "Dinnerware: Ustawienia klienta",
+
+  "text.autoconfig.dinnerware-client.option.maxTrayTooltipLines": "Maksymalna liczba wierszy w podpowiedzi dotyczącej tacy",
+  "text.autoconfig.dinnerware-client.option.maxTrayTooltipLines.@Tooltip": "Liczba stosów przedmiotów, które mają być wyświetlane w podpowiedzi.\nPozostała część zostanie pominięta w podpunkcie \"i N więcej...\".\nDomyślnie: 5",
+
+  "text.autoconfig.dinnerware-client.option.trayDynamicPlateOffset": "Dynamiczne przesunięcie talerzy na tacy",
+  "text.autoconfig.dinnerware-client.option.trayDynamicPlateOffset.@Tooltip": "Jeśli ta opcja jest włączona, wieże z talerzami o wysokości od ~5 do ~16 będą renderowane na tej samej wysokości.\nW przeciwnym razie wysokość renderowania nie zostanie skorygowana.\nDotyczy wyłącznie perspektywy pierwszej osoby.\nDomyślnie: true",
+
+  "text.autoconfig.dinnerware-client.option.showEatingParticles": "Cząsteczki jedzenia",
+  "text.autoconfig.dinnerware-client.option.showEatingParticles.@Tooltip": "Wyświetlaj cząsteczki jedzenia podczas jedzenia z talerzy.\nDomyślnie: true",
+
+  "config.dinnerware.eating_mode.queue": "Kolejka",
+  "config.dinnerware.eating_mode.round_robin": "Karuzela",
+  "config.dinnerware.eating_mode.aiming": "Celowanie"
 }

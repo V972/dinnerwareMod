@@ -35,6 +35,7 @@ public final class FabricCommonConfig implements ConfigData {
         Food buffs/debuffs are still applied.
         Default: false
         """)
+    @ConfigEntry.Gui.Tooltip
     public boolean allowOvereating = false;
 
     @Comment("""
