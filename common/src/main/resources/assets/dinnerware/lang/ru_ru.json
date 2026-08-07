@@ -1,0 +1,142 @@
+{
+  "advancement.dinnerware.put_plate_in_plate.title": "Ёшки матрёшки",
+  "advancement.dinnerware.put_plate_in_plate.description": "Положите тарелку в другую тарелку",
+
+  "advancement.dinnerware.get_diamond_plate.title": "Дорогая, у нас гости...",
+  "advancement.dinnerware.get_diamond_plate.description": "Заполучите алмазную тарелку",
+
+  "advancement.dinnerware.get_tray_with_all_regular_plates.title": "Один поднос, чтоб править всеми",
+  "advancement.dinnerware.get_tray_with_all_regular_plates.description": "Положите на один поднос все ванильные виды обычных тарелок",
+
+  "advancement.dinnerware.root.title": "Dinnerware",
+  "advancement.dinnerware.root.description": "Красиво и функционально",
+
+  "block.dinnerware.plate.food_blacklist_message": "Есть эту еду запрещено настройкой мода",
+
+  "block.dinnerware.plate_block": "Тарелка",
+
+  "block.dinnerware.quartz_plate_block": "Кварцевая тарелка",
+
+  "block.dinnerware.iron_plate_block": "Железная тарелка",
+  "block.dinnerware.gold_plate_block": "Золотая тарелка",
+
+  "block.dinnerware.diamond_plate_block": "Алмазная тарелка",
+
+  "block.dinnerware.obsidian_plate_block": "Обсидиановая тарелка",
+  "block.dinnerware.polished_blackstone_plate_block": "Тарелка из полированного чернита",
+  "block.dinnerware.purpur_plate_block": "Пурпуровая тарелка",
+  "block.dinnerware.chiseled_quartz_plate_block": "Резная кварцевая тарелка",
+  "block.dinnerware.chiseled_nether_bricks_plate_block": "Тарелка из незерского кирпича",
+
+  "block.dinnerware.oak_plate_block": "Дубовая тарелка",
+  "block.dinnerware.birch_plate_block": "Берёзовая тарелка",
+  "block.dinnerware.spruce_plate_block": "Еловая тарелка",
+  "block.dinnerware.jungle_plate_block": "Тропическая тарелка",
+  "block.dinnerware.acacia_plate_block": "Акациевая тарелка",
+  "block.dinnerware.dark_oak_plate_block": "Тарелка из тёмного дуба",
+  "block.dinnerware.cherry_plate_block": "Вишнёвая тарелка",
+  "block.dinnerware.mangrove_plate_block": "Мангровая тарелка",
+  "block.dinnerware.bamboo_plate_block": "Бамбуковая тарелка",
+
+  "block.dinnerware.crimson_plate_block": "Багровая тарелка",
+  "block.dinnerware.warped_plate_block": "Искажённая тарелка",
+
+  "block.dinnerware.terracotta_plate_block": "Керамическая тарелка",
+
+  "block.dinnerware.white_terracotta_plate_block": "Белая керамическая тарелка",
+  "block.dinnerware.orange_terracotta_plate_block": "Оранжевая керамическая тарелка",
+  "block.dinnerware.magenta_terracotta_plate_block": "Пурпурная керамическая тарелка",
+  "block.dinnerware.light_blue_terracotta_plate_block": "Голубая керамическая тарелка",
+  "block.dinnerware.yellow_terracotta_plate_block": "Жёлтая керамическая тарелка",
+  "block.dinnerware.lime_terracotta_plate_block": "Лаймовая керамическая тарелка",
+  "block.dinnerware.pink_terracotta_plate_block": "Розовая керамическая тарелка",
+  "block.dinnerware.gray_terracotta_plate_block": "Серая керамическая тарелка",
+  "block.dinnerware.light_gray_terracotta_plate_block": "Светло-серая керамическая тарелка",
+  "block.dinnerware.cyan_terracotta_plate_block": "Бирюзовая керамическая тарелка",
+  "block.dinnerware.purple_terracotta_plate_block": "Фиолетовая керамическая тарелка",
+  "block.dinnerware.blue_terracotta_plate_block": "Синяя керамическая тарелка",
+  "block.dinnerware.brown_terracotta_plate_block": "Коричневая керамическая тарелка",
+  "block.dinnerware.green_terracotta_plate_block": "Зелёная керамическая тарелка",
+  "block.dinnerware.red_terracotta_plate_block": "Красная керамическая тарелка",
+  "block.dinnerware.black_terracotta_plate_block": "Чёрная керамическая тарелка",
+
+  "block.dinnerware.white_concrete_plate_block": "Белая бетонная тарелка",
+  "block.dinnerware.orange_concrete_plate_block": "Оранжевая бетонная тарелка",
+  "block.dinnerware.magenta_concrete_plate_block": "Пурпурная бетонная тарелка",
+  "block.dinnerware.light_blue_concrete_plate_block": "Голубая бетонная тарелка",
+  "block.dinnerware.yellow_concrete_plate_block": "Жёлтая бетонная тарелка",
+  "block.dinnerware.lime_concrete_plate_block": "Лаймовая бетонная тарелка",
+  "block.dinnerware.pink_concrete_plate_block": "Розовая бетонная тарелка",
+  "block.dinnerware.gray_concrete_plate_block": "Серая бетонная тарелка",
+  "block.dinnerware.light_gray_concrete_plate_block": "Светло-серая бетонная тарелка",
+  "block.dinnerware.cyan_concrete_plate_block": "Бирюзовая бетонная тарелка",
+  "block.dinnerware.purple_concrete_plate_block": "Фиолетовая бетонная тарелка",
+  "block.dinnerware.blue_concrete_plate_block": "Синяя бетонная тарелка",
+  "block.dinnerware.brown_concrete_plate_block": "Коричневая бетонная тарелка",
+  "block.dinnerware.green_concrete_plate_block": "Зелёная бетонная тарелка",
+  "block.dinnerware.red_concrete_plate_block": "Красная бетонная тарелка",
+  "block.dinnerware.black_concrete_plate_block": "Чёрная бетонная тарелка",
+
+  "block.dinnerware.bedrock_plate_block": "Тарелка из Бедрока",
+
+  "creativetab.dinnerware_tab": "Dinnerware",
+
+  "item.dinnerware.dinnerware_icon": "Иконка мода Dinnerware",
+  "item.dinnerware.iron_tray": "Железный поднос",
+  "item.dinnerware.gold_tray": "Золотой поднос",
+
+  "container.dinnerware.tray.fullness": "%s/%s тарелок",
+  "container.dinnerware.tray.with_food": "%s с едой",
+  "container.dinnerware.tray.more": "и ещё %s...",
+
+  "subtitles.dinnerware.tray_metal_load": "Предмет положен на поднос",
+  "subtitles.dinnerware.tray_metal_unload": "Предмет взят с подноса",
+  
+  "config.dinnerware.selector.title": "Настройки Dinnerware",
+  "config.dinnerware.selector.common": "Общие настройки",
+  "config.dinnerware.selector.client": "Настройки клиента",
+
+  "text.autoconfig.dinnerware-common.title": "Dinnerware: Общие настройки",
+
+  "text.autoconfig.dinnerware-common.option.maxPlateStackSize": "Максимальный размер стака на тарелке",
+  "text.autoconfig.dinnerware-common.option.maxPlateStackSize.@Tooltip": "Максимальное количество предметов, которое может содержать один слот тарелки.\nНе изменяет максимальный размер стака предмета.\nПо умолчанию: 16",
+
+  "text.autoconfig.dinnerware-common.option.allowOvereating": "Разрешить переедание",
+  "text.autoconfig.dinnerware-common.option.allowOvereating.@Tooltip": "Если установлено значение true, игрок сможет продолжать есть с тарелки, даже если он не голоден.\nПоложительные и отрицательные эффекты еды всё равно применяются.\nПо умолчанию: false",
+
+  "text.autoconfig.dinnerware-common.option.onlyFoodOnPlate": "Только еда на тарелках",
+  "text.autoconfig.dinnerware-common.option.onlyFoodOnPlate.@Tooltip": "Если установлено значение true, на тарелки можно помещать только еду и предметы из тега \"dinnerware:additional_food\".\nВ противном случае можно положить любой предмет. Однако с отображением может не повезти.\nПо умолчанию: true",
+
+  "text.autoconfig.dinnerware-common.option.foodBlacklist": "Чёрный список еды",
+  "text.autoconfig.dinnerware-common.option.foodBlacklist.@Tooltip": "Список предметов, которые нельзя будет съесть, даже если они входят в тег \"dinnerware:additional_food\".\nПредметы из этого списка всё равно можно положить на тарелку.\nПо умолчанию: [\"artifacts:everlasting_beef\", \"artifacts:eternal_steak\"]",
+
+  "text.autoconfig.dinnerware-common.option.fragilePlates": "Хрупкие тарелки",
+  "text.autoconfig.dinnerware-common.option.fragilePlates.@Tooltip": "Если установлено значение true, тарелки будут разбиваться при различных обстоятельствах.\nНапример, если ходить по ним.\nСущности из тега \"fragile_plate_ignored\" игнорируются.\nПо умолчанию: false",
+
+  "text.autoconfig.dinnerware-common.option.rightToLeft": "Схема тарелки справа налево",
+  "text.autoconfig.dinnerware-common.option.rightToLeft.@Tooltip": "Если установлено значение true, нижний правый слот станет основным слотом тарелки.\nПо факту это зеркально отражает тарелку.\nБудьте осторожны при изменении этого параметра в мире, где уже есть тарелки.\nПо умолчанию: false",
+
+  "text.autoconfig.dinnerware-common.option.eatingMode": "Режим поедания",
+  "text.autoconfig.dinnerware-common.option.eatingMode.@Tooltip": "Способ, которым еда будет съедаться с тарелки.\nОчередь: сначала полностью съедается еда из слота Основного блюда, затем из слота Гарнира, затем из слота Дополнительного блюда;\nКарусель: каждое новое нажатие правой кнопкой мыши будет брать еду из нового слота. Нажатия без съедания еды также учитываются;\nПрицеливание: еда съедается в зависимости от того, куда направлен прицел в момент нажатия правой кнопкой мыши;\nПо умолчанию: AIMING",
+
+  "text.autoconfig.dinnerware-common.option.trayMergeMatchingItem": "Объединять одинаковые тарелки на подносах",
+  "text.autoconfig.dinnerware-common.option.trayMergeMatchingItem.@Tooltip": "Если установлено значение true, поднос будет работать как мешок:\nЕсли существует подходящий стак тарелок, поднятая тарелка будет объединена с ним.\nВ противном случае объединение происходит только с верхней тарелкой.\nПо умолчанию: false",
+
+  "text.autoconfig.dinnerware-common.option.dispensersPlacePlates": "Раздатчики устанавливают тарелки",
+  "text.autoconfig.dinnerware-common.option.dispensersPlacePlates.@Tooltip": "Если установлено значение true, раздатчики будут размещать блоки тарелок.\nОтключите эту опцию, если другой мод предоставляет похожее поведение.\nПо умолчанию: true",
+
+  "text.autoconfig.dinnerware-client.title": "Dinnerware: Настройки клиента",
+
+  "text.autoconfig.dinnerware-client.option.maxTrayTooltipLines": "Максимальное количество строк подсказки подноса",
+  "text.autoconfig.dinnerware-client.option.maxTrayTooltipLines.@Tooltip": "Количество стаков предметов, отображаемых в подсказке подноса.\nОстальные будут скрыты под надписью \"и ещё N...\".\nПо умолчанию: 5",
+
+  "text.autoconfig.dinnerware-client.option.trayDynamicPlateOffset": "Динамическое смещение тарелок на подносе",
+  "text.autoconfig.dinnerware-client.option.trayDynamicPlateOffset.@Tooltip": "Если включено, стопки из тарелок высотой примерно от 5 до 16 будут отображаться на одной высоте.\nВ противном случае высота отображения не будет корректироваться.\nВлияет только на вид от первого лица.\nПо умолчанию: true",
+
+  "text.autoconfig.dinnerware-client.option.showEatingParticles": "Частицы еды",
+  "text.autoconfig.dinnerware-client.option.showEatingParticles.@Tooltip": "Показывает частицы еды при поедании с тарелок.\nПо умолчанию: true",
+
+  "config.dinnerware.eating_mode.queue": "Очередь",
+  "config.dinnerware.eating_mode.round_robin": "Карусель",
+  "config.dinnerware.eating_mode.aiming": "Прицеливание"
+}

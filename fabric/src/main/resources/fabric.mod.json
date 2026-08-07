@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "${mod_name}",
+  "description": "${mod_description}",
+  "icon": "icon.png",
+  "authors": [
+    "${mod_authors}"
+  ],
+  "license": "${mod_license}",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.v972.dinnerware.fabric.DinnerwareFabric"
+    ],
+    "client": [
+      "net.v972.dinnerware.fabric.client.DinnerwareFabricClient"
+    ],
+    "modmenu": [
+      "net.v972.dinnerware.fabric.client.DinnerwareModMenuIntegration"
+    ],
+    "fabric-datagen": [
+      "net.v972.dinnerware.fabric.datagen.DinnerwareFabricDataGenerator"
+    ]
+  },
+  "mixins": [
+    "dinnerware.fabric.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric-api": "*",
+    "cloth-config": ">=11.1.136",
+    "minecraft": "~${minecraft_version}",
+    "java": ">=17"
+  },
+  "suggests": {
+    "modmenu": "*"
+  }
+}

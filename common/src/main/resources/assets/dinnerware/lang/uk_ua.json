@@ -1,0 +1,142 @@
+{
+  "advancement.dinnerware.put_plate_in_plate.title": "Мотрійка",
+  "advancement.dinnerware.put_plate_in_plate.description": "Покладіть тарілку в іншу тарілку",
+
+  "advancement.dinnerware.get_diamond_plate.title": "Люба, у нас гості...",
+  "advancement.dinnerware.get_diamond_plate.description": "Добудьте даімантову тарілку",
+
+  "advancement.dinnerware.get_tray_with_all_regular_plates.title": "Одна таця, щоб ними правити",
+  "advancement.dinnerware.get_tray_with_all_regular_plates.description": "Покладіть на одну тацю всі ванильні види звичайних тарілок",
+
+  "advancement.dinnerware.root.title": "Dinnerware",
+  "advancement.dinnerware.root.description": "Красиво та функціонально",
+
+  "block.dinnerware.plate.food_blacklist_message": "Їсти цю їжу заборонено налаштуванням мода",
+
+  "block.dinnerware.plate_block": "Тарілка",
+
+  "block.dinnerware.quartz_plate_block": "Кварцова тарілка",
+
+  "block.dinnerware.iron_plate_block": "Залізна тарілка",
+  "block.dinnerware.gold_plate_block": "Золота тарілка",
+
+  "block.dinnerware.diamond_plate_block": "Діамантова тарілка",
+
+  "block.dinnerware.obsidian_plate_block": "Обсидіанова тарілка",
+  "block.dinnerware.polished_blackstone_plate_block": "Полірована чорнокам'яна тарілка",
+  "block.dinnerware.purpur_plate_block": "Тарілка з пурпуру",
+  "block.dinnerware.chiseled_quartz_plate_block": "Різьблена кварцова тарілка",
+  "block.dinnerware.chiseled_nether_bricks_plate_block": "Тарілка з незерськоъї цегли",
+
+  "block.dinnerware.oak_plate_block": "Дубова тарілка",
+  "block.dinnerware.birch_plate_block": "Березова тарілка",
+  "block.dinnerware.spruce_plate_block": "Смерекова тарілка",
+  "block.dinnerware.jungle_plate_block": "Тропічна тарілка",
+  "block.dinnerware.acacia_plate_block": "Акацієва тарілка",
+  "block.dinnerware.dark_oak_plate_block": "Темно-дубова тарілка",
+  "block.dinnerware.cherry_plate_block": "Вишнева тарілка",
+  "block.dinnerware.mangrove_plate_block": "Мангрова тарілка",
+  "block.dinnerware.bamboo_plate_block": "Бамбукова тарілка",
+
+  "block.dinnerware.crimson_plate_block": "Багряна тарілка",
+  "block.dinnerware.warped_plate_block": "Химерна тарілка",
+
+  "block.dinnerware.terracotta_plate_block": "Керамічна тарілка",
+
+  "block.dinnerware.white_terracotta_plate_block": "Біла керамічна тарілка",
+  "block.dinnerware.orange_terracotta_plate_block": "Помаранчева керамічна тарілка",
+  "block.dinnerware.magenta_terracotta_plate_block": "Пурпурова керамічна тарілка",
+  "block.dinnerware.light_blue_terracotta_plate_block": "Блакитна керамічна тарілка",
+  "block.dinnerware.yellow_terracotta_plate_block": "Жовта керамічна тарілка",
+  "block.dinnerware.lime_terracotta_plate_block": "Лаймова керамічна тарілка",
+  "block.dinnerware.pink_terracotta_plate_block": "Рожева керамічна тарілка",
+  "block.dinnerware.gray_terracotta_plate_block": "Сіра керамічна тарілка",
+  "block.dinnerware.light_gray_terracotta_plate_block": "Світло-сіра керамічна тарілка",
+  "block.dinnerware.cyan_terracotta_plate_block": "Бірюзова керамічна тарілка",
+  "block.dinnerware.purple_terracotta_plate_block": "Фіолетова керамічна тарілка",
+  "block.dinnerware.blue_terracotta_plate_block": "Синя керамічна тарілка",
+  "block.dinnerware.brown_terracotta_plate_block": "Коричнева керамічна тарілка",
+  "block.dinnerware.green_terracotta_plate_block": "Зелена керамічна тарілка",
+  "block.dinnerware.red_terracotta_plate_block": "Червона керамічна тарілка",
+  "block.dinnerware.black_terracotta_plate_block": "Чорна керамічна тарілка",
+
+  "block.dinnerware.white_concrete_plate_block": "Біла бетонна тарілка",
+  "block.dinnerware.orange_concrete_plate_block": "Помаранчева бетонна тарілка",
+  "block.dinnerware.magenta_concrete_plate_block": "Пурпурова бетонна тарілка",
+  "block.dinnerware.light_blue_concrete_plate_block": "Блакитна бетонна тарілка",
+  "block.dinnerware.yellow_concrete_plate_block": "Жовта бетонна тарілка",
+  "block.dinnerware.lime_concrete_plate_block": "Лаймова бетонна тарілка",
+  "block.dinnerware.pink_concrete_plate_block": "Рожева бетонна тарілка",
+  "block.dinnerware.gray_concrete_plate_block": "Сіра бетонна тарілка",
+  "block.dinnerware.light_gray_concrete_plate_block": "Світло-сіра бетонна тарілка",
+  "block.dinnerware.cyan_concrete_plate_block": "Бірюзова бетонна тарілка",
+  "block.dinnerware.purple_concrete_plate_block": "Фіолетова бетонна тарілка",
+  "block.dinnerware.blue_concrete_plate_block": "Синя бетонна тарілка",
+  "block.dinnerware.brown_concrete_plate_block": "Коричнева бетонна тарілка",
+  "block.dinnerware.green_concrete_plate_block": "Зелена бетонна тарілка",
+  "block.dinnerware.red_concrete_plate_block": "Червона бетонна тарілка",
+  "block.dinnerware.black_concrete_plate_block": "Чорна бетонна тарілка",
+
+  "block.dinnerware.bedrock_plate_block": "Тарілка з корінної породи",
+
+  "creativetab.dinnerware_tab": "Dinnerware",
+
+  "item.dinnerware.dinnerware_icon": "Значок моду Dinnerware",
+  "item.dinnerware.iron_tray": "Залізна таця",
+  "item.dinnerware.gold_tray": "Золота таця",
+
+  "container.dinnerware.tray.fullness": "%s/%s тарілок",
+  "container.dinnerware.tray.with_food": "%s з їжою",
+  "container.dinnerware.tray.more": "і ще %s...",
+
+  "subtitles.dinnerware.tray_metal_load": "Предмет покладено на тацю",
+  "subtitles.dinnerware.tray_metal_unload": "Предмет взято з таці",
+  
+  "config.dinnerware.selector.title": "Налаштування Dinnerware",
+  "config.dinnerware.selector.common": "Загальні налаштування",
+  "config.dinnerware.selector.client": "Налаштування клієнта",
+
+  "text.autoconfig.dinnerware-common.title": "Dinnerware: Загальні налаштування",
+
+  "text.autoconfig.dinnerware-common.option.maxPlateStackSize": "Максимальний розмір стосу на тарілці",
+  "text.autoconfig.dinnerware-common.option.maxPlateStackSize.@Tooltip": "Максимальна кількість предметів, яку може вмістити один слот тарілки.\nНе змінює максимальний розмір стосу предмета.\nЗа замовчуванням: 16",
+
+  "text.autoconfig.dinnerware-common.option.allowOvereating": "Дозволити переїдання",
+  "text.autoconfig.dinnerware-common.option.allowOvereating.@Tooltip": "Якщо встановлено значення true, гравець може продовжувати їсти з тарілки, навіть якщо він не голодний.\nПозитивні й негативні ефекти їжі все одно застосовуються.\nЗа замовчуванням: false",
+
+  "text.autoconfig.dinnerware-common.option.onlyFoodOnPlate": "Лише їжа на тарілках",
+  "text.autoconfig.dinnerware-common.option.onlyFoodOnPlate.@Tooltip": "Якщо встановлено значення true, на тарілки можна класти лише їжу та предмети з тегу \"dinnerware:additional_food\".\nІнакше можна покласти будь-який предмет. Проте з відображенням може не пощастити.\nЗа замовчуванням: true",
+
+  "text.autoconfig.dinnerware-common.option.foodBlacklist": "Чорний список їжі",
+  "text.autoconfig.dinnerware-common.option.foodBlacklist.@Tooltip": "Список предметів, які не можна буде з'їсти, навіть якщо вони входять до тегу \"dinnerware:additional_food\".\nПредмети з цього списку все одно можна покласти на тарілку.\nЗа замовчуванням: [\"artifacts:everlasting_beef\", \"artifacts:eternal_steak\"]",
+
+  "text.autoconfig.dinnerware-common.option.fragilePlates": "Крихкі тарілки",
+  "text.autoconfig.dinnerware-common.option.fragilePlates.@Tooltip": "Якщо встановлено значення true, тарілки розбиватимуться за різних обставин.\nНаприклад, якщо ходити по них.\nСутності з тегу \"fragile_plate_ignored\" ігноруються.\nЗа замовчуванням: false",
+
+  "text.autoconfig.dinnerware-common.option.rightToLeft": "Схема тарілки справа наліво",
+  "text.autoconfig.dinnerware-common.option.rightToLeft.@Tooltip": "Якщо встановлено значення true, нижній правий слот стане головним слотом тарілки.\nЦе фактично відзеркалює тарілку.\nБудьте обережні, змінюючи цей параметр у світі, де вже є тарілки.\nЗа замовчуванням: false",
+
+  "text.autoconfig.dinnerware-common.option.eatingMode": "Режим поїдання",
+  "text.autoconfig.dinnerware-common.option.eatingMode.@Tooltip": "Спосіб, у який їжа буде з'їдатися з тарілки.\nЧЕРГА: спочатку повністю з'їдається їжа зі слоту Основної страви, потім зі слоту Гарніру, а потім зі слоту Додаткової страви;\nКАРУСЕЛЬ: кожне нове натискання правою кнопкою миші братиме їжу з нового слоту. Натискання без поїдання їжі теж враховуються;\nПРИЦІЛЮВАННЯ: їжа з'їдається залежно від того, куди спрямований приціл під час натискання правою кнопкою миші;\nЗа замовчуванням: ПРИЦІЛЮВАННЯ",
+
+  "text.autoconfig.dinnerware-common.option.trayMergeMatchingItem": "Об'єднання однакових тарілок на тацях",
+  "text.autoconfig.dinnerware-common.option.trayMergeMatchingItem.@Tooltip": "Якщо встановлено значення true, таця працюватиме як мішечок:\nЯкщо є відповідний стос тарілок, піднята тарілка буде об'єднана з ним.\nІнакше об'єднання відбувається лише з верхньою тарілкою.\nЗа замовчуванням: false",
+
+  "text.autoconfig.dinnerware-common.option.dispensersPlacePlates": "Роздавачі встановлюють тарілки",
+  "text.autoconfig.dinnerware-common.option.dispensersPlacePlates.@Tooltip": "Якщо встановлено значення true, роздавачі розміщуватимуть блоки тарілок.\nВимкніть цю опцію, якщо інший мод забезпечує подібну поведінку.\nЗа замовчуванням: true",
+
+  "text.autoconfig.dinnerware-client.title": "Dinnerware: Налаштування клієнта",
+
+  "text.autoconfig.dinnerware-client.option.maxTrayTooltipLines": "Максимальна кількість рядків підказки таці",
+  "text.autoconfig.dinnerware-client.option.maxTrayTooltipLines.@Tooltip": "Кількість стосів предметів, що відображатимуться в підказці таці.\nРешта буде прихована під написом \"і ще N...\".\nЗа замовчуванням: 5",
+
+  "text.autoconfig.dinnerware-client.option.trayDynamicPlateOffset": "Динамічне зміщення тарілок на таці",
+  "text.autoconfig.dinnerware-client.option.trayDynamicPlateOffset.@Tooltip": "Якщо ввімкнено, стопки тарілок висотою приблизно від 5 до 16 відображатимуться на однаковій висоті.\nІнакше висота відображення не коригуватиметься.\nВпливає лише на вигляд від першої особи.\nЗа замовчуванням: true",
+
+  "text.autoconfig.dinnerware-client.option.showEatingParticles": "Частинки їжі",
+  "text.autoconfig.dinnerware-client.option.showEatingParticles.@Tooltip": "Показує частинки їжі під час поїдання з тарілок.\nЗа замовчуванням: true",
+
+  "config.dinnerware.eating_mode.queue": "Черга",
+  "config.dinnerware.eating_mode.round_robin": "Карусель",
+  "config.dinnerware.eating_mode.aiming": "Прицілювання"
+}

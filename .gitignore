@@ -1,29 +1,55 @@
-# eclipse
-bin
-*.launch
-.settings
-.metadata
-.classpath
-.project
+# Gradle
+.gradle/
+build/
+**/build/
 
-# idea
-out
+# IntelliJ IDEA
+.idea/
+*.iml
 *.ipr
 *.iws
-*.iml
-.idea
+out/
 
-# gradle
-build
-.gradle
+# Eclipse
+.classpath
+.project
+.settings/
+.metadata/
+bin/
+*.launch
 
-# other
-eclipse
-run
+# VS Code
+.vscode/
 
-# Files from Forge MDK
+# Minecraft / Forge / development runs
+run/
+**/runs/
+run-*/
+run-data/
+logs/
+crash-reports/
+screenshots/
+saves/
+server.properties
+eula.txt
+
+# Generated datagen output
+src/generated/
+**/src/generated/
+
+# Local libraries / manual test jars
+libs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Forge MDK leftovers
 forge*changelog.txt
-/src/generated/*
-/run-data/logs/*
-/run-data/config/fml.toml
-/run-data/logs/latest.log
+
+# Local notes/backups
+*.bak
+*.tmp
+*.log
+
+fabric-remap-info.txt

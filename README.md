@@ -2,7 +2,7 @@
 
 <p align="center">
   <img alt="Logo" src="./docs/images/title.png"><br>
-  <img alt="Icon" width="400" src="./src/main/resources/icon.png">
+  <img alt="Icon" width="400" src="./common/src/main/resources/icon.png">
 </p>
 
 
@@ -27,12 +27,12 @@ Detailed description can be found on [GitHub Wiki](https://github.com/V972/dinne
 
 ## Loaders / Versions
 
-Forge 47.4.16+ for Minecraft 1.20.1.  
-
-When the mod is feature-complete I will be looking into forward porting it to 1.21.1.  
-As well as back-porting to Forge 1.18.2. Yes, really.  
-
-Fabric port is looming on the horizon...
+|          | 1.18.2 | 1.19.2 | 1.20.1 | 1.21.1 |
+|----------|--------|--------|--------|--------|
+| Forge    |   ✅    |   ✅    |   ✅    |        |
+| Neoforge |        |        |        |   ✅    |
+| Fabric   |   ✅    |   ✅    |   ✅    |   ✅    |
+<sub>*At the time of writing, versions other than 1.20.1 are still in development.</sub>
 
 ## Potential Plans and Known Issues
 
@@ -49,9 +49,8 @@ Fun, but unlikely stuff:
 
 </details>  
 
-<details><summary>Issues</summary>  
+<details><summary>Known Issues</summary>  
 
-- "The one tray" advancement doesn't work from GUI, only from in-world interactions;
 - Tag-based crafting ingredients are not properly listed in recipe unlock criteria. This is irrelevant to 90% of the players, but there's still that 10%, so I will try to do something about it.  
 
 </details>  

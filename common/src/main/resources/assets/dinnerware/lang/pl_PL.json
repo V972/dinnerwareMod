@@ -1,0 +1,142 @@
+{
+  "advancement.dinnerware.put_plate_in_plate.title": "Jejku, matrioszka",
+  "advancement.dinnerware.put_plate_in_plate.description": "Umieść talerz w innym talerzu",
+
+  "advancement.dinnerware.get_diamond_plate.title": "Kochanie, mamy gości...",
+  "advancement.dinnerware.get_diamond_plate.description": "Zdobądź diamentowy talerz",
+
+  "advancement.dinnerware.get_tray_with_all_regular_plates.title": "Jeden talerz, by wszystkimi rządzić",
+  "advancement.dinnerware.get_tray_with_all_regular_plates.description": "Umieść na jednej tacy wszystkie rodzaje zwykłych vanilla talerzy",
+
+  "advancement.dinnerware.root.title": "Dinnerware",
+  "advancement.dinnerware.root.description": "Piękne i funkcjonalne",
+
+  "block.dinnerware.plate.food_blacklist_message": "Spożywanie tego jedzenia jest zabronione przez konfigurację modyfikacji",
+
+  "block.dinnerware.plate_block": "Talerz",
+
+  "block.dinnerware.quartz_plate_block": "Kwarcowy talerz",
+
+  "block.dinnerware.iron_plate_block": "Żelazny talerz",
+  "block.dinnerware.gold_plate_block": "Złoty talerz",
+
+  "block.dinnerware.diamond_plate_block": "Diamentowy talerz",
+
+  "block.dinnerware.obsidian_plate_block": "Obsydianowy talerz",
+  "block.dinnerware.polished_blackstone_plate_block": "Talerz z polerowanego czernitu",
+  "block.dinnerware.purpur_plate_block": "Purpurowy talerz",
+  "block.dinnerware.chiseled_quartz_plate_block": "Rzeźbiony kwarcowy talerz",
+  "block.dinnerware.chiseled_nether_bricks_plate_block": "Talerz z rzeźbionych cegieł netherowych",
+
+  "block.dinnerware.oak_plate_block": "Dębowy talerz",
+  "block.dinnerware.birch_plate_block": "Brzozowy talerz",
+  "block.dinnerware.spruce_plate_block": "Świerkowy talerz",
+  "block.dinnerware.jungle_plate_block": "Tropikalny talerz",
+  "block.dinnerware.acacia_plate_block": "Akacjowy talerz",
+  "block.dinnerware.dark_oak_plate_block": "Ciemnodębowy talerz",
+  "block.dinnerware.cherry_plate_block": "Wiśniowy talerz",
+  "block.dinnerware.mangrove_plate_block": "Namorzynowy talerz",
+  "block.dinnerware.bamboo_plate_block": "Bambusowy talerz",
+
+  "block.dinnerware.crimson_plate_block": "Szkarłatny talerz",
+  "block.dinnerware.warped_plate_block": "Spaczony talerz",
+
+  "block.dinnerware.terracotta_plate_block": "Terakotowy talerz",
+
+  "block.dinnerware.white_terracotta_plate_block": "Biały terakotowy talerz",
+  "block.dinnerware.orange_terracotta_plate_block": "Pomarańczowy terakotowy talerz",
+  "block.dinnerware.magenta_terracotta_plate_block": "Purpurowy terakotowy talerz",
+  "block.dinnerware.light_blue_terracotta_plate_block": "Jasnoniebieski terakotowy talerz",
+  "block.dinnerware.yellow_terracotta_plate_block": "Żółty terakotowy talerz",
+  "block.dinnerware.lime_terracotta_plate_block": "Jasnozielony terakotowy talerz",
+  "block.dinnerware.pink_terracotta_plate_block": "Różowy terakotowy talerz",
+  "block.dinnerware.gray_terracotta_plate_block": "Szary terakotowy talerz",
+  "block.dinnerware.light_gray_terracotta_plate_block": "Jasnoszary terakotowy talerz",
+  "block.dinnerware.cyan_terracotta_plate_block": "Błękitny terakotowy talerz",
+  "block.dinnerware.purple_terracotta_plate_block": "Fioletowy terakotowy talerz",
+  "block.dinnerware.blue_terracotta_plate_block": "Niebieski terakotowy talerz",
+  "block.dinnerware.brown_terracotta_plate_block": "Brązowy terakotowy talerz",
+  "block.dinnerware.green_terracotta_plate_block": "Zielony terakotowy talerz",
+  "block.dinnerware.red_terracotta_plate_block": "Czerwony terakotowy talerz",
+  "block.dinnerware.black_terracotta_plate_block": "Czarny terakotowy talerz",
+
+  "block.dinnerware.white_concrete_plate_block": "Biały betonowy talerz",
+  "block.dinnerware.orange_concrete_plate_block": "Pomarańczowy betonowy talerz",
+  "block.dinnerware.magenta_concrete_plate_block": "Purpurowy betonowy talerz",
+  "block.dinnerware.light_blue_concrete_plate_block": "Jasnoniebieski betonowy talerz",
+  "block.dinnerware.yellow_concrete_plate_block": "Żółty betonowy talerz",
+  "block.dinnerware.lime_concrete_plate_block": "Jasnozielony betonowy talerz",
+  "block.dinnerware.pink_concrete_plate_block": "Różowy betonowy talerz",
+  "block.dinnerware.gray_concrete_plate_block": "Szary betonowy talerz",
+  "block.dinnerware.light_gray_concrete_plate_block": "Jasnoszary betonowy talerz",
+  "block.dinnerware.cyan_concrete_plate_block": "Błękitny betonowy talerz",
+  "block.dinnerware.purple_concrete_plate_block": "Fioletowy betonowy talerz",
+  "block.dinnerware.blue_concrete_plate_block": "Niebieski betonowy talerz",
+  "block.dinnerware.brown_concrete_plate_block": "Brązowy betonowy talerz",
+  "block.dinnerware.green_concrete_plate_block": "Zielony betonowy talerz",
+  "block.dinnerware.red_concrete_plate_block": "Czerwony betonowy talerz",
+  "block.dinnerware.black_concrete_plate_block": "Czarny betonowy talerz",
+
+  "block.dinnerware.bedrock_plate_block": "Talerz ze skały macierzystej",
+
+  "creativetab.dinnerware_tab": "Dinnerware",
+
+  "item.dinnerware.dinnerware_icon": "Dinnerware Icon",
+  "item.dinnerware.iron_tray": "Żelazna Taca",
+  "item.dinnerware.gold_tray": "Złota Taca",
+
+  "container.dinnerware.tray.fullness": "%s/%s Talerzy",
+  "container.dinnerware.tray.with_food": "%s z jedzeniem",
+  "container.dinnerware.tray.more": "i %s więcej...",
+
+  "subtitles.dinnerware.tray_metal_load": "Przedmiot umieszczono na tacy",
+  "subtitles.dinnerware.tray_metal_unload": "Przedmiot zdjęto z tacy",
+  
+  "config.dinnerware.selector.title": "Ustawienia Dinnerware",
+  "config.dinnerware.selector.common": "Ogólne ustawienia",
+  "config.dinnerware.selector.client": "Ustawienia klienta",
+
+  "text.autoconfig.dinnerware-common.title": "Dinnerware: Ogólne ustawienia",
+
+  "text.autoconfig.dinnerware-common.option.maxPlateStackSize": "Maksymalna liczba przedmiotów w slocie talerza",
+  "text.autoconfig.dinnerware-common.option.maxPlateStackSize.@Tooltip": "Maksymalna liczba przedmiotów, które może pomieścić jeden slot talerza.\nNie zmienia maksymalnej liczby sztuk danego przedmiotu w stosie.\nDomyślne: 16",
+
+  "text.autoconfig.dinnerware-common.option.allowOvereating": "Zezwalaj na przejadanie się",
+  "text.autoconfig.dinnerware-common.option.allowOvereating.@Tooltip": "Jeśli ustawiono wartość true, gracz może nadal jeść z talerza, nawet jeśli nie jest głodny.\nPozytywne i negatywne efekty jedzenia są nadal stosowane.\nDomyślnie: false",
+
+  "text.autoconfig.dinnerware-common.option.onlyFoodOnPlate": "Tylko jedzenie na talerzach",
+  "text.autoconfig.dinnerware-common.option.onlyFoodOnPlate.@Tooltip": "Jeśli ustawiono wartość true, tylko przedmioty jedzenia oraz przedmioty z tagu \"dinnerware:additional_food\" są dozwolone na talerzach.\nW przeciwnym razie umieścić można dowolny przedmiot. Renderowanie może wyglądać inaczej.\nDomyślnie: true",
+
+  "text.autoconfig.dinnerware-common.option.foodBlacklist": "Czarna lista jedzenia",
+  "text.autoconfig.dinnerware-common.option.foodBlacklist.@Tooltip": "Lista przedmiotów, których spożywanie będzie zabronione, nawet jeśli należą one do tagu \"dinnerware:additional_food\".\nWymienione tutaj przedmioty nadal można umieścić na talerzu.\nDomyślnie: [\"artifacts:everlasting_beef\", \"artifacts:eternal_steak\"]",
+
+  "text.autoconfig.dinnerware-common.option.fragilePlates": "Kruche talerze",
+  "text.autoconfig.dinnerware-common.option.fragilePlates.@Tooltip": "Jeśli ustawiono wartość true, talerze pękają w różnych okolicznościach.\nNa przykład podczas chodzenia po nich.\nByty w ramach tagu \"fragile_plate_ignored\" będą ignorowane.\nDomyślnie: false",
+
+  "text.autoconfig.dinnerware-common.option.rightToLeft": "Układ talerza od prawej do lewej",
+  "text.autoconfig.dinnerware-common.option.rightToLeft.@Tooltip": "Jeśli ustawiono wartość true, slot w prawym dolnym rogu staje się głównym slotem talerza.\nPowoduje lustrzane odbicie układu talerza.\nNależy zachować ostrożność podczas wprowadzania tej zmiany w przypadku już istnienia talerzy w świecie.\nDomyślnie: false",
+
+  "text.autoconfig.dinnerware-common.option.eatingMode": "Tryb jedzenia",
+  "text.autoconfig.dinnerware-common.option.eatingMode.@Tooltip": "Sposób, w jaki jedzenie będzie spożywane z talerza.\nKOLEJKA: najpierw zjadana jest cała zawartość slotu Głównego dania, potem slotu Drugiego dania, a zatem ze slotu Extra dania;\nKARUZELA: każde kolejne kliknięcie prawym przyciskiem myszy spowoduje pobranie jedzenia z nowego slotu. Kliknięcia, podczas których nic nie zostało zjedzone, również są liczone;\nCELOWANIE: jedzenie jest spożywane w zależności od tego, gdzie w danym momencie znajduje się celownik podczas kliknięcia prawym przyciskiem myszy;\nDomyślnie: CELOWANIE",
+
+  "text.autoconfig.dinnerware-common.option.trayMergeMatchingItem": "Połączenie identycznych talerzy na tacy",
+  "text.autoconfig.dinnerware-common.option.trayMergeMatchingItem.@Tooltip": "Jeśli ustawiono wartość true, taca będzie działać jak sakwa:\nJeśli istnieje stos identycznych talerzy, podniesiony talerz zostanie do niego dołączony.\nW przeciwnym razie talerz zostanie dołączony wyłącznie do najwyżej położonego talerza.\nDomyślnie: false",
+
+  "text.autoconfig.dinnerware-common.option.dispensersPlacePlates": "Dozownik umieszcza bloki talerzy",
+  "text.autoconfig.dinnerware-common.option.dispensersPlacePlates.@Tooltip": "Jeśli ustawiono wartość true, dozowniki będą umieszczać bloki talerzy.\nTę opcję można wyłączyć, jeśli inny mod zapewnia podobne działanie.\nDomyślnie: true",
+
+  "text.autoconfig.dinnerware-client.title": "Dinnerware: Ustawienia klienta",
+
+  "text.autoconfig.dinnerware-client.option.maxTrayTooltipLines": "Maksymalna liczba wierszy w podpowiedzi dotyczącej tacy",
+  "text.autoconfig.dinnerware-client.option.maxTrayTooltipLines.@Tooltip": "Liczba stosów przedmiotów, które mają być wyświetlane w podpowiedzi.\nPozostała część zostanie pominięta w podpunkcie \"i N więcej...\".\nDomyślnie: 5",
+
+  "text.autoconfig.dinnerware-client.option.trayDynamicPlateOffset": "Dynamiczne przesunięcie talerzy na tacy",
+  "text.autoconfig.dinnerware-client.option.trayDynamicPlateOffset.@Tooltip": "Jeśli ta opcja jest włączona, wieże z talerzami o wysokości od ~5 do ~16 będą renderowane na tej samej wysokości.\nW przeciwnym razie wysokość renderowania nie zostanie skorygowana.\nDotyczy wyłącznie perspektywy pierwszej osoby.\nDomyślnie: true",
+
+  "text.autoconfig.dinnerware-client.option.showEatingParticles": "Cząsteczki jedzenia",
+  "text.autoconfig.dinnerware-client.option.showEatingParticles.@Tooltip": "Wyświetlaj cząsteczki jedzenia podczas jedzenia z talerzy.\nDomyślnie: true",
+
+  "config.dinnerware.eating_mode.queue": "Kolejka",
+  "config.dinnerware.eating_mode.round_robin": "Karuzela",
+  "config.dinnerware.eating_mode.aiming": "Celowanie"
+}
