@@ -7,21 +7,32 @@ import net.fabricmc.fabric.api.transfer.v1.storage.base.CombinedStorage;
 import net.minecraft.world.item.ItemStack;
 import net.v972.dinnerware.inventory.PlateInventory;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 public final class FabricPlateInventoryStorage {
-    private FabricPlateInventoryStorage() {
-    }
+    private static final Map<PlateInventory, WeakReference<Storage<ItemVariant>>> CACHE = new WeakHashMap<>();
 
-    public static Storage<ItemVariant> of(PlateInventory inventory) {
-        List<SingleStackStorage> slots = new ArrayList<>(inventory.getSlotCount());
+    private FabricPlateInventoryStorage() { }
 
-        for (int slot = 0; slot < inventory.getSlotCount(); slot++) {
-            slots.add(new PlateSlotStorage(inventory, slot));
+    public static synchronized Storage<ItemVariant> of(PlateInventory inventory) {
+        WeakReference<Storage<ItemVariant>> reference = CACHE.get(inventory);
+        Storage<ItemVariant> storage = reference != null ? reference.get() : null;
+
+        if (storage == null) {
+            List<SingleStackStorage> slots = new ArrayList<>(inventory.getSlotCount());
+
+            for (int slot = 0; slot < inventory.getSlotCount(); slot++)
+                slots.add(new PlateSlotStorage(inventory, slot));
+
+            storage = new CombinedStorage<>(slots);
+            CACHE.put(inventory, new WeakReference<>(storage));
         }
 
-        return new CombinedStorage<>(slots);
+        return storage;
     }
 
     private static final class PlateSlotStorage extends SingleStackStorage {
@@ -40,7 +51,7 @@ public final class FabricPlateInventoryStorage {
 
         @Override
         protected void setStack(ItemStack stack) {
-            // not overriding onFinalCommit() cause this here already call it inside
+            // not overriding onFinalCommit() cause this here already calls it inside
             inventory.setStackInSlot(slot, stack);
         }
 
