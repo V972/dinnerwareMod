@@ -1,12 +1,11 @@
 package net.v972.dinnerware.fabric.datagen;
 
 import com.mojang.datafixers.util.Pair;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Item;
@@ -28,12 +27,12 @@ import java.util.stream.Stream;
 
 public final class DinnerwareFabricRecipeProvider extends FabricRecipeProvider {
 
-    public DinnerwareFabricRecipeProvider(FabricDataOutput output) {
-        super(output);
+    public DinnerwareFabricRecipeProvider(FabricDataGenerator dataGenerator) {
+        super(dataGenerator);
     }
 
     @Override
-    public void buildRecipes(Consumer<FinishedRecipe> exporter) {
+    protected void generateRecipes(Consumer<FinishedRecipe> exporter) {
         generatePlateRecipes(exporter);
         generateTerracottaDyeingRecipes(exporter);
         generateTrayRecipes(exporter);
@@ -50,8 +49,7 @@ public final class DinnerwareFabricRecipeProvider extends FabricRecipeProvider {
             if (craftingItems.length == 0 || Arrays.stream(craftingItems).allMatch(i -> i == Items.BARRIER)
             ) craftingItems = new Item[] { plateBlock.asItem() };
 
-            var recipe = ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS,
-                    plateBlock, plateBlock.CRAFTING_AMOUNT);
+            var recipe = ShapedRecipeBuilder.shaped(plateBlock, plateBlock.CRAFTING_AMOUNT);
 
             // special case for iron to NOT override vanilla bucket
             if (plateBlock == FabricModBlocks.plateBlock(PlateDefinition.IRON)) {
@@ -86,7 +84,7 @@ public final class DinnerwareFabricRecipeProvider extends FabricRecipeProvider {
 
             String blockId = DinnerwareHelper.getBlockId(plateBlock);
 
-            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, plateBlock, 8)
+            ShapedRecipeBuilder.shaped(plateBlock, 8)
                 .pattern("BBB")
                 .pattern("BDB")
                 .pattern("BBB")
@@ -98,7 +96,7 @@ public final class DinnerwareFabricRecipeProvider extends FabricRecipeProvider {
                 )
                 .save(writer, DinnerwareConstants.id(blockId + "_from_dyeing"));
 
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, plateBlock, 1)
+            ShapelessRecipeBuilder.shapeless(plateBlock, 1)
                 .requires(baseTerracottaPlate)
                 .requires(dyeItems)
                 .unlockedBy(
@@ -110,14 +108,14 @@ public final class DinnerwareFabricRecipeProvider extends FabricRecipeProvider {
     }
 
     private static void generateTrayRecipes(Consumer<FinishedRecipe> writer) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, FabricModItems.ironTray())
+        ShapedRecipeBuilder.shaped(FabricModItems.ironTray())
             .pattern("IPI")
             .define('P', Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE)
             .define('I', ConventionalItemTags.IRON_INGOTS)
             .unlockedBy("has_iron_ingot", has(ConventionalItemTags.IRON_INGOTS))
             .save(writer);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, FabricModItems.goldTray())
+        ShapedRecipeBuilder.shaped(FabricModItems.goldTray())
             .pattern("IPI")
             .define('P', Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE)
             .define('I', ConventionalItemTags.GOLD_INGOTS)

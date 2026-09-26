@@ -1,7 +1,7 @@
 package net.v972.dinnerware.util;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
@@ -24,7 +24,7 @@ public final class DinnerwareRenderHelper {
     }
 
     public static void positionAndRenderTrayItems(PoseStack pPoseStack, MultiBufferSource pBuffer, ItemRenderer pItemRenderer,
-                                                  NonNullList<ItemStack> pStacks, Direction pFacing, ItemDisplayContext pDisplayContext,
+                                                  NonNullList<ItemStack> pStacks, Direction pFacing, ItemTransforms.TransformType pDisplayContext,
                                                   @Nullable Level pLevel, int pLightLevel) {
         // initial offset so that the plate doesn't float above the tray surface.
         float currentY = -0.01f;
@@ -38,8 +38,8 @@ public final class DinnerwareRenderHelper {
         // plate tower that's so tall you can't see is still funny af, so we stop countering at 16,
         // because at that point you need to get your screen filled to get the message, buddy.
         if (DinnerwareConfig.trayDynamicPlateOffset() && //trayDynamicPlateOffset &&
-            (pDisplayContext == ItemDisplayContext.FIRST_PERSON_RIGHT_HAND ||
-            pDisplayContext == ItemDisplayContext.FIRST_PERSON_LEFT_HAND)) {
+            (pDisplayContext == ItemTransforms.TransformType.FIRST_PERSON_RIGHT_HAND ||
+            pDisplayContext == ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND)) {
 
             int plateTowerCount = getPlateTowerCount(pStacks);
             float estimatedPlateTowerY = getPlateTowerHeight(pStacks, 0, plateTowerCount);
@@ -71,21 +71,21 @@ public final class DinnerwareRenderHelper {
 
                 // Rotate based on facing
                 switch (pFacing) {
-                    case NORTH -> {} // pPoseStack.mulPose(Axis.YP.rotationDegrees(0));
-                    case WEST -> pPoseStack.mulPose(Axis.YP.rotationDegrees(90));
-                    case SOUTH -> pPoseStack.mulPose(Axis.YP.rotationDegrees(180));
-                    case EAST -> pPoseStack.mulPose(Axis.YN.rotationDegrees(90));
+                    case NORTH -> {} // pPoseStack.mulPose(Vector3f.YP.rotationDegrees(0));
+                    case WEST -> pPoseStack.mulPose(Vector3f.YP.rotationDegrees(90));
+                    case SOUTH -> pPoseStack.mulPose(Vector3f.YP.rotationDegrees(180));
+                    case EAST -> pPoseStack.mulPose(Vector3f.YN.rotationDegrees(90));
                 }
 
                 // Lie flat
-                pPoseStack.mulPose(Axis.XP.rotationDegrees(90));
+                pPoseStack.mulPose(Vector3f.XP.rotationDegrees(90));
 
                 // Scale down
                 pPoseStack.scale(0.45f, 0.45f, 0.45f);
 
                 pItemRenderer.renderStatic(stack,
-                    ItemDisplayContext.FIXED, pLightLevel, OverlayTexture.NO_OVERLAY,
-                    pPoseStack, pBuffer, pLevel, i);
+                    ItemTransforms.TransformType.FIXED, pLightLevel, OverlayTexture.NO_OVERLAY,
+                    pPoseStack, pBuffer, i);
 
                 pPoseStack.popPose();
             }
@@ -235,14 +235,14 @@ public final class DinnerwareRenderHelper {
 
         // Rotate based on facing
         switch (facing) {
-            case NORTH -> {} // pPoseStack.mulPose(Axis.YP.rotationDegrees(0));
-            case WEST -> pPoseStack.mulPose(Axis.YP.rotationDegrees(90));
-            case SOUTH -> pPoseStack.mulPose(Axis.YP.rotationDegrees(180));
-            case EAST -> pPoseStack.mulPose(Axis.YN.rotationDegrees(90));
+            case NORTH -> {} // pPoseStack.mulPose(Vector3f.YP.rotationDegrees(0));
+            case WEST -> pPoseStack.mulPose(Vector3f.YP.rotationDegrees(90));
+            case SOUTH -> pPoseStack.mulPose(Vector3f.YP.rotationDegrees(180));
+            case EAST -> pPoseStack.mulPose(Vector3f.YN.rotationDegrees(90));
         }
 
         // Lie flat
-        pPoseStack.mulPose(Axis.XP.rotationDegrees(90));
+        pPoseStack.mulPose(Vector3f.XP.rotationDegrees(90));
 
         // Precise positioning
         precisePositioner.accept(pPoseStack);
@@ -251,8 +251,8 @@ public final class DinnerwareRenderHelper {
         pPoseStack.scale(0.4f, 0.4f, 0.4f);
 
         pItemRenderer.renderStatic(pStack,
-            ItemDisplayContext.FIXED, pLightLevel, OverlayTexture.NO_OVERLAY,
-            pPoseStack, pBuffer, pLevel, pSeed);
+            ItemTransforms.TransformType.FIXED, pLightLevel, OverlayTexture.NO_OVERLAY,
+            pPoseStack, pBuffer, pSeed);
         pPoseStack.popPose();
     }
 
@@ -265,17 +265,17 @@ public final class DinnerwareRenderHelper {
         // Rotate
         pPoseStack.mulPose(
             mirrored
-                ? Axis.ZP.rotationDegrees(300)
-                : Axis.ZN.rotationDegrees(30)
+                ? Vector3f.ZP.rotationDegrees(300)
+                : Vector3f.ZN.rotationDegrees(30)
         );
 
         // Tilt against plate edge
         if (mirrored) {
-            pPoseStack.mulPose(Axis.YP.rotationDegrees(15));
-            pPoseStack.mulPose(Axis.XN.rotationDegrees(15));
+            pPoseStack.mulPose(Vector3f.YP.rotationDegrees(15));
+            pPoseStack.mulPose(Vector3f.XN.rotationDegrees(15));
         } else {
-            pPoseStack.mulPose(Axis.YN.rotationDegrees(15));
-            pPoseStack.mulPose(Axis.XP.rotationDegrees(15));
+            pPoseStack.mulPose(Vector3f.YN.rotationDegrees(15));
+            pPoseStack.mulPose(Vector3f.XP.rotationDegrees(15));
         }
     }
 
@@ -287,11 +287,11 @@ public final class DinnerwareRenderHelper {
 
         // Rotate
         if (!mirrored)
-            pPoseStack.mulPose(Axis.ZP.rotationDegrees(90));
+            pPoseStack.mulPose(Vector3f.ZP.rotationDegrees(90));
 
         // Tilt against plate edge
-        pPoseStack.mulPose(Axis.YN.rotationDegrees(10));
-        pPoseStack.mulPose(Axis.XP.rotationDegrees(10));
+        pPoseStack.mulPose(Vector3f.YN.rotationDegrees(10));
+        pPoseStack.mulPose(Vector3f.XP.rotationDegrees(10));
     }
 
     private static void positionExtraDish(PoseStack pPoseStack) {
@@ -299,11 +299,11 @@ public final class DinnerwareRenderHelper {
         pPoseStack.translate(0f, 0.2f, -0.01f);
 
         // Rotate
-        pPoseStack.mulPose(Axis.ZP.rotationDegrees(40));
+        pPoseStack.mulPose(Vector3f.ZP.rotationDegrees(40));
 
         // Tilt against plate edge
-        pPoseStack.mulPose(Axis.YP.rotationDegrees(20));
-        pPoseStack.mulPose(Axis.XN.rotationDegrees(20));
+        pPoseStack.mulPose(Vector3f.YP.rotationDegrees(20));
+        pPoseStack.mulPose(Vector3f.XN.rotationDegrees(20));
     }
 
     public static int getLightLevel(@NotNull Level level, BlockPos pos) {

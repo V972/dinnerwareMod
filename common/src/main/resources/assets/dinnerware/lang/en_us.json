@@ -79,7 +79,8 @@
 
   "block.dinnerware.bedrock_plate_block": "Bedrock Plate",
 
-  "creativetab.dinnerware_tab": "Dinnerware",
+  "itemGroup.dinnerware.dinnerware_tab": "Dinnerware",
+  "itemGroup.dinnerware_tab": "Dinnerware",
 
   "item.dinnerware.dinnerware_icon": "Dinnerware Icon",
   "item.dinnerware.iron_tray": "Iron Tray",

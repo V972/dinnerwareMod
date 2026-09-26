@@ -1,20 +1,17 @@
 package net.v972.dinnerware.datagen;
 
+import net.minecraft.data.DataGenerator;
+import net.minecraft.data.tags.BlockTagsProvider;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.DinnerwareConstants;
 import net.v972.dinnerware.util.ModTags;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.data.PackOutput;
-import net.minecraftforge.common.data.BlockTagsProvider;
-import net.minecraftforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.concurrent.CompletableFuture;
-
 public class ModBlockTagGenerator extends BlockTagsProvider {
-    public ModBlockTagGenerator(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, @Nullable ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, DinnerwareCommon.MOD_ID, existingFileHelper);
+    public ModBlockTagGenerator(DataGenerator generator, @Nullable ExistingFileHelper existingFileHelper) {
+        super(generator, DinnerwareCommon.MOD_ID, existingFileHelper);
     }
 
     @Override
@@ -23,7 +20,7 @@ public class ModBlockTagGenerator extends BlockTagsProvider {
     }
 
     @Override
-    protected void addTags(HolderLookup.Provider pProvider) {
+    protected void addTags() {
         this.tag(ModTags.Blocks.PLATE_SOFT_BREAKERS)
             .add(Blocks.END_ROD)
             .add(Blocks.SPONGE)

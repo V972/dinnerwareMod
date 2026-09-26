@@ -1,7 +1,7 @@
 package net.v972.dinnerware.fabric.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import me.shedaniel.autoconfig.AutoConfig;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -43,7 +43,9 @@ public final class DinnerwareConfigSelectionScreen extends Screen {
         int firstY = this.height / 2 - 24;
 
         addRenderableWidget(
-            Button.builder(
+            new Button(
+                x, firstY,
+                buttonWidth, buttonHeight,
                 Component.translatable("config.dinnerware.selector.common"),
                 button -> {
                     configToReload = ConfigType.COMMON;
@@ -55,13 +57,15 @@ public final class DinnerwareConfigSelectionScreen extends Screen {
                             .get()
                     );
                 }
-            ).bounds(x, firstY, buttonWidth, buttonHeight).build()
+            )
         );
 
         addRenderableWidget(
-            Button.builder(
+            new Button(
+                x, firstY + 24,
+                buttonWidth, buttonHeight,
                 Component.translatable("config.dinnerware.selector.client"),
-                button -> {
+                    button -> {
                     configToReload = ConfigType.CLIENT;
                     clearWidgets();
 
@@ -71,20 +75,16 @@ public final class DinnerwareConfigSelectionScreen extends Screen {
                             .get()
                     );
                 }
-            ).bounds(
-                x, firstY + 24,
-                buttonWidth, buttonHeight
-            ).build()
+            )
         );
 
         addRenderableWidget(
-            Button.builder(
+            new Button(
+                x, firstY + 56,
+                buttonWidth, buttonHeight,
                 Component.translatable("gui.done"),
                 button -> onClose()
-            ).bounds(
-                x, firstY + 56,
-                buttonWidth, buttonHeight
-            ).build()
+            )
         );
     }
 
@@ -96,11 +96,11 @@ public final class DinnerwareConfigSelectionScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        renderBackground(graphics);
-        graphics.drawCenteredString(font, title, width / 2, 40, 0xFFFFFF);
+    public void render(@NotNull PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        this.renderBackground(poseStack);
+        drawCenteredString(poseStack, font, title, width / 2, 40, 0xFFFFFF);
 
-        super.render(graphics, mouseX, mouseY, partialTick);
+        super.render(poseStack, mouseX, mouseY, partialTick);
     }
 
     @Override

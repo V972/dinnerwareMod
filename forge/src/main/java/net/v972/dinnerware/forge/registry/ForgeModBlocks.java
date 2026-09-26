@@ -5,7 +5,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -30,7 +29,6 @@ public class ForgeModBlocks {
             .isRedstoneConductor((state, level, pos) -> false)
             .isSuffocating((state, level, pos) -> false)
             .isViewBlocking((state, level, pos) -> false)
-            .pushReaction(PushReaction.BLOCK)
     );
 
     public static final RegistryObject<Block> PLATE_BLOCK_QUARTZ = registerPlateBlock(PlateDefinition.QUARTZ,
@@ -59,9 +57,9 @@ public class ForgeModBlocks {
     public static final RegistryObject<Block> PLATE_BLOCK_JUNGLE = registerPlateBlock(PlateDefinition.JUNGLE);
     public static final RegistryObject<Block> PLATE_BLOCK_ACACIA = registerPlateBlock(PlateDefinition.ACACIA);
     public static final RegistryObject<Block> PLATE_BLOCK_DARK_OAK = registerPlateBlock(PlateDefinition.DARK_OAK);
-    public static final RegistryObject<Block> PLATE_BLOCK_CHERRY = registerPlateBlock(PlateDefinition.CHERRY);
+    //public static final RegistryObject<Block> PLATE_BLOCK_CHERRY = registerPlateBlock(PlateDefinition.CHERRY);
     public static final RegistryObject<Block> PLATE_BLOCK_MANGROVE = registerPlateBlock(PlateDefinition.MANGROVE);
-    public static final RegistryObject<Block> PLATE_BLOCK_BAMBOO = registerPlateBlock(PlateDefinition.BAMBOO);
+    //public static final RegistryObject<Block> PLATE_BLOCK_BAMBOO = registerPlateBlock(PlateDefinition.BAMBOO);
 
     public static final RegistryObject<Block> PLATE_BLOCK_CRIMSON = registerPlateBlock(PlateDefinition.CRIMSON);
     public static final RegistryObject<Block> PLATE_BLOCK_WARPED = registerPlateBlock(PlateDefinition.WARPED);
@@ -137,7 +135,7 @@ public class ForgeModBlocks {
 
     private static RegistryObject<Block> registerPlateBlock(PlateDefinition definition) {
         return BLOCKS.register(definition.block(),
-            () -> new PlateBlock(definition.material(), getDefaultPlateProperties()));
+            () -> new PlateBlock(definition.material(), getDefaultPlateProperties(definition)));
     }
 
     private static RegistryObject<Block> registerPlateBlock(
@@ -150,7 +148,7 @@ public class ForgeModBlocks {
                 definition.material(),
                 pCraftMaterial,
                 pCraftingAmount,
-                getDefaultPlateProperties()));
+                getDefaultPlateProperties(definition)));
     }
 
     private static RegistryObject<Block> registerPlateBlock(
@@ -161,14 +159,15 @@ public class ForgeModBlocks {
             () -> new PlateBlock(definition.material(), properties));
     }
 
-    private static BlockBehaviour.Properties getDefaultPlateProperties() {
-        return BlockBehaviour.Properties.of()
+    private static BlockBehaviour.Properties getDefaultPlateProperties(PlateDefinition definition) {
+        return BlockBehaviour.Properties.of(
+                definition.material().defaultBlockState().getMaterial()
+            )
             .strength(0.3F)
             .isValidSpawn((state, getter, pos, entityType) -> false)
             .isRedstoneConductor((state, level, pos) -> false)
             .isSuffocating((state, level, pos) -> false)
             .isViewBlocking((state, level, pos) -> false)
-            .pushReaction(PushReaction.DESTROY)
             .instabreak()
         ;
     }

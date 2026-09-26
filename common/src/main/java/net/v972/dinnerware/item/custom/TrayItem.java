@@ -331,7 +331,7 @@ public class TrayItem extends Item {
     public static void playRemoveOneSound(Entity pEntity, boolean pInInventory) {
         if (pInInventory) {
             pEntity.playSound(SoundEvents.BUNDLE_REMOVE_ONE, //trayMetalUnload(),
-                0.8F, 0.8F + pEntity.level().getRandom().nextFloat() * 0.4F);
+                0.8F, 0.8F + pEntity.level.getRandom().nextFloat() * 0.4F);
         }
     }
 
@@ -339,7 +339,7 @@ public class TrayItem extends Item {
         pEntity.playSound(pInInventory
                 ? SoundEvents.BUNDLE_INSERT //trayMetalLoad()
                 : SoundEvents.ITEM_PICKUP,
-            0.8F, 0.8F + pEntity.level().getRandom().nextFloat() * 0.4F);
+            0.8F, 0.8F + pEntity.level.getRandom().nextFloat() * 0.4F);
     }
 
     // -----------------------------
@@ -373,7 +373,7 @@ public class TrayItem extends Item {
                     listTag.remove(matchingItemTag);
                     listTag.add(0, matchingItemTag);
                 } else {
-                    ItemStack itemStackCopyWithCount = pInsertedStack.copyWithCount(k);
+                    ItemStack itemStackCopyWithCount = copyWithCount(pInsertedStack, k);
                     CompoundTag compoundTagCopyWithCount = new CompoundTag();
                     itemStackCopyWithCount.save(compoundTagCopyWithCount);
                     listTag.add(0, compoundTagCopyWithCount);
@@ -400,7 +400,7 @@ public class TrayItem extends Item {
 
                 return Optional.of(wholeStack
                     ? itemStackToReturn
-                    : itemStackToReturn.copyWithCount(1));
+                    : copyWithCount(itemStackToReturn, 1));
             }
         }
     }
@@ -421,7 +421,7 @@ public class TrayItem extends Item {
                     listTag.remove(0);
                 } else {
                     ItemStack itemStackRemaining = ItemStack.of(itemTag);
-                    itemStackToReturn = ItemStack.of(itemTag).copyWithCount(1);
+                    itemStackToReturn = copyWithCount(ItemStack.of(itemTag), 1);
                     itemStackRemaining.shrink(1);
 
                     if (itemStackRemaining.isEmpty() || itemStackRemaining.is(Items.AIR)) {
@@ -529,4 +529,10 @@ public class TrayItem extends Item {
     }
 
     // =============================
+
+    private static ItemStack copyWithCount(ItemStack stack, int count) {
+        ItemStack copy = stack.copy();
+        copy.setCount(count);
+        return copy;
+    }
 }

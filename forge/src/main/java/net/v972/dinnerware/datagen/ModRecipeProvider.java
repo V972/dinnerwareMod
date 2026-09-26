@@ -2,6 +2,7 @@ package net.v972.dinnerware.datagen;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -13,25 +14,25 @@ import net.v972.dinnerware.DinnerwareConstants;
 import net.v972.dinnerware.forge.registry.ForgeModBlocks;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.forge.registry.ForgeModItems;
-import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraftforge.common.crafting.conditions.IConditionBuilder;
 import net.v972.dinnerware.util.DinnerwareHelper;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class ModRecipeProvider extends RecipeProvider implements IConditionBuilder {
-    public ModRecipeProvider(PackOutput pOutput) {
-        super(pOutput);
+    public ModRecipeProvider(DataGenerator generator) {
+        super(generator);
     }
 
     @Override
-    protected void buildRecipes(Consumer<FinishedRecipe> pWriter) {
-        generatePlateRecipes(pWriter);
-        generateTerracottaDyeingRecipes(pWriter);
-        generateTrayRecipes(pWriter);
+    protected void buildCraftingRecipes(@NotNull Consumer<FinishedRecipe> pConsumer) {
+        generatePlateRecipes(pConsumer);
+        generateTerracottaDyeingRecipes(pConsumer);
+        generateTrayRecipes(pConsumer);
     }
 
     private static void generatePlateRecipes(Consumer<FinishedRecipe> pWriter) {
@@ -46,8 +47,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
             if (craftingItems.length == 0 || Arrays.stream(craftingItems).allMatch(i -> i == Items.BARRIER)
             ) craftingItems = new Item[] { plateBlock.asItem() };
 
-            var recipe = ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS,
-                plateBlock, plateBlock.CRAFTING_AMOUNT);
+            var recipe = ShapedRecipeBuilder.shaped(plateBlock, plateBlock.CRAFTING_AMOUNT);
 
             // special case for iron to NOT override vanilla bucket
             if (plateBlock == ForgeModBlocks.PLATE_BLOCK_IRON.get()) {
@@ -82,7 +82,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                     Arrays.stream(dyeItems.getItems()).map(ItemStack::getItem)
                 ).toArray(Item[]::new);
 
-            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, plateBlock, 8)
+            ShapedRecipeBuilder.shaped(plateBlock, 8)
                 .pattern("BBB")
                 .pattern("BDB")
                 .pattern("BBB")
@@ -94,7 +94,7 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
                 )
                 .save(pWriter, DinnerwareConstants.id(DinnerwareHelper.getBlockId(plateBlock) + "_from_dyeing"));
 
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, plateBlock, 1)
+            ShapelessRecipeBuilder.shapeless(plateBlock, 1)
                 .requires(baseTerracottaPlate)
                 .requires(dyeItems)
                 .unlockedBy(
@@ -106,14 +106,14 @@ public class ModRecipeProvider extends RecipeProvider implements IConditionBuild
     }
 
     private static void generateTrayRecipes(Consumer<FinishedRecipe> pWriter) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ForgeModItems.TRAY_IRON.get())
+        ShapedRecipeBuilder.shaped(ForgeModItems.TRAY_IRON.get())
             .pattern("IPI")
             .define('P', Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE)
             .define('I', Tags.Items.INGOTS_IRON)
             .unlockedBy("has_iron_ingot", has(Tags.Items.INGOTS_IRON))
             .save(pWriter);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ForgeModItems.TRAY_GOLD.get())
+        ShapedRecipeBuilder.shaped(ForgeModItems.TRAY_GOLD.get())
             .pattern("IPI")
             .define('P', Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE)
             .define('I', Tags.Items.INGOTS_GOLD)

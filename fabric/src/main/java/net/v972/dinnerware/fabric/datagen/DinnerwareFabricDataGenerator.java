@@ -2,33 +2,65 @@ package net.v972.dinnerware.fabric.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.v972.dinnerware.datagen.DinnerwareDatagenPaths;
 
 public final class DinnerwareFabricDataGenerator implements DataGeneratorEntrypoint {
 
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator dataGenerator) {
-        FabricDataGenerator.Pack pack = dataGenerator.createPack();
+        FabricDataGenerator commonGenerator = new FabricDataGenerator(
+            DinnerwareDatagenPaths.commonOutput(),
+            dataGenerator.getModContainer(),
+            dataGenerator.isStrictValidationEnabled()
+        );
 
-        pack.addProvider(FabricEntityTypeTagProvider::new);
-        FabricBlockTagProvider commonBlockTags = pack.addProvider(FabricBlockTagProvider::new);
-        pack.addProvider((output, lookupProvider) ->
-            new FabricItemTagProvider(
-                output,
-                lookupProvider,
-                commonBlockTags
-            )
+        // Common output.
+        dataGenerator.addProvider(
+            new DinnerwareFabricAdvancementProvider(commonGenerator)
         );
-        FabricVanillaBlockTagProvider fabricBlockTags = pack.addProvider(FabricVanillaBlockTagProvider::new);
-        pack.addProvider((output, lookupProvider) ->
-            new FabricVanillaItemTagProvider(
-                output,
-                lookupProvider,
-                fabricBlockTags
-            )
+        dataGenerator.addProvider(
+            new DinnerwareFabricBlockLootProvider(commonGenerator)
         );
-        pack.addProvider(DinnerwareFabricAdvancementProvider::new);
-        pack.addProvider(DinnerwareFabricBlockLootProvider::new);
-        pack.addProvider(DinnerwareFabricRecipeProvider::new);
-        pack.addProvider(DinnerwareFabricModelProvider::new);
+        dataGenerator.addProvider(
+            new DinnerwareFabricModelProvider(commonGenerator)
+        );
+
+        FabricBlockTagProvider commonBlockTags =
+            new FabricBlockTagProvider(commonGenerator);
+        dataGenerator.addProvider(
+            new NamedDataProvider(
+                "Common Block Tags: dinnerware", commonBlockTags)
+        );
+        FabricItemTagProvider commonItemTags =
+            new FabricItemTagProvider(commonGenerator, commonBlockTags);
+        dataGenerator.addProvider(
+            new NamedDataProvider(
+                "Common Item Tags: dinnerware", commonItemTags )
+        );
+        FabricEntityTypeTagProvider commonEntityTypeTags =
+            new FabricEntityTypeTagProvider(commonGenerator);
+        dataGenerator.addProvider(
+            new NamedDataProvider(
+                "Common Entity Type Tags: dinnerware", commonEntityTypeTags)
+        );
+
+
+        // Fabric-specific output.
+        dataGenerator.addProvider(
+            new DinnerwareFabricRecipeProvider(dataGenerator)
+        );
+
+        FabricVanillaBlockTagProvider fabricBlockTags =
+            new FabricVanillaBlockTagProvider(dataGenerator);
+        dataGenerator.addProvider(
+            new NamedDataProvider(
+                "Fabric Block Tags: dinnerware", fabricBlockTags)
+        );
+        FabricVanillaItemTagProvider fabricItemTags =
+            new FabricVanillaItemTagProvider(dataGenerator, fabricBlockTags);
+        dataGenerator.addProvider(
+            new NamedDataProvider(
+                "Fabric Item Tags: dinnerware", fabricItemTags)
+        );
     }
 }

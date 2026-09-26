@@ -5,7 +5,7 @@ import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 import net.v972.dinnerware.block.entity.renderer.DinnerwareBEWLRManager;
 import net.v972.dinnerware.util.DinnerwareRegistryObject;
@@ -26,13 +26,13 @@ public class ItemRendererMixin {
 
     // Renders the BEWLR after normal items
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;renderModelLists(Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/item/ItemStack;IILcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;)V", shift = At.Shift.AFTER))
-    public void injectAfterRenderModelLists(ItemStack stack, ItemDisplayContext context, boolean leftHand, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay, BakedModel model, CallbackInfo ci) {
+    public void injectAfterRenderModelLists(ItemStack stack, ItemTransforms.TransformType context, boolean leftHand, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay, BakedModel model, CallbackInfo ci) {
         this.dinnerware$renderCustomBEWLR(stack, context, poseStack, buffer, combinedLight, combinedOverlay);
     }
 
     // Renders the BEWLR after custom model items, e.g. entity builtin
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/BlockEntityWithoutLevelRenderer;renderByItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V", shift = At.Shift.AFTER))
-    public void injectAfterRenderByItem(ItemStack stack, ItemDisplayContext context, boolean leftHand, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay, BakedModel model, CallbackInfo ci) {
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/BlockEntityWithoutLevelRenderer;renderByItem(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/renderer/block/model/ItemTransforms$TransformType;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V", shift = At.Shift.AFTER))
+    public void injectAfterRenderByItem(ItemStack stack, ItemTransforms.TransformType context, boolean leftHand, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay, BakedModel model, CallbackInfo ci) {
         this.dinnerware$renderCustomBEWLR(stack, context, poseStack, buffer, combinedLight, combinedOverlay);
     }
 
@@ -43,7 +43,7 @@ public class ItemRendererMixin {
      * <br/><br/>
      * Rendering a {@code BlockEntity} with this system remains unchanged to the way it would normally be done using a {@code BEWLR}.
      */
-    @Unique private void dinnerware$renderCustomBEWLR(ItemStack stack, ItemDisplayContext context, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+    @Unique private void dinnerware$renderCustomBEWLR(ItemStack stack, ItemTransforms.TransformType context, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         // Skips early if the item doesn't need to be handled by our BEWLR
         DinnerwareRegistryObject<BlockEntityWithoutLevelRenderer> renderer = DinnerwareBEWLRManager.get(stack.getItem());
         if (renderer == null) return;

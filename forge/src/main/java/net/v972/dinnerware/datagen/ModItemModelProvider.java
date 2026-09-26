@@ -1,6 +1,6 @@
 package net.v972.dinnerware.datagen;
 
-import net.minecraft.data.PackOutput;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -9,7 +9,6 @@ import net.minecraftforge.client.model.generators.ItemModelProvider;
 import net.minecraftforge.client.model.generators.ModelFile;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.registries.RegistryObject;
-import net.v972.dinnerware.DinnerwareCommon;
 import net.v972.dinnerware.DinnerwareConstants;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.forge.registry.ForgeModItems;
@@ -17,8 +16,8 @@ import net.v972.dinnerware.item.custom.PlateBlockBlockItem;
 import net.v972.dinnerware.item.custom.TrayItem;
 
 public class ModItemModelProvider extends ItemModelProvider {
-    public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
-        super(output, DinnerwareCommon.MOD_ID, existingFileHelper);
+    public ModItemModelProvider(DataGenerator generator, ExistingFileHelper existingFileHelper) {
+        super(generator, DinnerwareConstants.MOD_ID, existingFileHelper);
     }
 
     @Override

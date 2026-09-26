@@ -51,9 +51,10 @@ public class ForgeCommonConfig
                 "Items listed here may still be placed on a plate. \n" +
                 "Default: [\"artifacts:everlasting_beef\", \"artifacts:eternal_steak\"]"
             )
-            .defineListAllowEmpty("foodBlacklist", List.of(
-                "artifacts:everlasting_beef",
-                "artifacts:eternal_steak"
+            .defineListAllowEmpty(List.of("foodBlacklist"),
+                () -> List.of(
+                    "artifacts:everlasting_beef",
+                    "artifacts:eternal_steak"
             ), ForgeCommonConfig::validateItemName);
 
     public static final ForgeConfigSpec.BooleanValue FRAGILE_PLATES = BUILDER

@@ -79,7 +79,8 @@
 
   "block.dinnerware.bedrock_plate_block": "Тарелка из Бедрока",
 
-  "creativetab.dinnerware_tab": "Dinnerware",
+  "itemGroup.dinnerware.dinnerware_tab": "Dinnerware",
+  "itemGroup.dinnerware_tab": "Dinnerware",
 
   "item.dinnerware.dinnerware_icon": "Иконка мода Dinnerware",
   "item.dinnerware.iron_tray": "Железный поднос",

@@ -29,7 +29,7 @@ public class PlateMenu extends AbstractContainerMenu {
     private final List<Integer> targetIndexCache = new ArrayList<>();
 
     public PlateMenu(int containerId, Inventory inv, FriendlyByteBuf buffer) {
-        this(containerId, inv, inv.player.level().getBlockEntity(buffer.readBlockPos()), new SimpleContainerData(1));
+        this(containerId, inv, inv.player.level.getBlockEntity(buffer.readBlockPos()), new SimpleContainerData(1));
     }
 
     public PlateMenu(int containerId, Inventory inv, BlockEntity blockEntity, ContainerData data) {
@@ -43,7 +43,7 @@ public class PlateMenu extends AbstractContainerMenu {
 
         AbstractContainerMenu.checkContainerSize(this.plateInventory, PlateBlockBlockEntity.SLOT_COUNT);
 
-        this.level = inv.player.level();
+        this.level = inv.player.level;
         this.data = data;
 
         this.addPlayerInventory(inv);

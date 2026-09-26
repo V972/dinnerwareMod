@@ -1,42 +1,46 @@
 package net.v972.dinnerware.datagen;
 
+import net.minecraft.SharedConstants;
 import net.v972.dinnerware.DinnerwareCommon;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.concurrent.CompletableFuture;
 
 @Mod.EventBusSubscriber(modid = DinnerwareCommon.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DataGenerators {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
-        DataGenerator generator = event.getGenerator();
-
-        PackOutput forgeOutput = generator.getPackOutput();
-        PackOutput commonOutput = new PackOutput(DinnerwareDatagenPaths.commonOutput());
+        DataGenerator forgeGenerator  = event.getGenerator();
+        DataGenerator commonGenerator = new DataGenerator(
+            DinnerwareDatagenPaths.commonOutput(),
+            forgeGenerator.getInputFolders(),
+            SharedConstants.getCurrentVersion(),
+            true
+        );
 
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
-        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
-        generator.addProvider(event.includeServer(), new ModRecipeProvider(forgeOutput));
-        generator.addProvider(event.includeServer(), ModLootTableProvider.create(commonOutput));
+        forgeGenerator.addProvider(event.includeServer(), new ModRecipeProvider(forgeGenerator));
+        forgeGenerator.addProvider(event.includeServer(), new ModLootTableProvider(commonGenerator));
 
-        generator.addProvider(event.includeClient(), new ModBlockStateProvider(commonOutput, existingFileHelper));
-        generator.addProvider(event.includeClient(), new ModItemModelProvider(commonOutput, existingFileHelper));
+        forgeGenerator.addProvider(event.includeClient(), new ModBlockStateProvider(commonGenerator, existingFileHelper));
+        forgeGenerator.addProvider(event.includeClient(), new ModItemModelProvider(commonGenerator, existingFileHelper));
 
-        generator.addProvider(event.includeServer(), new ModAdvancementProvider(commonOutput, lookupProvider,existingFileHelper));
+        forgeGenerator.addProvider(event.includeServer(), new ModAdvancementProvider(commonGenerator, existingFileHelper));
 
-        ModBlockTagGenerator sharedBlockTags = generator.addProvider(event.includeServer(), new ModBlockTagGenerator(commonOutput, lookupProvider, existingFileHelper));
-        generator.addProvider(event.includeServer(), new ModItemTagGenerator(commonOutput, lookupProvider, sharedBlockTags.contentsGetter(), existingFileHelper));
+        ModBlockTagGenerator sharedBlockTags = new ModBlockTagGenerator(commonGenerator, existingFileHelper);
+        forgeGenerator.addProvider(event.includeServer(), sharedBlockTags);
 
-        ForgeBlockTagGenerator forgeBlockTags = generator.addProvider(event.includeServer(),new ForgeBlockTagGenerator(forgeOutput, lookupProvider, existingFileHelper));
-        generator.addProvider(event.includeServer(), new ForgeItemTagGenerator(forgeOutput, lookupProvider, forgeBlockTags.contentsGetter(), existingFileHelper));
+        forgeGenerator.addProvider(event.includeServer(), new ModItemTagGenerator(commonGenerator, sharedBlockTags, existingFileHelper));
 
-        generator.addProvider(event.includeServer(), new ModEntityTypeTagsGenerator(commonOutput, lookupProvider, existingFileHelper));
+        ForgeBlockTagGenerator forgeBlockTags = new ForgeBlockTagGenerator(forgeGenerator, existingFileHelper);
+        forgeGenerator.addProvider(event.includeServer(), forgeBlockTags);
+
+        forgeGenerator.addProvider(event.includeServer(), new ForgeItemTagGenerator(forgeGenerator, forgeBlockTags, existingFileHelper));
+
+        forgeGenerator.addProvider(event.includeServer(), new ModEntityTypeTagsGenerator(commonGenerator, existingFileHelper));
     }
 }

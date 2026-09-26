@@ -17,9 +17,7 @@ public class ForgeModSounds {
     public static final RegistryObject<SoundEvent> TRAY_METAL_UNLOAD = registerSoundEvent(DinnerwareRegistryNames.Sounds.TRAY_METAL_UNLOAD);
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
-        return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(
-                DinnerwareConstants.id(name)
-        ));
+        return SOUND_EVENTS.register(name, () -> new SoundEvent(DinnerwareConstants.id(name)));
     }
 
     public static void register(IEventBus eventBus) {

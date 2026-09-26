@@ -2,7 +2,6 @@ package net.v972.dinnerware.fabric.registry;
 
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Blocks;
 import net.v972.dinnerware.DinnerwareConstants;
@@ -41,20 +40,20 @@ public final class FabricModItems {
             DinnerwareRegistryNames.Items.IRON_TRAY,
             new TrayItem(
                 Blocks.IRON_BLOCK,
-                new Item.Properties().stacksTo(1))
+                new Item.Properties().tab(FabricModCreativeModeTabs.dinnerwareTab()).stacksTo(1))
         );
 
         goldTray = registerItem(
             DinnerwareRegistryNames.Items.GOLD_TRAY,
             new TrayItem(
                 Blocks.GOLD_BLOCK,
-                new Item.Properties().stacksTo(1))
+                new Item.Properties().tab(FabricModCreativeModeTabs.dinnerwareTab()).stacksTo(1))
         );
 
         for (PlateDefinition definition : PlateDefinition.values()) {
             PlateBlockBlockItem item = new PlateBlockBlockItem(
                 FabricModBlocks.plateBlock(definition),
-                new Item.Properties());
+                new Item.Properties().tab(FabricModCreativeModeTabs.dinnerwareTab()));
 
             PLATE_ITEMS.put(definition, item);
             registerItem(definition.item(), item);
@@ -125,7 +124,7 @@ public final class FabricModItems {
 
         if (item == null) {
             throw new IllegalArgumentException(
-                    "Unknown plate definition: " + definition
+                "Unknown plate definition: " + definition
             );
         }
 
@@ -139,9 +138,9 @@ public final class FabricModItems {
         registerFuel(PlateDefinition.JUNGLE);
         registerFuel(PlateDefinition.ACACIA);
         registerFuel(PlateDefinition.DARK_OAK);
-        registerFuel(PlateDefinition.CHERRY);
+        //registerFuel(PlateDefinition.CHERRY);
         registerFuel(PlateDefinition.MANGROVE);
-        registerFuel(PlateDefinition.BAMBOO);
+        //registerFuel(PlateDefinition.BAMBOO);
     }
 
     private static void registerFuel(PlateDefinition definition) {
@@ -157,7 +156,7 @@ public final class FabricModItems {
     }
 
     private static <T extends Item> T registerItem(String path, T item) {
-        return Registry.register(BuiltInRegistries.ITEM,
+        return Registry.register(Registry.ITEM,
             DinnerwareConstants.id(path), item);
     }
 

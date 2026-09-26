@@ -2,12 +2,11 @@ package net.v972.dinnerware.fabric.registry;
 
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.PushReaction;
 import net.v972.dinnerware.DinnerwareConstants;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.registry.PlateDefinition;
@@ -34,7 +33,7 @@ public final class FabricModBlocks {
             PLATE_BLOCKS.put(definition, block);
 
             net.minecraft.core.Registry.register(
-                BuiltInRegistries.BLOCK,
+                Registry.BLOCK,
                 DinnerwareConstants.id(definition.block()),
                 block
             );
@@ -95,72 +94,66 @@ public final class FabricModBlocks {
                     .isRedstoneConductor((state, level, pos) -> false)
                     .isSuffocating((state, level, pos) -> false)
                     .isViewBlocking((state, level, pos) -> false)
-                    .pushReaction(PushReaction.BLOCK)
-            );
-
-            case OBSIDIAN -> new PlateBlock(
-                definition.material(),
-                defaultPlateProperties()
-                    .pushReaction(PushReaction.BLOCK)
             );
 
             case QUARTZ -> new PlateBlock(
                 definition.material(),
                 Ingredient.of(ConventionalItemTags.QUARTZ),
                 1,
-                defaultPlateProperties()
+                defaultPlateProperties(definition)
             );
 
             case IRON -> new PlateBlock(
                 definition.material(),
                 Ingredient.of(ConventionalItemTags.IRON_INGOTS),
                 1,
-                defaultPlateProperties()
+                defaultPlateProperties(definition)
             );
 
             case GOLD -> new PlateBlock(
                 definition.material(),
                 Ingredient.of(ConventionalItemTags.GOLD_INGOTS),
                 1,
-                defaultPlateProperties()
+                defaultPlateProperties(definition)
             );
 
             case DIAMOND -> new PlateBlock(
                 definition.material(),
                 Ingredient.of(ConventionalItemTags.DIAMONDS),
                 1,
-                defaultPlateProperties()
+                defaultPlateProperties(definition)
             );
 
             case CHISELED_NETHER_BRICKS -> new PlateBlock(
                 definition.material(),
                 Ingredient.of(Items.NETHER_BRICK),
                 1,
-                defaultPlateProperties()
+                defaultPlateProperties(definition)
             );
 
             case PURPUR -> new PlateBlock(
                 definition.material(),
                 Ingredient.of(Items.POPPED_CHORUS_FRUIT),
                 1,
-                defaultPlateProperties()
+                defaultPlateProperties(definition)
             );
 
             default -> new PlateBlock(
                 definition.material(),
-                defaultPlateProperties()
+                defaultPlateProperties(definition)
             );
         };
     }
 
-    private static BlockBehaviour.Properties defaultPlateProperties() {
-        return BlockBehaviour.Properties.of()
+    private static BlockBehaviour.Properties defaultPlateProperties(PlateDefinition definition) {
+        return BlockBehaviour.Properties.of(
+                definition.material().defaultBlockState().getMaterial()
+            )
             .strength(0.3F)
             .isValidSpawn((state, getter, pos, entityType) -> false)
             .isRedstoneConductor((state, level, pos) -> false)
             .isSuffocating((state, level, pos) -> false)
             .isViewBlocking((state, level, pos) -> false)
-            .pushReaction(PushReaction.DESTROY)
             .instabreak();
     }
 }

@@ -40,7 +40,7 @@ public final class DinnerwareForgePlatform implements DinnerwarePlatform {
 
     @Override
     public void requestTrayAdvancementCheck(Player player, TrayAdvancementCheckSource source, ItemStack traySnapshot) {
-        if (player.level().isClientSide) {
+        if (player.level.isClientSide) {
             ForgeClientNetworkRequests.requestTrayAdvancementCheck(source, traySnapshot);
         }
     }

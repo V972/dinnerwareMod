@@ -28,12 +28,13 @@ public final class DinnerwareFabric implements ModInitializer {
 
         DinnerwareCommon.init();
 
+        FabricModCreativeModeTabs.register();
+
         FabricModBlocks.register();
         FabricModItems.register();
         FabricModBlockEntities.register();
         FabricModStorage.register();
         FabricModMenuTypes.register();
-        FabricModCreativeModeTabs.register();
         FabricModCriterionTriggers.register();
 
         DinnerwareCommon.registerDispenserBehaviors();

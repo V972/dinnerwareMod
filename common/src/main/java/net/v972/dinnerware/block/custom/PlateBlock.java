@@ -37,6 +37,7 @@ import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -132,6 +133,13 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     @Override
     public @NotNull RenderShape getRenderShape(@NotNull BlockState pState) {
         return RenderShape.MODEL;
+    }
+
+    @Override
+    public @NotNull PushReaction getPistonPushReaction(@NotNull BlockState state) {
+        return MATERIAL == Blocks.BEDROCK || MATERIAL == Blocks.OBSIDIAN
+            ? PushReaction.BLOCK
+            : PushReaction.DESTROY;
     }
 
     @Override

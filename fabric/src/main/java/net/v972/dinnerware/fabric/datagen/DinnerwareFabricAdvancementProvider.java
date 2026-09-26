@@ -1,7 +1,7 @@
 package net.v972.dinnerware.fabric.datagen;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.FrameType;
@@ -14,7 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.v972.dinnerware.DinnerwareConstants;
 import net.v972.dinnerware.advancement.ManualCriterionTrigger;
-import net.v972.dinnerware.datagen.DinnerwareDatagenPaths;
 import net.v972.dinnerware.fabric.registry.FabricModBlocks;
 import net.v972.dinnerware.fabric.registry.FabricModItems;
 import net.v972.dinnerware.registry.PlateDefinition;
@@ -24,14 +23,8 @@ import java.util.function.Consumer;
 public final class DinnerwareFabricAdvancementProvider
         extends FabricAdvancementProvider {
 
-    public DinnerwareFabricAdvancementProvider(FabricDataOutput output) {
-        super(
-            new FabricDataOutput(
-                output.getModContainer(),
-                DinnerwareDatagenPaths.commonOutput(),
-                output.isStrictValidationEnabled()
-            )
-        );
+    public DinnerwareFabricAdvancementProvider(FabricDataGenerator dataGenerator) {
+        super(dataGenerator);
     }
 
     @Override

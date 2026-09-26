@@ -1,7 +1,7 @@
 package net.v972.dinnerware.block.entity.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -13,7 +13,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.world.item.ItemStack;
 import net.v972.dinnerware.block.custom.PlateBlock;
 import net.v972.dinnerware.item.custom.PlateBlockBlockItem;
@@ -29,7 +29,7 @@ public class DinnerwareBEWLR extends BlockEntityWithoutLevelRenderer {
     }
 
     @Override
-    public void renderByItem(ItemStack stack, @NotNull ItemDisplayContext pDisplayContext, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+    public void renderByItem(ItemStack stack, @NotNull ItemTransforms.TransformType pDisplayContext, @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         boolean isPlate = stack.is(ModTags.Items.PLATES);
         boolean isTray = stack.is(ModTags.Items.TRAYS);
 
@@ -44,7 +44,7 @@ public class DinnerwareBEWLR extends BlockEntityWithoutLevelRenderer {
         }
     }
 
-    private void renderPlate(ItemStack stack, ItemDisplayContext context, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
+    private void renderPlate(ItemStack stack, ItemTransforms.TransformType context, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
         PlateBlock plateBlock = (PlateBlock)((PlateBlockBlockItem)stack.getItem()).getBlock();
@@ -56,12 +56,12 @@ public class DinnerwareBEWLR extends BlockEntityWithoutLevelRenderer {
         poseStack.pushPose();
         {
             poseStack.translate(0.5, 0.5, 0.5);
-            poseStack.mulPose(Axis.XP.rotationDegrees(90));
+            poseStack.mulPose(Vector3f.XP.rotationDegrees(90));
             poseStack.translate(0, 0, 0.485);
             poseStack.scale(0.625f, 0.625f, 0.625f);
 
-            boolean isLeftHand = context == ItemDisplayContext.FIRST_PERSON_LEFT_HAND || context == ItemDisplayContext.THIRD_PERSON_LEFT_HAND;
-            itemRenderer.render(stack, ItemDisplayContext.FIXED, isLeftHand, poseStack, buffer, packedLight, packedOverlay, bakedModel);
+            boolean isLeftHand = context == ItemTransforms.TransformType.FIRST_PERSON_LEFT_HAND || context == ItemTransforms.TransformType.THIRD_PERSON_LEFT_HAND;
+            itemRenderer.render(stack, ItemTransforms.TransformType.FIXED, isLeftHand, poseStack, buffer, packedLight, packedOverlay, bakedModel);
         }
         poseStack.popPose();
 
@@ -72,7 +72,7 @@ public class DinnerwareBEWLR extends BlockEntityWithoutLevelRenderer {
         DinnerwareRenderHelper.positionAndRenderPlateItems(poseStack, buffer, itemRenderer, stacks, nonEmptyCount, facing, null, packedLight);
     }
 
-    private void renderTray(ItemStack pStack, ItemDisplayContext pDisplayContext, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
+    private void renderTray(ItemStack pStack, ItemTransforms.TransformType pDisplayContext, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight, int pPackedOverlay) {
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
         // Tray itself is rendered via mixin

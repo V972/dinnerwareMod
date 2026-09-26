@@ -23,9 +23,9 @@ public enum PlateDefinition {
     JUNGLE("jungle", () -> Blocks.STRIPPED_JUNGLE_LOG),
     ACACIA("acacia", () -> Blocks.STRIPPED_ACACIA_LOG),
     DARK_OAK("dark_oak", () -> Blocks.STRIPPED_DARK_OAK_LOG),
-    CHERRY("cherry", () -> Blocks.STRIPPED_CHERRY_LOG),
+    //CHERRY("cherry", () -> Blocks.STRIPPED_CHERRY_LOG),
     MANGROVE("mangrove", () -> Blocks.STRIPPED_MANGROVE_LOG),
-    BAMBOO("bamboo", () -> Blocks.STRIPPED_BAMBOO_BLOCK),
+    //BAMBOO("bamboo", () -> Blocks.STRIPPED_BAMBOO_BLOCK),
     CRIMSON("crimson", () -> Blocks.STRIPPED_CRIMSON_STEM),
     WARPED("warped", () -> Blocks.STRIPPED_WARPED_STEM),
 

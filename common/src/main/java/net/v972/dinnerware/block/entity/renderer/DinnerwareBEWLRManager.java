@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.v972.dinnerware.util.DinnerwareRegistryObject;
@@ -25,7 +25,7 @@ public class DinnerwareBEWLRManager {
         Objects.requireNonNull(renderer, "renderer is null");
 
         if (DinnerwareBEWLRManager.RENDERERS.putIfAbsent(item.asItem(), new DinnerwareRegistryObject<>(() -> renderer.apply(Minecraft.getInstance()))) != null)
-            throw new IllegalArgumentException("Item " + BuiltInRegistries.ITEM.getKey(item.asItem()) + " is already registered as a BEWLR!");
+            throw new IllegalArgumentException("Item " + Registry.ITEM.getKey(item.asItem()) + " is already registered as a BEWLR!");
     }
 
     // Registers a single "ItemLike" instance to a single "BlockEntityWithoutLevelRenderer" instance, and provides "BlockEntityRenderDispatcher" and "EntityModelSet".
@@ -49,7 +49,7 @@ public class DinnerwareBEWLRManager {
         DinnerwareRegistryObject<BlockEntityWithoutLevelRenderer> registryObject = new DinnerwareRegistryObject<>(() -> renderer.apply(Minecraft.getInstance()));
         for (ItemLike item : items)
             if (DinnerwareBEWLRManager.RENDERERS.putIfAbsent(item.asItem(), registryObject) != null)
-                throw new IllegalArgumentException("Item " + BuiltInRegistries.ITEM.getKey(item.asItem()) + " is already registered as a BEWLR!");
+                throw new IllegalArgumentException("Item " + Registry.ITEM.getKey(item.asItem()) + " is already registered as a BEWLR!");
     }
 
     // Registers a set of "ItemLike" instances to a single "BlockEntityWithoutLevelRenderer" instance, and provides "BlockEntityRenderDispatcher" and "EntityModelSet".

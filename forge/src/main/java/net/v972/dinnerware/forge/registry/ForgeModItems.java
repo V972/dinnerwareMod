@@ -29,9 +29,9 @@ public class ForgeModItems {
 
 
     public static final RegistryObject<TrayItem> TRAY_IRON = ITEMS.register(DinnerwareRegistryNames.Items.IRON_TRAY,
-        () -> new TrayItem(Blocks.IRON_BLOCK, new Item.Properties().stacksTo(1)));
+        () -> new TrayItem(Blocks.IRON_BLOCK, new Item.Properties().tab(ForgeModCreativeModTabs.DINNERWARE_TAB).stacksTo(1)));
     public static final RegistryObject<TrayItem> TRAY_GOLD = ITEMS.register(DinnerwareRegistryNames.Items.GOLD_TRAY,
-        () -> new TrayItem(Blocks.GOLD_BLOCK, new Item.Properties().stacksTo(1)));
+        () -> new TrayItem(Blocks.GOLD_BLOCK, new Item.Properties().tab(ForgeModCreativeModTabs.DINNERWARE_TAB).stacksTo(1)));
 
 
     public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_BEDROCK =
@@ -72,12 +72,12 @@ public class ForgeModItems {
         registerPlateItem(PlateDefinition.ACACIA, ForgeModBlocks.PLATE_BLOCK_ACACIA, 150);
     public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_DARK_OAK =
         registerPlateItem(PlateDefinition.DARK_OAK, ForgeModBlocks.PLATE_BLOCK_DARK_OAK, 150);
-    public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_CHERRY =
-        registerPlateItem(PlateDefinition.CHERRY, ForgeModBlocks.PLATE_BLOCK_CHERRY, 150);
+//    public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_CHERRY =
+//        registerPlateItem(PlateDefinition.CHERRY, ForgeModBlocks.PLATE_BLOCK_CHERRY, 150);
     public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_MANGROVE =
         registerPlateItem(PlateDefinition.MANGROVE, ForgeModBlocks.PLATE_BLOCK_MANGROVE, 150);
-    public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_BAMBOO =
-        registerPlateItem(PlateDefinition.BAMBOO, ForgeModBlocks.PLATE_BLOCK_BAMBOO, 150);
+//    public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_BAMBOO =
+//        registerPlateItem(PlateDefinition.BAMBOO, ForgeModBlocks.PLATE_BLOCK_BAMBOO, 150);
 
     public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_CRIMSON =
         registerPlateItem(PlateDefinition.CRIMSON, ForgeModBlocks.PLATE_BLOCK_CRIMSON);
@@ -204,9 +204,9 @@ public class ForgeModItems {
             PLATE_ITEM_JUNGLE.get(),
             PLATE_ITEM_ACACIA.get(),
             PLATE_ITEM_DARK_OAK.get(),
-            PLATE_ITEM_CHERRY.get(),
+            //PLATE_ITEM_CHERRY.get(),
             PLATE_ITEM_MANGROVE.get(),
-            PLATE_ITEM_BAMBOO.get(),
+            //PLATE_ITEM_BAMBOO.get(),
 
             PLATE_ITEM_CRIMSON.get(),
             PLATE_ITEM_WARPED.get(),
@@ -256,7 +256,8 @@ public class ForgeModItems {
         RegistryObject<Block> block
     ) {
         return ITEMS.register(definition.item(),
-            () -> new ForgePlateBlockBlockItem(block.get(), new Item.Properties()));
+            () -> new ForgePlateBlockBlockItem(block.get(),
+                new Item.Properties().tab(ForgeModCreativeModTabs.DINNERWARE_TAB)));
     }
 
     private static RegistryObject<PlateBlockBlockItem> registerPlateItem(
@@ -265,7 +266,8 @@ public class ForgeModItems {
         int burnTime
     ) {
         return ITEMS.register(definition.item(),
-            () -> new ForgePlateBlockBlockItem(block.get(), new Item.Properties(), burnTime));
+            () -> new ForgePlateBlockBlockItem(block.get(),
+                new Item.Properties().tab(ForgeModCreativeModTabs.DINNERWARE_TAB), burnTime));
     }
 
     // ========================================

@@ -2,7 +2,6 @@ package net.v972.dinnerware.fabric.registry;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.inventory.MenuType;
 import net.v972.dinnerware.DinnerwareConstants;
 import net.v972.dinnerware.registry.DinnerwareRegistryNames;
@@ -17,12 +16,10 @@ public final class FabricModMenuTypes {
     }
 
     public static void register() {
-        if (registered) {
-            return;
-        }
+        if (registered) return;
 
         plateMenu = Registry.register(
-            BuiltInRegistries.MENU,
+            Registry.MENU,
             DinnerwareConstants.id(DinnerwareRegistryNames.Menus.PLATE_MENU),
             new ExtendedScreenHandlerType<>(PlateMenu::new)
         );

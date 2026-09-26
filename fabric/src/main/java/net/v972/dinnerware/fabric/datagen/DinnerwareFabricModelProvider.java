@@ -1,11 +1,10 @@
 package net.v972.dinnerware.fabric.datagen;
 
 import com.google.gson.JsonObject;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.minecraft.core.Registry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -13,106 +12,80 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.v972.dinnerware.DinnerwareConstants;
 import net.v972.dinnerware.block.custom.PlateBlock;
-import net.v972.dinnerware.datagen.DinnerwareDatagenPaths;
 import net.v972.dinnerware.fabric.registry.FabricModBlocks;
 import net.v972.dinnerware.fabric.registry.FabricModItems;
 import net.v972.dinnerware.item.custom.PlateBlockBlockItem;
 import net.v972.dinnerware.item.custom.TrayItem;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public final class DinnerwareFabricModelProvider implements DataProvider {
 
-    private final PackOutput.PathProvider blockStates;
-    private final PackOutput.PathProvider blockModels;
-    private final PackOutput.PathProvider itemModels;
+    private final Path output;
 
-    public DinnerwareFabricModelProvider(FabricDataOutput output) {
-        FabricDataOutput commonOutput = new FabricDataOutput(
-            output.getModContainer(),
-            DinnerwareDatagenPaths.commonOutput(),
-            output.isStrictValidationEnabled()
-        );
-
-        this.blockStates = commonOutput.createPathProvider(
-            PackOutput.Target.RESOURCE_PACK,
-            "blockstates"
-        );
-
-        this.blockModels = commonOutput.createPathProvider(
-            PackOutput.Target.RESOURCE_PACK,
-            "models/block"
-        );
-
-        this.itemModels = commonOutput.createPathProvider(
-            PackOutput.Target.RESOURCE_PACK,
-            "models/item"
-        );
+    public DinnerwareFabricModelProvider(FabricDataGenerator dataGenerator) {
+        this.output = dataGenerator.getOutputFolder();
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Common Dinnerware Models and Blockstates";
     }
 
     @Override
-    public CompletableFuture<?> run(CachedOutput output) {
-        List<CompletableFuture<?>> writes = new ArrayList<>();
+    public void run(@NotNull CachedOutput output) throws IOException {
 
         // plate block models
         for (Block block : FabricModBlocks.getKnownPlateBlocksIterable()) {
             PlateBlock plateBlock = (PlateBlock) block;
 
-            ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(plateBlock);
+            ResourceLocation blockId = Registry.BLOCK.getKey(plateBlock);
 
             ResourceLocation materialTexture = getTextureForMaterial(plateBlock.MATERIAL);
-            writes.add(save(
+            save(
                 output,
                 createPlateBlockModel(plateBlock, materialTexture),
-                blockModels.json(blockId)
-            ));
+                resourcePath("models/block", blockId)
+            );
 
-            writes.add(save(
+            save(
                 output,
                 createPlateBlockState(blockId),
-                blockStates.json(blockId)
-            ));
+                resourcePath("blockstates", blockId)
+            );
         }
 
         // plate item models
         for (PlateBlockBlockItem item : FabricModItems.getKnownPlateItemsArray()) {
-            ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(item);
+            ResourceLocation itemId = Registry.ITEM.getKey(item);
             PlateBlock plateBlock = (PlateBlock)item.getBlock();
-            writes.add(save(
+            save(
                 output,
                 createPlateItemModel(getTextureForMaterial(plateBlock.MATERIAL)),
-                itemModels.json(itemId)
-            ));
+                resourcePath("models/item", itemId)
+            );
         }
 
         // tray models
         for (Item item : FabricModItems.getTrayItemsArray()) {
             TrayItem tray = (TrayItem) item;
-            ResourceLocation itemId = BuiltInRegistries.ITEM.getKey(tray);
-            writes.add(save(
+            ResourceLocation itemId = Registry.ITEM.getKey(tray);
+            save(
                 output,
                 createTrayItemModel(getTextureForMaterial(tray.MATERIAL)),
-                itemModels.json(itemId)
-            ));
+                resourcePath("models/item", itemId)
+            );
         }
 
         // icon item
-        ResourceLocation iconId = BuiltInRegistries.ITEM.getKey(FabricModItems.icon());
-        writes.add(save(
+        ResourceLocation iconId = Registry.ITEM.getKey(FabricModItems.icon());
+        save(
             output,
             createSimpleItemModel(iconId),
-            itemModels.json(iconId)
-        ));
-
-        return CompletableFuture.allOf(writes.toArray(CompletableFuture[]::new));
+            resourcePath("models/item", iconId)
+        );
     }
 
     private static JsonObject createPlateBlockModel(PlateBlock plateBlock, ResourceLocation texture) {
@@ -217,9 +190,9 @@ public final class DinnerwareFabricModelProvider implements DataProvider {
     }
 
     private static ResourceLocation getTextureForMaterial(Block material) {
-        ResourceLocation materialId = BuiltInRegistries.BLOCK.getKey(material);
+        ResourceLocation materialId = Registry.BLOCK.getKey(material);
 
-        if (materialId == BuiltInRegistries.BLOCK.getDefaultKey())
+        if (materialId == Registry.BLOCK.getDefaultKey())
             throw new IllegalStateException("Material block is not registered: " + material);
 
         boolean useTopTexture =
@@ -232,7 +205,15 @@ public final class DinnerwareFabricModelProvider implements DataProvider {
         );
     }
 
-    private static CompletableFuture<?> save(CachedOutput output, JsonObject json, Path path) {
-        return DataProvider.saveStable(output, json, path);
+    private Path resourcePath(String folder, ResourceLocation id) {
+        return output
+            .resolve("assets")
+            .resolve(id.getNamespace())
+            .resolve(folder)
+            .resolve(id.getPath() + ".json");
+    }
+
+    private static void save(CachedOutput output, JsonObject json, Path path) throws IOException {
+        DataProvider.saveStable(output, json, path);
     }
 }

@@ -12,27 +12,27 @@ public class ManualCriterionTrigger extends SimpleCriterionTrigger<ManualCriteri
     static final ResourceLocation ID = DinnerwareConstants.id("manual_trigger");
 
     @Override
-    public ResourceLocation getId() {  return ID; }
+    public @NotNull ResourceLocation getId() {  return ID; }
 
     public void trigger(ServerPlayer pPlayer, ResourceLocation id) {
         this.trigger(pPlayer, triggerInstance -> triggerInstance.matches(id));
     }
 
     @Override
-    protected @NotNull TriggerInstance createInstance(JsonObject pJson, ContextAwarePredicate pPredicate, @NotNull DeserializationContext pContext) {
+    protected @NotNull TriggerInstance createInstance(JsonObject pJson, EntityPredicate.@NotNull Composite pPredicate, @NotNull DeserializationContext pContext) {
         return new TriggerInstance(pPredicate, new ResourceLocation(pJson.get("triggerId").getAsString()));
     }
 
     public static class TriggerInstance extends AbstractCriterionTriggerInstance {
         private final ResourceLocation triggerId;
 
-        public TriggerInstance(ContextAwarePredicate pPredicate, ResourceLocation id) {
+        public TriggerInstance(EntityPredicate.Composite pPredicate, ResourceLocation id) {
             super(ID, pPredicate);
             triggerId = id;
         }
 
         public static ManualCriterionTrigger.TriggerInstance byId(ResourceLocation id) {
-            return new ManualCriterionTrigger.TriggerInstance(ContextAwarePredicate.ANY, id);
+            return new ManualCriterionTrigger.TriggerInstance(EntityPredicate.Composite.ANY, id);
         }
 
         public boolean matches(ResourceLocation pTriggerId) {
@@ -40,7 +40,7 @@ public class ManualCriterionTrigger extends SimpleCriterionTrigger<ManualCriteri
         }
 
         @Override
-        public JsonObject serializeToJson(SerializationContext pConditions) {
+        public @NotNull JsonObject serializeToJson(@NotNull SerializationContext pConditions) {
             JsonObject obj = super.serializeToJson(pConditions);
             obj.add("triggerId", new JsonPrimitive(triggerId.toString()));
             return obj;

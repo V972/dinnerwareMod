@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -32,7 +32,7 @@ public class ForgeTrayItemHud implements IGuiOverlay {
 
     //deadlock prevention
     private static class Holder {
-        //this can't never ever be null
+        //this can't ever be null
         private static final ForgeTrayItemHud INSTANCE = makeInstance();
     }
 
@@ -100,123 +100,123 @@ public class ForgeTrayItemHud implements IGuiOverlay {
 //        return itemUsed.getData(stack);
 //    }
 
-    public void render(GuiGraphics graphics, float partialTicks) {
-        var w = this.mc.getWindow();
-        this.render(graphics, partialTicks, w.getGuiScaledWidth(), w.getGuiScaledHeight());
+    public void render(PoseStack pPoseStack, float partialTicks) {
+        //var w = this.mc.getWindow();
+        //this.render(pPoseStack, partialTicks, w.getGuiScaledWidth(), w.getGuiScaledHeight());
     }
 
-    public void render(GuiGraphics graphics, float partialTicks, int screenWidth, int screenHeight) {
-        if (itemUsed == null) return;
-        if (!(mc.getCameraEntity() instanceof Player)) {
-            closeHud();
-            return;
-        }
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.screen != null) {
-            closeHud();
-            return;
-        }
-
-//        var data = getItemUsedData();
-//        if (data == null) {
+//    public void render(PoseStack pPoseStack, float partialTicks, int screenWidth, int screenHeight) {
+//        if (itemUsed == null) return;
+//        if (!(mc.getCameraEntity() instanceof Player)) {
 //            closeHud();
 //            return;
 //        }
-        ///gui.setupOverlayRenderState(true, false);
-        PoseStack poseStack = graphics.pose();
-        poseStack.pushPose();
-
-        List<ItemStack> items = List.of(); //data.getContentView();
-        int slots = items.size();
-
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-
-        int centerX = screenWidth / 2;
-
-        poseStack.pushPose();
-        poseStack.translate(0, 0, -90);
-
-        int uWidth = 170;
-        int px = uWidth / 2;
-        int py = screenHeight / 2 - 40;
-
-//        px += DinnerwareConfig.trayGuiXOffset();
-//        py += DinnerwareConfig.trayGuiYOffset();
-
-        //graphics.blit(TEXTURE, centerX - px, py, 0, 0, uWidth - 1, 40);
-        //graphics.blit(TEXTURE, centerX + px - 1, py, 0, 0, 1, 40);
-
-        poseStack.popPose();
-
-        int i1 = 1;
-
-        for (int i = 0; i < slots; ++i) {
-            int kx = centerX - px + 3 + i * 20;
-            renderSlot(graphics, kx, py + 3, items.get(i), i1++, mc.font);
-        }
-        RenderSystem.disableBlend();
-        ItemStack topStack = items.get(0);
-        if (!topStack.isEmpty()) {
-            drawHighlight(graphics, screenWidth, py, topStack);
-        }
-
-        poseStack.popPose();
-    }
-
-    public void drawHighlight(GuiGraphics graphics, int screenWidth, int py, ItemStack selectedStack) {
-        int l;
-
-        MutableComponent mutablecomponent = Component.empty().append(selectedStack.getHoverName()).withStyle(selectedStack.getRarity().getStyleModifier());
-        if (selectedStack.hasCustomHoverName()) {
-            mutablecomponent.withStyle(ChatFormatting.ITALIC);
-        }
-
-        // append "with Food"
-        boolean withFood = false;
-        CompoundTag blockEntityData = BlockItem.getBlockEntityData(selectedStack);
-        if (blockEntityData != null && blockEntityData.contains(PlateBlockBlockEntity.ITEMS_TAG)) {
-            blockEntityData = blockEntityData.getCompound(PlateBlockBlockEntity.ITEMS_TAG);
-            if (blockEntityData.contains("Items", Tag.TAG_LIST)) {
-                ListTag plateListTag = blockEntityData.getList("Items", 10);
-                withFood = !plateListTag.isEmpty();
-            }
-        }
-
-        if (withFood) mutablecomponent =
-                Component.translatable("container.dinnerware.tray.with_food", mutablecomponent);
-
-        Component highlightTip = selectedStack.getHighlightTip(mutablecomponent);
-        int fontWidth = mc.font.width(highlightTip);
-        int nx = (screenWidth - fontWidth) / 2;
-        int ny = py - 19;
-
-        l = 255;
-
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        graphics.fill(nx - 2, ny - 2, nx + fontWidth + 2, ny + 9 + 2, mc.options.getBackgroundColor(0));
-        Font font = IClientItemExtensions.of(selectedStack).getFont(selectedStack, IClientItemExtensions.FontContext.SELECTED_ITEM_NAME);
-        if (font == null) {
-            graphics.drawString(mc.font, highlightTip, nx, ny, 0xFFFFFF + (l << 24));
-        } else {
-            nx = (screenWidth - font.width(highlightTip)) / 2;
-            graphics.drawString(font, highlightTip, nx, ny, 0xFFFFFF + (l << 24));
-        }
-        RenderSystem.disableBlend();
-    }
-
-    private void renderSlot(GuiGraphics graphics, int pX, int pY, ItemStack pStack, int seed, Font font) {
-        if (!pStack.isEmpty()) {
-            graphics.renderItem(pStack, pX, pY, seed);
-            RenderSystem.setShader(GameRenderer::getPositionColorShader);
-            graphics.renderItemDecorations(font, pStack, pX, pY);
-        }
-    }
+//        Minecraft mc = Minecraft.getInstance();
+//        if (mc.screen != null) {
+//            closeHud();
+//            return;
+//        }
+//
+////        var data = getItemUsedData();
+////        if (data == null) {
+////            closeHud();
+////            return;
+////        }
+//        ///gui.setupOverlayRenderState(true, false);
+//        PoseStack poseStack = pPoseStack.pose();
+//        poseStack.pushPose();
+//
+//        List<ItemStack> items = List.of(); //data.getContentView();
+//        int slots = items.size();
+//
+//        RenderSystem.enableBlend();
+//        RenderSystem.defaultBlendFunc();
+//
+//        int centerX = screenWidth / 2;
+//
+//        poseStack.pushPose();
+//        poseStack.translate(0, 0, -90);
+//
+//        int uWidth = 170;
+//        int px = uWidth / 2;
+//        int py = screenHeight / 2 - 40;
+//
+////        px += DinnerwareConfig.trayGuiXOffset();
+////        py += DinnerwareConfig.trayGuiYOffset();
+//
+//        //graphics.blit(TEXTURE, centerX - px, py, 0, 0, uWidth - 1, 40);
+//        //graphics.blit(TEXTURE, centerX + px - 1, py, 0, 0, 1, 40);
+//
+//        poseStack.popPose();
+//
+//        int i1 = 1;
+//
+//        for (int i = 0; i < slots; ++i) {
+//            int kx = centerX - px + 3 + i * 20;
+//            renderSlot(pPoseStack, kx, py + 3, items.get(i), i1++, mc.font);
+//        }
+//        RenderSystem.disableBlend();
+//        ItemStack topStack = items.get(0);
+//        if (!topStack.isEmpty()) {
+//            drawHighlight(pPoseStack, screenWidth, py, topStack);
+//        }
+//
+//        poseStack.popPose();
+//    }
+//
+//    public void drawHighlight(PoseStack pPoseStack, int screenWidth, int py, ItemStack selectedStack) {
+//        int l;
+//
+//        MutableComponent mutablecomponent = Component.empty().append(selectedStack.getHoverName()).withStyle(selectedStack.getRarity().getStyleModifier());
+//        if (selectedStack.hasCustomHoverName()) {
+//            mutablecomponent.withStyle(ChatFormatting.ITALIC);
+//        }
+//
+//        // append "with Food"
+//        boolean withFood = false;
+//        CompoundTag blockEntityData = BlockItem.getBlockEntityData(selectedStack);
+//        if (blockEntityData != null && blockEntityData.contains(PlateBlockBlockEntity.ITEMS_TAG)) {
+//            blockEntityData = blockEntityData.getCompound(PlateBlockBlockEntity.ITEMS_TAG);
+//            if (blockEntityData.contains("Items", Tag.TAG_LIST)) {
+//                ListTag plateListTag = blockEntityData.getList("Items", 10);
+//                withFood = !plateListTag.isEmpty();
+//            }
+//        }
+//
+//        if (withFood) mutablecomponent =
+//                Component.translatable("container.dinnerware.tray.with_food", mutablecomponent);
+//
+//        Component highlightTip = selectedStack.getHighlightTip(mutablecomponent);
+//        int fontWidth = mc.font.width(highlightTip);
+//        int nx = (screenWidth - fontWidth) / 2;
+//        int ny = py - 19;
+//
+//        l = 255;
+//
+//        RenderSystem.enableBlend();
+//        RenderSystem.defaultBlendFunc();
+//        graphics.fill(nx - 2, ny - 2, nx + fontWidth + 2, ny + 9 + 2, mc.options.getBackgroundColor(0));
+//        Font font = IClientItemExtensions.of(selectedStack).getFont(selectedStack, IClientItemExtensions.FontContext.SELECTED_ITEM_NAME);
+//        if (font == null) {
+//            graphics.drawString(mc.font, highlightTip, nx, ny, 0xFFFFFF + (l << 24));
+//        } else {
+//            nx = (screenWidth - font.width(highlightTip)) / 2;
+//            graphics.drawString(font, highlightTip, nx, ny, 0xFFFFFF + (l << 24));
+//        }
+//        RenderSystem.disableBlend();
+//    }
+//
+//    private void renderSlot(GuiGraphics graphics, int pX, int pY, ItemStack pStack, int seed, Font font) {
+//        if (!pStack.isEmpty()) {
+//            graphics.renderItem(pStack, pX, pY, seed);
+//            RenderSystem.setShader(GameRenderer::getPositionColorShader);
+//            graphics.renderItemDecorations(font, pStack, pX, pY);
+//        }
+//    }
 
 
     @Override
-    public void render(ForgeGui gui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
-        this.render(guiGraphics, partialTick, screenWidth, screenHeight);
+    public void render(ForgeGui gui, PoseStack pPoseStack, float partialTick, int screenWidth, int screenHeight) {
+        //this.render(pPoseStack, partialTick, screenWidth, screenHeight);
     }
 }

@@ -1,6 +1,6 @@
 package net.v972.dinnerware.fabric.config;
 
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.v972.dinnerware.config.DinnerwareConfigBackend;
@@ -58,8 +58,8 @@ public final class FabricDinnerwareConfigBackend
 
     @Override
     public boolean isInFoodBlacklist(Item item) {
-        ResourceLocation id = BuiltInRegistries.ITEM.getKey(item);
-        if (id == BuiltInRegistries.ITEM.getDefaultKey()) return false;
+        ResourceLocation id = Registry.ITEM.getKey(item);
+        if (id == Registry.ITEM.getDefaultKey()) return false;
         String itemId = id.toString();
         return DinnerwareFabricConfigs.common().foodBlacklist.contains(itemId);
     }

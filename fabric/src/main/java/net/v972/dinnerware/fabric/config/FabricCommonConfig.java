@@ -6,9 +6,8 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.v972.dinnerware.config.DinnerwareEatingMode;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -86,7 +85,7 @@ public final class FabricCommonConfig implements ConfigData {
         Default: AIMING
         """)
     @ConfigEntry.Gui.Tooltip
-    public FabricEatingMode eatingMode = FabricEatingMode .AIMING;
+    public FabricEatingMode eatingMode = FabricEatingMode.AIMING;
 
     @Comment("""
         If set to true, the tray will behave like a bundle: 
@@ -164,6 +163,6 @@ public final class FabricCommonConfig implements ConfigData {
             .getInstance()
             .isModLoaded(itemId.getNamespace());
 
-        return !namespaceLoaded || BuiltInRegistries.ITEM.containsKey(itemId);
+        return !namespaceLoaded || Registry.ITEM.containsKey(itemId);
     }
 }

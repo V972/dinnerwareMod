@@ -67,7 +67,7 @@ public final class DinnerwareFabricPlatform implements DinnerwarePlatform {
 
     @Override
     public void requestTrayAdvancementCheck(Player player, TrayAdvancementCheckSource source, ItemStack traySnapshot ) {
-        if (!player.level().isClientSide) return;
+        if (!player.level.isClientSide) return;
 
         if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) {
             return;
