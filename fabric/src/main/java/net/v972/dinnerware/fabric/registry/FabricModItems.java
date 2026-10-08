@@ -139,7 +139,7 @@ public final class FabricModItems {
         registerFuel(PlateDefinition.ACACIA);
         registerFuel(PlateDefinition.DARK_OAK);
         //registerFuel(PlateDefinition.CHERRY);
-        registerFuel(PlateDefinition.MANGROVE);
+        //registerFuel(PlateDefinition.MANGROVE);
         //registerFuel(PlateDefinition.BAMBOO);
     }
 

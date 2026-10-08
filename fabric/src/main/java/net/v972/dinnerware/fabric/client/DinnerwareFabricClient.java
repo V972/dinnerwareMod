@@ -1,7 +1,7 @@
 package net.v972.dinnerware.fabric.client;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.v972.dinnerware.block.entity.renderer.DinnerwareBEWLR;
 import net.v972.dinnerware.block.entity.renderer.DinnerwareBEWLRManager;
@@ -45,7 +45,7 @@ public final class DinnerwareFabricClient
     }
 
     private static void registerBlockEntityRenderers() {
-        BlockEntityRenderers.register(
+        BlockEntityRendererRegistry.register(
             FabricModBlockEntities.plateBlockEntityType(),
             PlateBlockBlockEntityRenderer::new
         );

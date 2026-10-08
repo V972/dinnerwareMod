@@ -1,7 +1,7 @@
 package net.v972.dinnerware.forge.event;
 
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.level.PistonEvent;
+import net.minecraftforge.event.world.PistonEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.v972.dinnerware.DinnerwareCommon;
@@ -15,7 +15,7 @@ public final class DinnerwareForgePistonEvents {
     @SubscribeEvent
     public static void onPistonPre(PistonEvent.Pre event) {
         DinnerwarePistonHooks.beforePistonMove(
-            (Level) event.getLevel(),
+            (Level) event.getWorld(),
             event.getPos(),
             event.getDirection()
         );

@@ -8,8 +8,10 @@ import net.v972.dinnerware.DinnerwareCommon;
 @Mod(DinnerwareCommon.MOD_ID)
 public class DinnerwareForge
 {
-    public DinnerwareForge(FMLJavaModLoadingContext context)
+    public DinnerwareForge()
     {
+        FMLJavaModLoadingContext context = FMLJavaModLoadingContext.get();
+
         DinnerwareForgeBootstrap.registerPlatformHooks();
         DinnerwareForgeBootstrap.registerNetwork();
 

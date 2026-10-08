@@ -1,6 +1,6 @@
 package net.v972.dinnerware.fabric.datagen;
 
-import net.minecraft.data.CachedOutput;
+import net.minecraft.data.HashCache;
 import net.minecraft.data.DataProvider;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +17,7 @@ public final class NamedDataProvider implements DataProvider {
     }
 
     @Override
-    public void run(@NotNull CachedOutput output) throws IOException {
+    public void run(@NotNull HashCache output) throws IOException {
         delegate.run(output);
     }
 

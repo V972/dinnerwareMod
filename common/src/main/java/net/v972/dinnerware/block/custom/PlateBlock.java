@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
@@ -422,8 +423,8 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         ) {
 
             if (DinnerwareConfig.isInFoodBlacklist(itemStack.getItem())) {
-                pPlayer.displayClientMessage(Component
-                    .translatable("block.dinnerware.plate.food_blacklist_message")
+                pPlayer.displayClientMessage(new
+                    TranslatableComponent("block.dinnerware.plate.food_blacklist_message")
                     .withStyle(ChatFormatting.RED), true);
 
                 return InteractionResult.PASS;

@@ -7,7 +7,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkHooks;
-import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import net.v972.dinnerware.forge.client.network.ForgeClientNetworkRequests;
 import net.v972.dinnerware.forge.network.ForgeNetwork;
 import net.v972.dinnerware.platform.DinnerwarePlatform;
@@ -17,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 public final class DinnerwareForgePlatform implements DinnerwarePlatform {
     @Override
     public void openPlateMenu(ServerPlayer player, MenuProvider menuProvider, BlockPos pos) {
-        NetworkHooks.openScreen(player, menuProvider, pos);
+        NetworkHooks.openGui(player, menuProvider, pos);
     }
 
     @Override
@@ -30,12 +29,12 @@ public final class DinnerwareForgePlatform implements DinnerwarePlatform {
 
     @Override
     public boolean hasCraftingRemainingItem(ItemStack stack) {
-        return stack.hasCraftingRemainingItem();
+        return stack.hasContainerItem();
     }
 
     @Override
     public ItemStack getCraftingRemainingItem(ItemStack stack) {
-        return stack.getCraftingRemainingItem();
+        return stack.getContainerItem();
     }
 
     @Override

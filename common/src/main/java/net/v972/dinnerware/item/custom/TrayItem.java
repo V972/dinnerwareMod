@@ -7,6 +7,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
@@ -290,7 +291,7 @@ public class TrayItem extends Item {
     public void appendHoverText(@NotNull ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
         String maxFullness = "64";
         pTooltipComponents.add(
-            Component.translatable("container.dinnerware.tray.fullness",
+            new TranslatableComponent("container.dinnerware.tray.fullness",
                 getContentWeight(pStack), maxFullness)
                 .withStyle(ChatFormatting.GRAY));
 
@@ -317,13 +318,13 @@ public class TrayItem extends Item {
                     }
                 }
 
-                if (withFood) mutablecomponent = Component.translatable("container.dinnerware.tray.with_food", mutablecomponent);
+                if (withFood) mutablecomponent = new TranslatableComponent("container.dinnerware.tray.with_food", mutablecomponent);
                 if (itemstack.getCount() > 1) mutablecomponent.append(" x").append(String.valueOf(itemstack.getCount()));
                 pTooltipComponents.add(mutablecomponent);
             }
 
             if (itemsSize - parsedItems > 0) {
-                pTooltipComponents.add(Component.translatable("container.dinnerware.tray.more", itemsSize - parsedItems).withStyle(ChatFormatting.ITALIC));
+                pTooltipComponents.add(new TranslatableComponent("container.dinnerware.tray.more", itemsSize - parsedItems).withStyle(ChatFormatting.ITALIC));
             }
         }
     }

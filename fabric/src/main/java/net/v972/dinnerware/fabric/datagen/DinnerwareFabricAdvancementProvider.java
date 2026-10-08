@@ -9,6 +9,7 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -34,8 +35,8 @@ public final class DinnerwareFabricAdvancementProvider
         Advancement root = Advancement.Builder.advancement()
             .display(
                 FabricModItems.icon(),
-                Component.translatable("advancement.dinnerware.root.title"),
-                Component.translatable("advancement.dinnerware.root.description"),
+                new TranslatableComponent("advancement.dinnerware.root.title"),
+                new TranslatableComponent("advancement.dinnerware.root.description"),
                 new ResourceLocation("minecraft", "textures/block/quartz_block_top.png"),
                 FrameType.TASK, false, false, true
             )
@@ -46,8 +47,8 @@ public final class DinnerwareFabricAdvancementProvider
             .parent(root)
             .display(
                 FabricModBlocks.plateBlock(PlateDefinition.DIAMOND),
-                Component.translatable("advancement.dinnerware.get_diamond_plate.title"),
-                Component.translatable("advancement.dinnerware.get_diamond_plate.description"),
+                new TranslatableComponent("advancement.dinnerware.get_diamond_plate.title"),
+                new TranslatableComponent("advancement.dinnerware.get_diamond_plate.description"),
                 null, FrameType.TASK, true, false, false
             )
             .addCriterion("got_diamond_plate",
@@ -83,8 +84,8 @@ public final class DinnerwareFabricAdvancementProvider
             .parent(root)
             .display(
                 inceptionPlateStack,
-                Component.translatable("advancement.dinnerware.put_plate_in_plate.title"),
-                Component.translatable("advancement.dinnerware.put_plate_in_plate.description"),
+                new TranslatableComponent("advancement.dinnerware.put_plate_in_plate.title"),
+                new TranslatableComponent("advancement.dinnerware.put_plate_in_plate.description"),
                 null, FrameType.GOAL, true, false, false
             )
             .addCriterion("put_plate_in_plate",
@@ -98,8 +99,8 @@ public final class DinnerwareFabricAdvancementProvider
             .parent(root)
             .display(
                 FabricModItems.ironTray(),
-                Component.translatable("advancement.dinnerware.get_tray_with_all_regular_plates.title"),
-                Component.translatable("advancement.dinnerware.get_tray_with_all_regular_plates.description"),
+                new TranslatableComponent("advancement.dinnerware.get_tray_with_all_regular_plates.title"),
+                new TranslatableComponent("advancement.dinnerware.get_tray_with_all_regular_plates.description"),
                 null, FrameType.CHALLENGE, true, true, false
             )
             .addCriterion("one_tray_to_hold_them_all",

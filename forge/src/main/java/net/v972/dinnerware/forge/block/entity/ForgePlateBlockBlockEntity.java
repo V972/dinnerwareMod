@@ -7,8 +7,8 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import net.v972.dinnerware.forge.inventory.ForgePlateInventoryItemHandler;
@@ -25,7 +25,7 @@ public class ForgePlateBlockBlockEntity extends PlateBlockBlockEntity {
 
     @Override
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             return itemHandler.cast();
         }
 

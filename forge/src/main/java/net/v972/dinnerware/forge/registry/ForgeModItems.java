@@ -74,8 +74,8 @@ public class ForgeModItems {
         registerPlateItem(PlateDefinition.DARK_OAK, ForgeModBlocks.PLATE_BLOCK_DARK_OAK, 150);
 //    public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_CHERRY =
 //        registerPlateItem(PlateDefinition.CHERRY, ForgeModBlocks.PLATE_BLOCK_CHERRY, 150);
-    public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_MANGROVE =
-        registerPlateItem(PlateDefinition.MANGROVE, ForgeModBlocks.PLATE_BLOCK_MANGROVE, 150);
+//    public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_MANGROVE =
+//        registerPlateItem(PlateDefinition.MANGROVE, ForgeModBlocks.PLATE_BLOCK_MANGROVE, 150);
 //    public static final RegistryObject<PlateBlockBlockItem> PLATE_ITEM_BAMBOO =
 //        registerPlateItem(PlateDefinition.BAMBOO, ForgeModBlocks.PLATE_BLOCK_BAMBOO, 150);
 
@@ -205,7 +205,7 @@ public class ForgeModItems {
             PLATE_ITEM_ACACIA.get(),
             PLATE_ITEM_DARK_OAK.get(),
             //PLATE_ITEM_CHERRY.get(),
-            PLATE_ITEM_MANGROVE.get(),
+            //PLATE_ITEM_MANGROVE.get(),
             //PLATE_ITEM_BAMBOO.get(),
 
             PLATE_ITEM_CRIMSON.get(),

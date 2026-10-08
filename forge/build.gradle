@@ -50,8 +50,8 @@ legacyForge {
     // Use non-default mappings at your own risk. They may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
     parchment {
-        minecraftVersion = '1.20.1'
-        mappingsVersion = '2023.06.26'
+        minecraftVersion = '1.18.2'
+        mappingsVersion = '2022.11.06'
     }
 
     // Default run configurations.

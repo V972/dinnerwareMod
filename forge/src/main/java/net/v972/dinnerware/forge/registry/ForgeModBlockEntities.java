@@ -12,7 +12,7 @@ import net.v972.dinnerware.registry.DinnerwareRegistryNames;
 
 public class ForgeModBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
-            DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, DinnerwareCommon.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, DinnerwareCommon.MOD_ID);
 
     public static final RegistryObject<BlockEntityType<PlateBlockBlockEntity>> PLATE_BLOCK_BE =
         BLOCK_ENTITIES.register(DinnerwareRegistryNames.BlockEntities.PLATE_BLOCK,

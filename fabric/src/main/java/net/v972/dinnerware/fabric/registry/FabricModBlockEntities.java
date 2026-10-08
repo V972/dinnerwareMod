@@ -1,5 +1,6 @@
 package net.v972.dinnerware.fabric.registry;
 
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.v972.dinnerware.DinnerwareConstants;
@@ -22,10 +23,10 @@ public final class FabricModBlockEntities {
         plateBlockEntityType = Registry.register(
             Registry.BLOCK_ENTITY_TYPE,
             DinnerwareConstants.id(DinnerwareRegistryNames.BlockEntities.PLATE_BLOCK),
-            BlockEntityType.Builder.of(
+            FabricBlockEntityTypeBuilder.create(
                 PlateBlockBlockEntity::new,
                 FabricModBlocks.getKnownPlateBlocksArray()
-            ).build(null)
+            ).build()
         );
 
         registered = true;

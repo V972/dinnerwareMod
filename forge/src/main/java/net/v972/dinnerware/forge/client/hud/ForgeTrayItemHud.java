@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -16,9 +15,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.extensions.common.IClientItemExtensions;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+//import net.minecraftforge.client.extensions.common.IClientItemExtensions; //-> IItemRenderProperties
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.IIngameOverlay;
 import net.v972.dinnerware.DinnerwareConstants;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import net.v972.dinnerware.item.custom.TrayItem;
@@ -26,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class ForgeTrayItemHud implements IGuiOverlay {
+public class ForgeTrayItemHud implements IIngameOverlay {
 
     private static final ResourceLocation TEXTURE = DinnerwareConstants.id("textures/gui/tray_hud.png");
 
@@ -216,7 +215,7 @@ public class ForgeTrayItemHud implements IGuiOverlay {
 
 
     @Override
-    public void render(ForgeGui gui, PoseStack pPoseStack, float partialTick, int screenWidth, int screenHeight) {
+    public void render(ForgeIngameGui gui, PoseStack pPoseStack, float partialTick, int screenWidth, int screenHeight) {
         //this.render(pPoseStack, partialTick, screenWidth, screenHeight);
     }
 }

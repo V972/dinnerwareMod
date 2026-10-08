@@ -58,7 +58,7 @@ public class ForgeModBlocks {
     public static final RegistryObject<Block> PLATE_BLOCK_ACACIA = registerPlateBlock(PlateDefinition.ACACIA);
     public static final RegistryObject<Block> PLATE_BLOCK_DARK_OAK = registerPlateBlock(PlateDefinition.DARK_OAK);
     //public static final RegistryObject<Block> PLATE_BLOCK_CHERRY = registerPlateBlock(PlateDefinition.CHERRY);
-    public static final RegistryObject<Block> PLATE_BLOCK_MANGROVE = registerPlateBlock(PlateDefinition.MANGROVE);
+    //public static final RegistryObject<Block> PLATE_BLOCK_MANGROVE = registerPlateBlock(PlateDefinition.MANGROVE);
     //public static final RegistryObject<Block> PLATE_BLOCK_BAMBOO = registerPlateBlock(PlateDefinition.BAMBOO);
 
     public static final RegistryObject<Block> PLATE_BLOCK_CRIMSON = registerPlateBlock(PlateDefinition.CRIMSON);

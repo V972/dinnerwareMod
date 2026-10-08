@@ -14,7 +14,7 @@ import net.v972.dinnerware.screen.PlateMenu;
 
 public class ForgeModMenuTypes {
     public static final DeferredRegister<MenuType<?>> MENUS =
-            DeferredRegister.create(ForgeRegistries.MENU_TYPES, DinnerwareCommon.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.CONTAINERS, DinnerwareCommon.MOD_ID);
 
     public static final RegistryObject<MenuType<PlateMenu>> PLATE_MENU =
             registerMenuType(DinnerwareRegistryNames.Menus.PLATE_MENU, PlateMenu::new);

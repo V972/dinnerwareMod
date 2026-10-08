@@ -5,6 +5,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.v972.dinnerware.fabric.config.DinnerwareFabricConfigs;
 import net.v972.dinnerware.fabric.config.FabricClientConfig;
 import net.v972.dinnerware.fabric.config.FabricCommonConfig;
@@ -21,7 +22,7 @@ public final class DinnerwareConfigSelectionScreen extends Screen {
     }
 
     public DinnerwareConfigSelectionScreen(Screen parent) {
-        super(Component.translatable("config.dinnerware.selector.title"));
+        super(new TranslatableComponent("config.dinnerware.selector.title"));
         this.parent = parent;
     }
 
@@ -46,7 +47,7 @@ public final class DinnerwareConfigSelectionScreen extends Screen {
             new Button(
                 x, firstY,
                 buttonWidth, buttonHeight,
-                Component.translatable("config.dinnerware.selector.common"),
+                new TranslatableComponent("config.dinnerware.selector.common"),
                 button -> {
                     configToReload = ConfigType.COMMON;
                     clearWidgets();
@@ -64,7 +65,7 @@ public final class DinnerwareConfigSelectionScreen extends Screen {
             new Button(
                 x, firstY + 24,
                 buttonWidth, buttonHeight,
-                Component.translatable("config.dinnerware.selector.client"),
+                new TranslatableComponent("config.dinnerware.selector.client"),
                     button -> {
                     configToReload = ConfigType.CLIENT;
                     clearWidgets();
@@ -82,7 +83,7 @@ public final class DinnerwareConfigSelectionScreen extends Screen {
             new Button(
                 x, firstY + 56,
                 buttonWidth, buttonHeight,
-                Component.translatable("gui.done"),
+                new TranslatableComponent("gui.done"),
                 button -> onClose()
             )
         );

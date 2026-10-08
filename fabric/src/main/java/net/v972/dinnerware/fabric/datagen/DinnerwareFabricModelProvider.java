@@ -1,9 +1,11 @@
 package net.v972.dinnerware.fabric.datagen;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.minecraft.core.Registry;
-import net.minecraft.data.CachedOutput;
+import net.minecraft.data.HashCache;
 import net.minecraft.data.DataProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -25,6 +27,11 @@ public final class DinnerwareFabricModelProvider implements DataProvider {
 
     private final Path output;
 
+    private static final Gson GSON = new GsonBuilder()
+        .setPrettyPrinting()
+        .disableHtmlEscaping()
+        .create();
+
     public DinnerwareFabricModelProvider(FabricDataGenerator dataGenerator) {
         this.output = dataGenerator.getOutputFolder();
     }
@@ -35,7 +42,7 @@ public final class DinnerwareFabricModelProvider implements DataProvider {
     }
 
     @Override
-    public void run(@NotNull CachedOutput output) throws IOException {
+    public void run(@NotNull HashCache output) throws IOException {
 
         // plate block models
         for (Block block : FabricModBlocks.getKnownPlateBlocksIterable()) {
@@ -213,7 +220,7 @@ public final class DinnerwareFabricModelProvider implements DataProvider {
             .resolve(id.getPath() + ".json");
     }
 
-    private static void save(CachedOutput output, JsonObject json, Path path) throws IOException {
-        DataProvider.saveStable(output, json, path);
+    private static void save(HashCache output, JsonObject json, Path path) throws IOException {
+        DataProvider.save(GSON, output, json, path);
     }
 }
