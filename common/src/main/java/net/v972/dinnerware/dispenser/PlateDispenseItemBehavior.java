@@ -51,9 +51,10 @@ public final class PlateDispenseItemBehavior extends ShulkerBoxDispenseBehavior 
         delegatedToFallback = true;
         setSuccess(false);
 
+        int countBefore = stack.getCount();
         ItemStack result = fallback.dispense(source, stack);
 
-        if (fallback instanceof OptionalDispenseItemBehavior optional && !optional.isSuccess()) {
+        if (fallback instanceof OptionalDispenseItemBehavior optional && !optional.isSuccess() && result.getCount() == countBefore) {
             return DEFAULT_DISPENSE_BEHAVIOR.dispense(source, result);
         }
 
