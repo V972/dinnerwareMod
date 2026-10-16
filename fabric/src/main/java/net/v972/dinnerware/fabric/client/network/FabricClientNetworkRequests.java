@@ -24,13 +24,12 @@ public final class FabricClientNetworkRequests {
         );
 
         ClientPlayNetworking.registerGlobalReceiver(
-                FabricNetwork.EATING_PARTICLES,
-                (client, handler, buffer, responseSender) -> {
-                    int entityId = buffer.readVarInt();
-                    ItemStack foodStack = buffer.readItem();
-
-                    client.execute(() -> EatingParticleClientHandler.handle(entityId, foodStack));
-                }
+            FabricNetwork.EatingParticlesPayload.TYPE,
+            (payload, context) ->
+                EatingParticleClientHandler.handle(
+                    payload.entityId(),
+                    payload.foodStack()
+                )
         );
 
         registered = true;
@@ -50,13 +49,10 @@ public final class FabricClientNetworkRequests {
         pendingSource = null;
         pendingTraySnapshot = ItemStack.EMPTY;
 
-        if (!ClientPlayNetworking.canSend(FabricNetwork.CHECK_TRAY_ADVANCEMENT)) {
+        if (!ClientPlayNetworking.canSend(FabricNetwork.TrayAdvancementCheckPayload.TYPE)) {
             return;
         }
 
-        ClientPlayNetworking.send(
-            FabricNetwork.CHECK_TRAY_ADVANCEMENT,
-            FabricNetwork.createTrayAdvancementCheckBuffer(source, snapshot)
-        );
+        ClientPlayNetworking.send(new FabricNetwork.TrayAdvancementCheckPayload(source, snapshot));
     }
 }

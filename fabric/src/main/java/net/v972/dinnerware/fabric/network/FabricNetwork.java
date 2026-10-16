@@ -1,10 +1,11 @@
 package net.v972.dinnerware.fabric.network;
 
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -12,13 +13,59 @@ import net.v972.dinnerware.DinnerwareConstants;
 import net.v972.dinnerware.item.custom.TrayItem;
 import net.v972.dinnerware.platform.TrayAdvancementCheckSource;
 import net.v972.dinnerware.util.ModTags;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 public final class FabricNetwork {
-    public static final ResourceLocation CHECK_TRAY_ADVANCEMENT = DinnerwareConstants.id("check_tray_advancement");
-    public static final ResourceLocation EATING_PARTICLES = DinnerwareConstants.id("eating_particles");
+    public record TrayAdvancementCheckPayload(TrayAdvancementCheckSource source, ItemStack traySnapshot)
+            implements CustomPacketPayload {
+
+        public static final Type<TrayAdvancementCheckPayload> TYPE =
+            new Type<>( DinnerwareConstants.id("check_tray_advancement"));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, TrayAdvancementCheckPayload> STREAM_CODEC =
+            StreamCodec.of(
+            (buffer, payload) -> {
+                buffer.writeEnum(payload.source());
+                ItemStack.OPTIONAL_STREAM_CODEC.encode(buffer, payload.traySnapshot());
+            },
+            buffer -> new TrayAdvancementCheckPayload(
+                buffer.readEnum(TrayAdvancementCheckSource.class),
+                ItemStack.OPTIONAL_STREAM_CODEC.decode(buffer)
+            )
+        );
+
+        @Override
+        public @NotNull Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
+    public record EatingParticlesPayload(int entityId, ItemStack foodStack)
+            implements CustomPacketPayload {
+
+        public static final Type<EatingParticlesPayload> TYPE =
+            new Type<>(DinnerwareConstants.id("eating_particles"));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, EatingParticlesPayload> STREAM_CODEC =
+            StreamCodec.of(
+            (buffer, payload) -> {
+                buffer.writeVarInt(payload.entityId());
+                ItemStack.STREAM_CODEC.encode(buffer, payload.foodStack());
+            },
+            buffer -> new EatingParticlesPayload(
+                buffer.readVarInt(),
+                ItemStack.STREAM_CODEC.decode(buffer)
+            )
+        );
+
+        @Override
+        public @NotNull Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
 
     private static boolean registered;
 
@@ -28,33 +75,27 @@ public final class FabricNetwork {
     public static void register() {
         if (registered) return;
 
+        PayloadTypeRegistry.playC2S().register(
+            TrayAdvancementCheckPayload.TYPE,
+            TrayAdvancementCheckPayload.STREAM_CODEC
+        );
+
+        PayloadTypeRegistry.playS2C().register(
+            EatingParticlesPayload.TYPE,
+            EatingParticlesPayload.STREAM_CODEC
+        );
+
         ServerPlayNetworking.registerGlobalReceiver(
-            CHECK_TRAY_ADVANCEMENT,
-            (server, player, handler, buffer, responseSender) -> {
-                TrayAdvancementCheckSource source = buffer.readEnum(TrayAdvancementCheckSource.class);
-
-                ItemStack traySnapshot = buffer.readItem();
-
-                server.execute(() ->
-                    handleTrayAdvancementCheck(
-                        player,
-                        source,
-                        traySnapshot
-                    )
-                );
-            }
+            TrayAdvancementCheckPayload.TYPE,
+            (payload, context) ->
+                handleTrayAdvancementCheck(
+                    context.player(),
+                    payload.source(),
+                    payload.traySnapshot()
+                )
         );
 
         registered = true;
-    }
-
-    public static FriendlyByteBuf createTrayAdvancementCheckBuffer(TrayAdvancementCheckSource source, ItemStack traySnapshot) {
-        FriendlyByteBuf buffer = PacketByteBufs.create();
-
-        buffer.writeEnum(source);
-        buffer.writeItem(traySnapshot);
-
-        return buffer;
     }
 
     private static void handleTrayAdvancementCheck(ServerPlayer player, TrayAdvancementCheckSource source, ItemStack traySnapshot) {
@@ -89,11 +130,9 @@ public final class FabricNetwork {
         Set<ServerPlayer> recipients = new LinkedHashSet<>(PlayerLookup.tracking(eater));
         recipients.add(eater);
 
+        EatingParticlesPayload payload =new EatingParticlesPayload(eater.getId(), foodStack);
         for (ServerPlayer recipient : recipients) {
-            FriendlyByteBuf buffer = PacketByteBufs.create();
-            buffer.writeVarInt(eater.getId());
-            buffer.writeItem(foodStack);
-            ServerPlayNetworking.send(recipient, EATING_PARTICLES, buffer);
+            ServerPlayNetworking.send(recipient, payload);
         }
     }
 }

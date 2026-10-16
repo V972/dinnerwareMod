@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.v972.dinnerware.datagen.DinnerwareDatagenPaths;
 import net.v972.dinnerware.fabric.registry.FabricModItems;
 import net.v972.dinnerware.util.ModTags;
@@ -46,5 +47,10 @@ public final class FabricItemTagProvider
 
         getOrCreateTagBuilder(ModTags.Items.TRAYS)
             .add(FabricModItems.getTrayItemsArray());
+
+        getOrCreateTagBuilder(ModTags.Items.FOOD_CONTAINERS)
+            .add(Items.BOWL);
+        getOrCreateTagBuilder(ModTags.Items.DRINK_CONTAINERS)
+            .add(Items.GLASS_BOTTLE);
     }
 }

@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "package": "net.v972.dinnerware.mixins",
+  "refmap": "dinnerware.refmap.json",
+  "mixins": [
+    "AbstractContainerMenuAccessor",
+    "LivingEntityAccessor",
+    "DispenserBlockAccessor"
+  ],
+  "client": [
+    "ItemRendererMixin",
+    "HumanoidModelMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

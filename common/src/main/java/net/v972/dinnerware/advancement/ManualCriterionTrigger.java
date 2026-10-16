@@ -1,49 +1,54 @@
 package net.v972.dinnerware.advancement;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-import net.minecraft.advancements.critereon.*;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.v972.dinnerware.DinnerwareConstants;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Optional;
+
 public class ManualCriterionTrigger extends SimpleCriterionTrigger<ManualCriterionTrigger.TriggerInstance> {
-    static final ResourceLocation ID = DinnerwareConstants.id("manual_trigger");
 
     @Override
-    public ResourceLocation getId() {  return ID; }
+    public @NotNull Codec<TriggerInstance> codec() {
+        return TriggerInstance.CODEC;
+    }
 
     public void trigger(ServerPlayer pPlayer, ResourceLocation id) {
         this.trigger(pPlayer, triggerInstance -> triggerInstance.matches(id));
     }
 
-    @Override
-    protected @NotNull TriggerInstance createInstance(JsonObject pJson, ContextAwarePredicate pPredicate, @NotNull DeserializationContext pContext) {
-        return new TriggerInstance(pPredicate, new ResourceLocation(pJson.get("triggerId").getAsString()));
-    }
+    public record TriggerInstance(Optional<ContextAwarePredicate> player, ResourceLocation triggerId)
+        implements SimpleCriterionTrigger.SimpleInstance {
 
-    public static class TriggerInstance extends AbstractCriterionTriggerInstance {
-        private final ResourceLocation triggerId;
+        public static final Codec<TriggerInstance> CODEC =
+            RecordCodecBuilder.create(instance ->
+                instance.group(
+                    EntityPredicate.ADVANCEMENT_CODEC
+                        .optionalFieldOf("player")
+                        .forGetter(TriggerInstance::player),
 
-        public TriggerInstance(ContextAwarePredicate pPredicate, ResourceLocation id) {
-            super(ID, pPredicate);
-            triggerId = id;
+                    ResourceLocation.CODEC
+                        .fieldOf("triggerId")
+                        .forGetter(TriggerInstance::triggerId)
+                ).apply(instance, TriggerInstance::new)
+            );
+
+        public static Criterion<TriggerInstance> byId(ResourceLocation id) {
+            return byId(ModCriterionTriggers.manualTrigger(), id);
         }
 
-        public static ManualCriterionTrigger.TriggerInstance byId(ResourceLocation id) {
-            return new ManualCriterionTrigger.TriggerInstance(ContextAwarePredicate.ANY, id);
+        public static Criterion<TriggerInstance> byId(ManualCriterionTrigger trigger, ResourceLocation id) {
+            return trigger.createCriterion(new TriggerInstance(Optional.empty(), id));
         }
 
         public boolean matches(ResourceLocation pTriggerId) {
-            return triggerId.compareTo(pTriggerId) == 0;
-        }
-
-        @Override
-        public JsonObject serializeToJson(SerializationContext pConditions) {
-            JsonObject obj = super.serializeToJson(pConditions);
-            obj.add("triggerId", new JsonPrimitive(triggerId.toString()));
-            return obj;
+            return triggerId.equals(pTriggerId);
         }
     }
 }

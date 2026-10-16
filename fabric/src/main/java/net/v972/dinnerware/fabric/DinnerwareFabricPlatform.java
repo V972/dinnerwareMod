@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -24,10 +24,10 @@ import org.jetbrains.annotations.Nullable;
 public final class DinnerwareFabricPlatform implements DinnerwarePlatform {
     @Override
     public void openPlateMenu(ServerPlayer player, MenuProvider menuProvider, BlockPos pos) {
-        player.openMenu(new ExtendedScreenHandlerFactory() {
+        player.openMenu(new ExtendedScreenHandlerFactory<BlockPos>() {
             @Override
-            public void writeScreenOpeningData(ServerPlayer player, FriendlyByteBuf buffer) {
-                buffer.writeBlockPos(pos);
+            public BlockPos getScreenOpeningData(ServerPlayer player) {
+                return pos;
             }
 
             @Override
@@ -48,7 +48,7 @@ public final class DinnerwareFabricPlatform implements DinnerwarePlatform {
 
     @Override
     public @Nullable FoodProperties getFoodProperties(ItemStack stack, Player player) {
-        return stack.getItem().getFoodProperties();
+        return stack.get(DataComponents.FOOD);
     }
 
     @Override

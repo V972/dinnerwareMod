@@ -3,10 +3,11 @@ package net.v972.dinnerware.fabric.datagen;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Item;
@@ -23,23 +24,23 @@ import net.v972.dinnerware.registry.PlateDefinition;
 import net.v972.dinnerware.util.DinnerwareHelper;
 
 import java.util.Arrays;
-import java.util.function.Consumer;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 public final class DinnerwareFabricRecipeProvider extends FabricRecipeProvider {
 
-    public DinnerwareFabricRecipeProvider(FabricDataOutput output) {
-        super(output);
+    public DinnerwareFabricRecipeProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+        super(output, registries);
     }
 
     @Override
-    public void buildRecipes(Consumer<FinishedRecipe> exporter) {
+    public void buildRecipes(RecipeOutput exporter) {
         generatePlateRecipes(exporter);
         generateTerracottaDyeingRecipes(exporter);
         generateTrayRecipes(exporter);
     }
 
-    private static void generatePlateRecipes(Consumer<FinishedRecipe> writer) {
+    private static void generatePlateRecipes(RecipeOutput writer) {
         for (Block block : FabricModBlocks.getKnownPlateBlocksIterable()) {
             PlateBlock plateBlock = (PlateBlock) block;
 
@@ -71,7 +72,7 @@ public final class DinnerwareFabricRecipeProvider extends FabricRecipeProvider {
         }
     }
 
-    private static void generateTerracottaDyeingRecipes(Consumer<FinishedRecipe> writer) {
+    private static void generateTerracottaDyeingRecipes(RecipeOutput writer) {
         Block baseTerracottaPlate = FabricModBlocks.plateBlock(PlateDefinition.TERRACOTTA);
 
         for (Pair<Block, Ingredient> pair : FabricModBlocks.getTerracottaPlateBlocksDyeingMap()) {
@@ -109,7 +110,7 @@ public final class DinnerwareFabricRecipeProvider extends FabricRecipeProvider {
         }
     }
 
-    private static void generateTrayRecipes(Consumer<FinishedRecipe> writer) {
+    private static void generateTrayRecipes(RecipeOutput writer) {
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, FabricModItems.ironTray())
             .pattern("IPI")
             .define('P', Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE)

@@ -159,7 +159,7 @@ public final class DinnerwareFabricModelProvider implements DataProvider {
 
         variant.addProperty(
             "model",
-            new ResourceLocation(blockId.getNamespace(), "block/" + blockId.getPath()).toString()
+            ResourceLocation.fromNamespaceAndPath(blockId.getNamespace(), "block/" + blockId.getPath()).toString()
         );
 
         if (rotationY != 0) variant.addProperty("y", rotationY);
@@ -226,7 +226,7 @@ public final class DinnerwareFabricModelProvider implements DataProvider {
             material == Blocks.QUARTZ_BLOCK ||
             material instanceof RotatedPillarBlock;
 
-        return new ResourceLocation(
+        return ResourceLocation.fromNamespaceAndPath(
             materialId.getNamespace(),
             "block/" + materialId.getPath() + (useTopTexture ? "_top" : "")
         );

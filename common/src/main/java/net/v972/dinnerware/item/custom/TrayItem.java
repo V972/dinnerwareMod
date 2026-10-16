@@ -2,6 +2,7 @@ package net.v972.dinnerware.item.custom;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -23,6 +24,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -43,11 +46,7 @@ import net.v972.dinnerware.platform.TrayAdvancementCheckSource;
 import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -283,8 +282,11 @@ public class TrayItem extends Item {
         return BAR_COLOR;
     }
 
+    @Override
     public void onDestroyed(@NotNull ItemEntity pItemEntity) {
-        ItemUtils.onContainerDestroyed(pItemEntity, getContents(pItemEntity.getItem()));
+        ItemContainerContents contents = pItemEntity.getItem()
+                .getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
+        ItemUtils.onContainerDestroyed(pItemEntity, contents.nonEmptyItems());
     }
 
     public void appendHoverText(@NotNull ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
@@ -294,37 +296,54 @@ public class TrayItem extends Item {
                 getContentWeight(pStack), maxFullness)
                 .withStyle(ChatFormatting.GRAY));
 
-        CompoundTag compoundtag = pStack.getTag();
-        if (compoundtag != null && compoundtag.contains(TAG_ITEMS)) {
-            ListTag listTag = compoundtag.getList(TAG_ITEMS, 10);
-            int parsedItems;
-            int itemsSize = listTag.size();
-            int maxLines = DinnerwareConfig.maxTrayTooltipLines();
+        List<ItemStack> contents = getContentList(pStack);
 
-            for(parsedItems = 0; parsedItems < Math.min(itemsSize, maxLines); parsedItems++) {
-                CompoundTag itemTag = listTag.getCompound(parsedItems);
-                ItemStack itemstack = ItemStack.of(itemTag);
-                if (itemstack.isEmpty()) continue;
-                MutableComponent mutablecomponent = itemstack.getHoverName().copy();
+        int parsedItems;
+        int itemsSize = contents.size();
+        int maxLines = DinnerwareConfig.maxTrayTooltipLines();
 
-                boolean withFood = false;
-                CompoundTag blockEntityData = BlockItem.getBlockEntityData(itemstack);
-                if (blockEntityData != null && blockEntityData.contains(PlateBlockBlockEntity.ITEMS_TAG)) {
-                    blockEntityData = blockEntityData.getCompound(PlateBlockBlockEntity.ITEMS_TAG);
-                    if (blockEntityData.contains("Items", Tag.TAG_LIST)) {
-                        ListTag plateListTag = blockEntityData.getList("Items", 10);
-                        withFood = !plateListTag.isEmpty();
+        for (parsedItems = 0; parsedItems < Math.min(itemsSize, maxLines); parsedItems++) {
+            ItemStack itemstack = contents.get(parsedItems);
+            MutableComponent mutablecomponent = itemstack.getHoverName().copy();
+
+            boolean withFood = false;
+
+            CustomData blockEntityData = itemstack.get(DataComponents.BLOCK_ENTITY_DATA);
+            if (blockEntityData != null) {
+                CompoundTag tag = blockEntityData.copyTag();
+
+                if (tag.contains(PlateBlockBlockEntity.ITEMS_TAG, Tag.TAG_COMPOUND)) {
+                    CompoundTag inventoryTag = tag.getCompound(PlateBlockBlockEntity.ITEMS_TAG);
+
+                    if (inventoryTag.contains("Items", Tag.TAG_LIST)) {
+                        withFood = !inventoryTag
+                            .getList("Items", Tag.TAG_COMPOUND)
+                            .isEmpty();
                     }
                 }
-
-                if (withFood) mutablecomponent = Component.translatable("container.dinnerware.tray.with_food", mutablecomponent);
-                if (itemstack.getCount() > 1) mutablecomponent.append(" x").append(String.valueOf(itemstack.getCount()));
-                pTooltipComponents.add(mutablecomponent);
             }
 
-            if (itemsSize - parsedItems > 0) {
-                pTooltipComponents.add(Component.translatable("container.dinnerware.tray.more", itemsSize - parsedItems).withStyle(ChatFormatting.ITALIC));
+            if (withFood) {
+                mutablecomponent = Component.translatable(
+                    "container.dinnerware.tray.with_food",
+                    mutablecomponent
+                );
             }
+
+            if (itemstack.getCount() > 1) {
+                mutablecomponent.append(" x").append(String.valueOf(itemstack.getCount()));
+            }
+
+            pTooltipComponents.add(mutablecomponent);
+        }
+
+        if (itemsSize - parsedItems > 0) {
+            pTooltipComponents.add(
+                    Component.translatable(
+                            "container.dinnerware.tray.more",
+                            itemsSize - parsedItems
+                    ).withStyle(ChatFormatting.ITALIC)
+            );
         }
     }
 
@@ -345,121 +364,90 @@ public class TrayItem extends Item {
     // -----------------------------
 
     private static int add(ItemStack pTrayStack, ItemStack pInsertedStack) {
-        if (!pInsertedStack.isEmpty() &&
-            pInsertedStack.getItem().canFitInsideContainerItems() &&
-            canLoadItem(pInsertedStack)
-        ) {
-            CompoundTag compoundtag = pTrayStack.getOrCreateTag();
-            if (!compoundtag.contains(TAG_ITEMS)) {
-                compoundtag.put(TAG_ITEMS, new ListTag());
-            }
-
-            int trayContentWeight = getContentWeight(pTrayStack);
-            int insertedStackWeight = getWeight(pInsertedStack);
-            int k = Math.min(pInsertedStack.getCount(), (64 - trayContentWeight) / insertedStackWeight);
-            if (k == 0) {
-                return 0;
-            } else {
-                ListTag listTag = compoundtag.getList(TAG_ITEMS, 10);
-                Optional<CompoundTag> matchingItemOptional = getMatchingItem(pInsertedStack, listTag);
-                if (matchingItemOptional.isPresent() && (
-                    DinnerwareConfig.trayMergeMatchingItem() ||
-                    listTag.indexOf(matchingItemOptional.get()) == 0
-                )) {
-                    CompoundTag matchingItemTag = matchingItemOptional.get();
-                    ItemStack matchingItemStack = ItemStack.of(matchingItemTag);
-                    matchingItemStack.grow(k);
-                    matchingItemStack.save(matchingItemTag);
-                    listTag.remove(matchingItemTag);
-                    listTag.add(0, matchingItemTag);
-                } else {
-                    ItemStack itemStackCopyWithCount = pInsertedStack.copyWithCount(k);
-                    CompoundTag compoundTagCopyWithCount = new CompoundTag();
-                    itemStackCopyWithCount.save(compoundTagCopyWithCount);
-                    listTag.add(0, compoundTagCopyWithCount);
-                }
-
-                return k;
-            }
-        } else {
+        if (pInsertedStack.isEmpty() ||
+                !pInsertedStack.getItem().canFitInsideContainerItems() ||
+                !canLoadItem(pInsertedStack)) {
             return 0;
         }
+
+        int trayContentWeight = getContentWeight(pTrayStack);
+        int insertedStackWeight = getWeight(pInsertedStack);
+
+        int insertedCount = Math.min(pInsertedStack.getCount(), (64 - trayContentWeight) / insertedStackWeight);
+        if (insertedCount == 0) {
+            return 0;
+        }
+
+        List<ItemStack> contents = getContentList(pTrayStack);
+
+        int matchingIndex = -1;
+
+        if (!pInsertedStack.is(ModTags.Items.TRAYS)) {
+            for (int i = 0; i < contents.size(); i++) {
+                if (ItemStack.isSameItemSameComponents(contents.get(i), pInsertedStack)) {
+                    matchingIndex = i;
+                    break;
+                }
+            }
+        }
+
+        if (matchingIndex >= 0 && (DinnerwareConfig.trayMergeMatchingItem() || matchingIndex == 0)) {
+            ItemStack matching = contents.remove(matchingIndex);
+            matching.grow(insertedCount);
+            contents.addFirst(matching);
+        } else {
+            contents.addFirst(pInsertedStack.copyWithCount(insertedCount));
+        }
+
+        setContentList(pTrayStack, contents);
+
+        return insertedCount;
     }
 
     private static Optional<ItemStack> peekTop(ItemStack pStack, boolean wholeStack) {
-        CompoundTag compoundtag = pStack.getOrCreateTag();
-        if (!compoundtag.contains(TAG_ITEMS)) {
-            return Optional.empty();
-        } else {
-            ListTag listTag = compoundtag.getList(TAG_ITEMS, 10);
-            if (listTag.isEmpty()) {
-                return Optional.empty();
-            } else {
-                CompoundTag itemTag = listTag.getCompound(0);
-                ItemStack itemStackToReturn = ItemStack.of(itemTag);
+        List<ItemStack> contents = getContentList(pStack);
 
-                return Optional.of(wholeStack
-                    ? itemStackToReturn
-                    : itemStackToReturn.copyWithCount(1));
-            }
+        if (contents.isEmpty()) {
+            return Optional.empty();
         }
+
+        ItemStack top = contents.getFirst();
+        return Optional.of(wholeStack
+            ? top.copy()
+            : top.copyWithCount(1)
+        );
     }
 
     private static Optional<ItemStack> removeOne(ItemStack pTrayStack, boolean wholeStack) {
-        CompoundTag trayTag = pTrayStack.getOrCreateTag();
-        if (!trayTag.contains(TAG_ITEMS)) {
+        List<ItemStack> contents = getContentList(pTrayStack);
+
+        if (contents.isEmpty()) {
             return Optional.empty();
+        }
+
+        ItemStack top = contents.getFirst();
+        ItemStack result;
+
+        if (wholeStack) {
+            result = top.copy();
+            contents.removeFirst();
         } else {
-            ListTag listTag = trayTag.getList(TAG_ITEMS, 10);
-            if (listTag.isEmpty()) {
-                return Optional.empty();
-            } else {
-                CompoundTag itemTag = listTag.getCompound(0);
-                ItemStack itemStackToReturn = ItemStack.of(itemTag);
+            result = top.copyWithCount(1);
+            top.shrink(1);
 
-                if (wholeStack) {
-                    listTag.remove(0);
-                } else {
-                    ItemStack itemStackRemaining = ItemStack.of(itemTag);
-                    itemStackToReturn = ItemStack.of(itemTag).copyWithCount(1);
-                    itemStackRemaining.shrink(1);
-
-                    if (itemStackRemaining.isEmpty() || itemStackRemaining.is(Items.AIR)) {
-                        listTag.remove(0);
-                    } else {
-                        listTag.set(0, itemStackRemaining.save(new CompoundTag()));
-                    }
-                }
-
-                if (listTag.isEmpty()) {
-                    pTrayStack.removeTagKey(TAG_ITEMS);
-                }
-
-                return Optional.of(itemStackToReturn);
+            if (top.isEmpty()) {
+                contents.removeFirst();
             }
         }
-    }
 
-    private static Optional<CompoundTag> getMatchingItem(ItemStack pStack, ListTag pList) {
-        return pStack.is(ModTags.Items.TRAYS)
-            ? Optional.empty()
-            : pList
-                .stream()
-                .filter(CompoundTag.class::isInstance)
-                .map(CompoundTag.class::cast)
-                .filter((tag) ->
-                    ItemStack.isSameItemSameTags(ItemStack.of(tag), pStack)
-                ).findFirst();
+        setContentList(pTrayStack, contents);
+        return Optional.of(result);
     }
 
     private static Stream<ItemStack> getContents(ItemStack pStack) {
-        CompoundTag compoundtag = pStack.getTag();
-        if (compoundtag == null) {
-            return Stream.empty();
-        } else {
-            ListTag listtag = compoundtag.getList(TAG_ITEMS, 10);
-            return listtag.stream().map(CompoundTag.class::cast).map(ItemStack::of);
-        }
+        return pStack
+            .getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY)
+            .nonEmptyStream();
     }
 
     private static int getContentWeight(ItemStack pStack) {
@@ -485,22 +473,19 @@ public class TrayItem extends Item {
         if (!pStack.is(ModTags.Items.TRAYS)) return false;
         if (slotsMoved == 0) return false;
 
-        CompoundTag compoundtag = pStack.getTag();
-        if (compoundtag == null || !compoundtag.contains(TAG_ITEMS)) return false;
+        List<ItemStack> contents = getContentList(pStack);
 
-        ListTag listTag = compoundtag.getList(TAG_ITEMS, Tag.TAG_COMPOUND);
-
-        int maxSlots = listTag.size();
+        int maxSlots = contents.size();
+        if (maxSlots == 0) return false;
         if (maxSlots == 1 && Math.abs(slotsMoved) == 1) return false;
 
-        slotsMoved = slotsMoved % maxSlots;
+        slotsMoved %= maxSlots;
 
         int newFirstSlot = (maxSlots + slotsMoved) % maxSlots;
         if (newFirstSlot == 0) return true;
 
-        Collections.rotate(listTag, slotsMoved);
-        compoundtag.put(TAG_ITEMS, listTag);
-        pStack.save(compoundtag);
+        Collections.rotate(contents, slotsMoved);
+        setContentList(pStack, contents);
 
         return true;
     }
@@ -510,21 +495,40 @@ public class TrayItem extends Item {
     public static boolean hasAllItems(ItemStack pStack) {
         if (!pStack.is(ModTags.Items.TRAYS)) return false;
 
-        CompoundTag compoundtag = pStack.getTag();
-        if (compoundtag == null || !compoundtag.contains(TAG_ITEMS)) return false;
+        Set<Item> trayItemsSet = getContents(pStack)
+            .map(ItemStack::getItem)
+            .collect(Collectors.toSet());
 
-        ListTag listTag = compoundtag.getList(TAG_ITEMS, 10);
-        Set<Item> trayItemsSet =
-            listTag.stream()
-                .map(tag -> ItemStack.of((CompoundTag)tag).getItem())
-                .collect(Collectors.toSet());
-        return trayItemsSet.containsAll(List.of(DinnerwareItems.getSurvivalPlateItemsArray()));
+        return trayItemsSet.containsAll(
+            List.of(DinnerwareItems.getSurvivalPlateItemsArray())
+        );
     }
 
     public static void checkAndAwardTheOneTrayAdvancement(ItemStack pStack, Player pPlayer) {
         if ((pPlayer instanceof ServerPlayer pServerPlayer) && TrayItem.hasAllItems(pStack)) {
             ModCriterionTriggers.manualTrigger().trigger(pServerPlayer,
                 DinnerwareConstants.id("one_tray_to_hold_them_all"));
+        }
+    }
+
+    // =============================
+
+    private static List<ItemStack> getContentList(ItemStack trayStack) {
+        return trayStack
+            .getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY)
+            .nonEmptyStream()
+            .map(ItemStack::copy)
+            .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private static void setContentList(ItemStack trayStack, List<ItemStack> contents) {
+        if (contents.isEmpty()) {
+            trayStack.remove(DataComponents.CONTAINER);
+        } else {
+            trayStack.set(
+                DataComponents.CONTAINER,
+                ItemContainerContents.fromItems(contents)
+            );
         }
     }
 

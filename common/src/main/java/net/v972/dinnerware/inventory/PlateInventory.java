@@ -1,11 +1,12 @@
 package net.v972.dinnerware.inventory;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.item.BowlFoodItem;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SuspiciousStewItem;
 import net.v972.dinnerware.config.DinnerwareConfig;
 import net.v972.dinnerware.util.ModTags;
 import org.jetbrains.annotations.NotNull;
@@ -117,7 +118,7 @@ public final class PlateInventory {
         int slotLimit = Math.min(getSlotLimit(slot), stack.getMaxStackSize());
 
         if (!existing.isEmpty()) {
-            if (!ItemStack.isSameItemSameTags(existing, stack)) {
+            if (!ItemStack.isSameItemSameComponents(existing, stack)) {
                 return stack;
             }
 
@@ -160,19 +161,19 @@ public final class PlateInventory {
         }
     }
 
-    public void save(CompoundTag tag) {
+    public void save(CompoundTag tag, HolderLookup.Provider registries) {
         tag.putInt("Size", getSlotCount());
-        ContainerHelper.saveAllItems(tag, this.items);
+        ContainerHelper.saveAllItems(tag, this.items, registries);
     }
 
-    public void load(CompoundTag tag) {
+    public void load(CompoundTag tag, HolderLookup.Provider registries) {
         clearContentWithoutUpdate();
-        ContainerHelper.loadAllItems(tag, this.items);
+        ContainerHelper.loadAllItems(tag, this.items, registries);
     }
 
     public boolean canPlaceItem(int slot, @NotNull ItemStack stack) {
         validateSlot(slot);
-        return canPlaceItemOnPlate(stack);
+        return canPlaceItemOnPlate(slot, stack);
     }
 
     public int getSlotLimit(int slot) {
@@ -180,14 +181,29 @@ public final class PlateInventory {
         return DinnerwareConfig.maxPlateStackSize();
     }
 
-    private boolean canPlaceItemOnPlate(ItemStack stack) {
-        return
-            !DinnerwareConfig.onlyFoodOnPlate() ||
-                (stack.isEdible() &&
-                !(stack.getItem() instanceof BowlFoodItem) &&
-                !(stack.getItem() instanceof SuspiciousStewItem)
-                ) ||
-                stack.is(ModTags.Items.ADDITIONAL_FOOD);
+    private boolean canPlaceItemOnPlate(int slot, ItemStack stack) {
+        if (!DinnerwareConfig.onlyFoodOnPlate() || stack.is(ModTags.Items.ADDITIONAL_FOOD)) {
+            return true;
+        }
+
+        FoodProperties food = stack.get(DataComponents.FOOD);
+        if (food == null) {
+            return false;
+        }
+
+        boolean isFoodContainerFood = food.usingConvertsTo()
+            .map(remainder -> remainder.is(ModTags.Items.FOOD_CONTAINERS))
+            .orElse(false);
+
+        boolean isDrinkContainerFood = food.usingConvertsTo()
+            .map(remainder -> remainder.is(ModTags.Items.DRINK_CONTAINERS))
+            .orElse(false);
+
+        return !isFoodContainerFood && (!isFoodSlot(slot) || !isDrinkContainerFood);
+    }
+
+    private boolean isFoodSlot(int slot) {
+        return true;
     }
 
     private void validateSlot(int slot) {

@@ -6,7 +6,6 @@ import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.v972.dinnerware.mixins.MinecraftAccessor;
 
 public final class TrayThirdPersonAnimationProvider implements DinnerwareThirdPersonAnimationProvider {
     @Override
@@ -36,9 +35,8 @@ public final class TrayThirdPersonAnimationProvider implements DinnerwareThirdPe
 
     /** @return The current partialTick. */
     private static float getPartialTick() {
-        Minecraft minecraft = Minecraft.getInstance();
-        return minecraft.isPaused()
-            ? ((MinecraftAccessor) minecraft).dinnerware$getPausePartialTick()
-            : minecraft.getFrameTime();
+        return Minecraft.getInstance()
+            .getTimer()
+            .getGameTimeDeltaPartialTick(true);
     }
 }

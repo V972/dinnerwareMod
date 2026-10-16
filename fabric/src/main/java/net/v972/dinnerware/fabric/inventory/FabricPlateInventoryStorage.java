@@ -71,7 +71,7 @@ public final class FabricPlateInventoryStorage {
 
             return Math.min(
                 inventory.getSlotLimit(slot),
-                variant.getObject().getMaxStackSize()
+                variant.toStack(1).getMaxStackSize()
             );
         }
     }

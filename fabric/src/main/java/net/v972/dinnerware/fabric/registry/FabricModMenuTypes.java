@@ -1,6 +1,7 @@
 package net.v972.dinnerware.fabric.registry;
 
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.inventory.MenuType;
@@ -24,7 +25,7 @@ public final class FabricModMenuTypes {
         plateMenu = Registry.register(
             BuiltInRegistries.MENU,
             DinnerwareConstants.id(DinnerwareRegistryNames.Menus.PLATE_MENU),
-            new ExtendedScreenHandlerType<>(PlateMenu::new)
+            new ExtendedScreenHandlerType<>(PlateMenu::new, BlockPos.STREAM_CODEC)
         );
 
         registered = true;

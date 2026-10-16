@@ -20,6 +20,9 @@ public class ModTags {
     public static class Items {
         public static final TagKey<Item> ADDITIONAL_FOOD = tag("additional_food");
 
+        public static final TagKey<Item> FOOD_CONTAINERS = tag("food_containers");
+        public static final TagKey<Item> DRINK_CONTAINERS = tag("drink_containers");
+
         public static final TagKey<Item> PLATES = tag("plates");
         public static final TagKey<Item> PLATES_REGULAR = tag("plates/regular");
         // public static final TagKey<Item> PLATES_BANQUET = tag("plates/banquet"); // WIP

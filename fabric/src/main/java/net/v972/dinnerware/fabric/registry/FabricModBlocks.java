@@ -1,12 +1,15 @@
 package net.v972.dinnerware.fabric.registry;
 
 import com.mojang.datafixers.util.Pair;
-import net.fabricmc.fabric.api.tag.convention.v1.ConventionalItemTags;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.v972.dinnerware.DinnerwareConstants;
 import net.v972.dinnerware.block.custom.PlateBlock;
@@ -90,11 +93,12 @@ public final class FabricModBlocks {
         return switch (definition) {
             case BEDROCK -> new PlateBlock(
                 definition.material(),
-                BlockBehaviour.Properties.copy(definition.material())
-                    .isValidSpawn((state, getter, pos, entityType) -> false)
-                    .isRedstoneConductor((state, level, pos) -> false)
-                    .isSuffocating((state, level, pos) -> false)
-                    .isViewBlocking((state, level, pos) -> false)
+                defaultPlateProperties()
+                    // --- copy of relevant Bedrock properties ---
+                    .mapColor(MapColor.STONE)
+                    .instrument(NoteBlockInstrument.BASEDRUM)
+                    .strength(-1.0F, 3600000.0F)
+                    // --------------------------------------------
                     .pushReaction(PushReaction.BLOCK)
             );
 
@@ -106,7 +110,7 @@ public final class FabricModBlocks {
 
             case QUARTZ -> new PlateBlock(
                 definition.material(),
-                Ingredient.of(ConventionalItemTags.QUARTZ),
+                Ingredient.of(ConventionalItemTags.QUARTZ_GEMS),
                 1,
                 defaultPlateProperties()
             );
@@ -127,7 +131,7 @@ public final class FabricModBlocks {
 
             case DIAMOND -> new PlateBlock(
                 definition.material(),
-                Ingredient.of(ConventionalItemTags.DIAMONDS),
+                Ingredient.of(ConventionalItemTags.DIAMOND_GEMS),
                 1,
                 defaultPlateProperties()
             );
@@ -156,7 +160,7 @@ public final class FabricModBlocks {
     private static BlockBehaviour.Properties defaultPlateProperties() {
         return BlockBehaviour.Properties.of()
             .strength(0.3F)
-            .isValidSpawn((state, getter, pos, entityType) -> false)
+            .isValidSpawn(Blocks::never)
             .isRedstoneConductor((state, level, pos) -> false)
             .isSuffocating((state, level, pos) -> false)
             .isViewBlocking((state, level, pos) -> false)

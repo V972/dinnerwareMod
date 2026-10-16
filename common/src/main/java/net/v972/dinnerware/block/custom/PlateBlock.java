@@ -1,10 +1,17 @@
 package net.v972.dinnerware.block.custom;
 
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
@@ -12,17 +19,16 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
-import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.BlockGetter;
@@ -56,6 +62,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.OptionalInt;
 
 public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
@@ -107,9 +114,33 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         );
     }
 
+    // 1.21 bs
+    public static final MapCodec<PlateBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
+        instance.group(
+            BuiltInRegistries.BLOCK.byNameCodec()
+                .fieldOf("material")
+                .forGetter(block -> block.MATERIAL),
+
+            Ingredient.CODEC
+                .fieldOf("crafting_material")
+                .forGetter(block -> block.CRAFTING_MATERIAL),
+
+            Codec.INT
+                .fieldOf("crafting_amount")
+                .forGetter(block -> block.CRAFTING_AMOUNT),
+
+            propertiesCodec()
+        ).apply(instance, PlateBlock::new)
+    );
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
+
     @Override
     public @NotNull SoundType getSoundType(@NotNull BlockState pState) {
-        return MATERIAL.getSoundType(pState);
+        return MATERIAL.defaultBlockState().getSoundType();
     }
 
     @Override
@@ -194,24 +225,22 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     public void attack(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer) {
         BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
 
-        if (!(blockEntity instanceof PlateBlockBlockEntity plateEntity)) {
-            super.attack(pState, pLevel, pPos, pPlayer);
-            return;
-        }
+        if (blockEntity instanceof PlateBlockBlockEntity plateEntity) {
 
-        if (plateEntity.isEmpty() || this.MATERIAL == Blocks.BEDROCK) {
-            super.attack(pState, pLevel, pPos, pPlayer);
-            return;
-        }
+            if (plateEntity.isEmpty() || this.MATERIAL == Blocks.BEDROCK) {
+                super.attack(pState, pLevel, pPos, pPlayer);
+                return;
+            }
 
-        if (pPlayer.isShiftKeyDown()) {
-            pickUpPlate(plateEntity, pPlayer, pLevel, pPos);
-            return;
-        }
+            if (pPlayer.isCrouching()) { //was isShiftDown(), test is breaks things
+                pickUpPlate(plateEntity, pPlayer, pLevel, pPos);
+                return;
+            }
 
-        if (hasSilkTouch(pPlayer.getMainHandItem())) {
-            breakPlateWithContents(plateEntity, pPlayer, pLevel, pPos);
-            return;
+            if (hasSilkTouch(pLevel, pPlayer.getMainHandItem())) {
+                breakPlateWithContents(plateEntity, pPlayer, pLevel, pPos);
+                return;
+            }
         }
 
         super.attack(pState, pLevel, pPos, pPlayer);
@@ -223,7 +252,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
             pLevel.getBlockEntity(pPos, DinnerwareBlockEntities.plateBlockEntityType()).ifPresent((be) -> {
                 be.fromItem(pStack);
             });
-        } else if (pStack.hasCustomHoverName()) {
+        } else if (pStack.has(DataComponents.CUSTOM_NAME)) {
             pLevel.getBlockEntity(pPos, DinnerwareBlockEntities.plateBlockEntityType()).ifPresent((be) -> {
                 be.setCustomName(pStack.getHoverName());
             });
@@ -249,15 +278,17 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         }
     }
 
-    @Override
-    public void appendHoverText(ItemStack pStack, @Nullable BlockGetter pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
-        super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
-        CompoundTag compoundtag = BlockItem.getBlockEntityData(pStack);
-        if (compoundtag != null && compoundtag.contains(PlateBlockBlockEntity.ITEMS_TAG)) {
+    public void appendHoverText(@NotNull ItemStack pStack, @NotNull Item.TooltipContext pContext, @NotNull List<Component> pTooltip, @NotNull TooltipFlag pFlag) {
+        super.appendHoverText(pStack, pContext, pTooltip, pFlag);
+
+        CustomData blockEntityData = pStack.get(DataComponents.BLOCK_ENTITY_DATA);
+        if (blockEntityData == null) return;
+        CompoundTag compoundtag = blockEntityData.copyTag();
+        if (compoundtag.contains(PlateBlockBlockEntity.ITEMS_TAG)) {
             compoundtag = compoundtag.getCompound(PlateBlockBlockEntity.ITEMS_TAG);
             if (compoundtag.contains("Items", Tag.TAG_LIST)) {
                 NonNullList<ItemStack> nonnulllist = NonNullList.withSize(3, ItemStack.EMPTY);
-                ContainerHelper.loadAllItems(compoundtag, nonnulllist);
+                ContainerHelper.loadAllItems(compoundtag, nonnulllist, Objects.requireNonNull(pContext.registries()));
                 for(ItemStack itemstack : nonnulllist) {
                     if (itemstack.isEmpty()) continue;
                     MutableComponent mutablecomponent = itemstack.getHoverName().copy();
@@ -269,43 +300,88 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        //if (!pLevel.isClientSide()) {
-            BlockEntity bEntity = pLevel.getBlockEntity(pPos);
-            if (bEntity instanceof PlateBlockBlockEntity pPlateEntity) {
-                ItemStack itemStackInHand = pPlayer.getItemInHand(pHand);
-                if (itemStackInHand.is(ModTags.Items.TRAYS)) {
-                    return pLevel.isClientSide()
-                        ? pPlayer.getCooldowns().isOnCooldown(itemStackInHand.getItem())
-                            ? InteractionResult.sidedSuccess(pLevel.isClientSide())
-                            : InteractionResult.PASS
-                        : super.use(pState, pLevel, pPos, pPlayer, pHand, pHit);
+    protected @NotNull ItemInteractionResult useItemOn(
+            @NotNull ItemStack pStack,
+            @NotNull BlockState pState,
+            Level pLevel,
+            @NotNull BlockPos pPos,
+            @NotNull Player pPlayer,
+            @NotNull InteractionHand pHand,
+            @NotNull BlockHitResult pHit) {
 
-                // open menu when shift-clicking or clicking empty
-                } else if ((pPlayer.isCrouching() ||
-                           pPlateEntity.isEmpty())) {
-                    if (!pLevel.isClientSide()) {
-                        PlatformHooks.openPlateMenu(
-                            (ServerPlayer) pPlayer,
-                            pPlateEntity,
-                            pPos);
-                    }
-                    return InteractionResult.sidedSuccess(pLevel.isClientSide());
-                } else return attemptEat(pLevel, pPos, pHit, pPlateEntity, pPlayer);
+        BlockEntity bEntity = pLevel.getBlockEntity(pPos);
+        if (!(bEntity instanceof PlateBlockBlockEntity plateEntity)) {
+            return ItemInteractionResult.FAIL;
+        }
+
+        // clicking with tray
+        if (pStack.is(ModTags.Items.TRAYS)) {
+            return pPlayer.getCooldowns().isOnCooldown(pStack.getItem())
+                ? ItemInteractionResult.FAIL
+                : ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+        }
+
+        if (pPlayer.isCrouching() || plateEntity.isEmpty()) {
+            // on server open menu
+            if (!pLevel.isClientSide()) {
+                PlatformHooks.openPlateMenu((ServerPlayer) pPlayer, plateEntity, pPos);
             }
 
-            return InteractionResult.FAIL;
-        //}
+            // on client swing arm
+            return ItemInteractionResult.sidedSuccess(pLevel.isClientSide());
+        }
 
-        //return InteractionResult.sidedSuccess(pLevel.isClientSide());
+        return toItemInteractionResult(
+            attemptEat(pLevel, pPos, pHit, plateEntity, pPlayer)
+        );
+    }
+
+    @Override
+    protected @NotNull InteractionResult useWithoutItem(
+            @NotNull BlockState pState,
+            Level pLevel,
+            @NotNull BlockPos pPos,
+            @NotNull Player pPlayer,
+            @NotNull BlockHitResult pHit) {
+
+        BlockEntity bEntity = pLevel.getBlockEntity(pPos);
+        if (!(bEntity instanceof PlateBlockBlockEntity plateEntity)) {
+            return InteractionResult.FAIL;
+        }
+
+        if (pPlayer.isCrouching() || plateEntity.isEmpty()) {
+            // on server open menu
+            if (!pLevel.isClientSide()) {
+                PlatformHooks.openPlateMenu((ServerPlayer) pPlayer, plateEntity, pPos);
+            }
+
+            // on client swing arm
+            return InteractionResult.sidedSuccess(pLevel.isClientSide());
+        }
+
+        return attemptEat(pLevel, pPos, pHit, plateEntity, pPlayer);
+    }
+
+    private static ItemInteractionResult toItemInteractionResult(InteractionResult result) {
+        return switch (result) {
+            case SUCCESS, SUCCESS_NO_ITEM_USED -> ItemInteractionResult.SUCCESS;
+            case CONSUME -> ItemInteractionResult.CONSUME;
+            case CONSUME_PARTIAL -> ItemInteractionResult.CONSUME_PARTIAL;
+            case FAIL -> ItemInteractionResult.FAIL;
+            case PASS -> ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
+        };
     }
 
     public static void playBreakEffects(Level level, @Nullable Player excludedPlayer, BlockPos pos, BlockState state) {
         if (!level.isClientSide) level.levelEvent(excludedPlayer, 2001, pos, Block.getId(state));
     }
 
-    private static boolean hasSilkTouch(ItemStack stack) {
-        return EnchantmentHelper.getItemEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0;
+    private static boolean hasSilkTouch(Level level, ItemStack stack) {
+        Holder<Enchantment> silkTouch = level.registryAccess()
+                .lookupOrThrow(Registries.ENCHANTMENT)
+                .getOrThrow(Enchantments.SILK_TOUCH);
+
+        return EnchantmentHelper.getItemEnchantmentLevel(silkTouch, stack) > 0;
     }
 
     public static void dropPlateStackWithContents(PlateBlockBlockEntity pPlateEntity, Level pLevel, BlockPos pPos) {
@@ -403,14 +479,12 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
         ItemStack itemStack = pEntity.getStackInSlot(slotToEat);
         if (itemStack.isEmpty() || itemStack == ItemStack.EMPTY) return InteractionResult.PASS;
 
-        FoodProperties foodProperties =
-            PlatformHooks.getFoodProperties(itemStack, pPlayer);
+        FoodProperties foodProperties = PlatformHooks.getFoodProperties(itemStack, pPlayer);
 
         boolean isFood = foodProperties != null;
         boolean isFoodAndCanAlwaysBeEaten = foodProperties != null && foodProperties.canAlwaysEat();
 
-        if (isFoodAndCanAlwaysBeEaten ||
-                (pPlayer.canEat(DinnerwareConfig.allowOvereating()) && isFood)
+        if (isFoodAndCanAlwaysBeEaten || (pPlayer.canEat(DinnerwareConfig.allowOvereating()) && isFood)
         ) {
 
             if (DinnerwareConfig.isInFoodBlacklist(itemStack.getItem())) {
@@ -421,22 +495,30 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
                 return InteractionResult.PASS;
             }
 
-            if ((itemStack.getItem() instanceof BowlFoodItem) ||
-                    (itemStack.getItem() instanceof SuspiciousStewItem)) {
+            ItemStack useContainer = foodProperties.usingConvertsTo()
+                .filter(stack ->
+                    stack.is(ModTags.Items.FOOD_CONTAINERS) ||
+                    stack.is(ModTags.Items.DRINK_CONTAINERS)
+                )
+                .map(ItemStack::copy)
+                .orElse(ItemStack.EMPTY);
 
-                Containers.dropItemStack(pLevel,
-                        pPos.getX(),
-                        pPos.getY(),
-                        pPos.getZ(),
-                        new ItemStack(Items.BOWL));
-            } else {
-                if (PlatformHooks.hasCraftingRemainingItem(itemStack)) {
-                    Containers.dropItemStack(pLevel,
-                        pPos.getX(),
-                        pPos.getY(),
-                        pPos.getZ(),
-                        PlatformHooks.getCraftingRemainingItem(itemStack));
-                }
+            if (!useContainer.isEmpty()) {
+                Containers.dropItemStack(
+                    pLevel,
+                    pPos.getX(),
+                    pPos.getY(),
+                    pPos.getZ(),
+                    useContainer
+                );
+            } else if (PlatformHooks.hasCraftingRemainingItem(itemStack)) {
+                Containers.dropItemStack(
+                    pLevel,
+                    pPos.getX(),
+                    pPos.getY(),
+                    pPos.getZ(),
+                    PlatformHooks.getCraftingRemainingItem(itemStack)
+                );
             }
 
             if (!pLevel.isClientSide && pPlayer instanceof ServerPlayer serverPlayer) {

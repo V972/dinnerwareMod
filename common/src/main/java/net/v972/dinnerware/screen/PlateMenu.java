@@ -1,6 +1,6 @@
 package net.v972.dinnerware.screen;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.BlockPos;import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -27,6 +27,10 @@ public class PlateMenu extends AbstractContainerMenu {
     private final ContainerData data;
     private final PlateInventoryContainer plateInventory;
     private final List<Integer> targetIndexCache = new ArrayList<>();
+
+    public PlateMenu(int containerId, Inventory inv, BlockPos pos) {
+        this(containerId, inv, inv.player.level().getBlockEntity(pos), new SimpleContainerData(1));
+    }
 
     public PlateMenu(int containerId, Inventory inv, FriendlyByteBuf buffer) {
         this(containerId, inv, inv.player.level().getBlockEntity(buffer.readBlockPos()), new SimpleContainerData(1));
@@ -189,7 +193,7 @@ public class PlateMenu extends AbstractContainerMenu {
         for (int slot = 0; slot < plateInventory.getContainerSize() && !sourceStack.isEmpty(); slot++) {
             ItemStack existing = plateInventory.getItem(slot);
 
-            if (!existing.isEmpty() && ItemStack.isSameItemSameTags(existing, sourceStack)) {
+            if (!existing.isEmpty() && ItemStack.isSameItemSameComponents(existing, sourceStack)) {
                 ItemStack remainder = plateInventory.insertItem(slot, sourceStack, false);
                 sourceStack.setCount(remainder.getCount());
             }

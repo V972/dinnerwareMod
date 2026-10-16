@@ -1,6 +1,7 @@
 package net.v972.dinnerware.fabric.registry;
 
 import net.minecraft.advancements.CriteriaTriggers;
+import net.v972.dinnerware.DinnerwareConstants;
 import net.v972.dinnerware.advancement.ManualCriterionTrigger;
 
 public final class FabricModCriterionTriggers {
@@ -14,6 +15,7 @@ public final class FabricModCriterionTriggers {
         if (registered) return;
 
         manualTrigger = CriteriaTriggers.register(
+            DinnerwareConstants.id("manual_trigger").toString(),
             new ManualCriterionTrigger()
         );
 

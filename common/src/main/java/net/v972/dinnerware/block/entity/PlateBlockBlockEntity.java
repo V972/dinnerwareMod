@@ -1,7 +1,9 @@
 package net.v972.dinnerware.block.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 //import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
@@ -17,6 +19,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -144,23 +147,23 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     // ========================================
 
     @Override
-    public void load(@NotNull CompoundTag pTag) {
-        super.load(pTag);
-        loadClientData(pTag);
+    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
+        super.loadAdditional(tag, registries);
+        loadClientData(tag, registries);
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag pTag) {
-        super.saveAdditional(pTag);
-        saveClientData(pTag);
+    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
+        super.saveAdditional(tag, registries);
+        saveClientData(tag, registries);
     }
 
     // ========================================
 
     @Override
-    public CompoundTag getUpdateTag() {
-        CompoundTag pTag = super.getUpdateTag();
-        saveClientData(pTag);
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {
+        CompoundTag pTag = super.getUpdateTag(registries);
+        saveClientData(pTag, registries);
         return pTag;
     }
 
@@ -173,26 +176,26 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
 
     // ========================================
 
-    protected void saveClientData(CompoundTag pTag) {
+    protected void saveClientData(CompoundTag pTag, HolderLookup.@NotNull Provider registries) {
         if (pTag == null)
             pTag = new CompoundTag();
 
         CompoundTag inventoryTag = new CompoundTag();
-        this.inventory.save(inventoryTag);
+        this.inventory.save(inventoryTag, registries);
         pTag.put(ITEMS_TAG, inventoryTag);
 
         if (this.name != null) {
-            pTag.putString("CustomName", Component.Serializer.toJson(this.name));
+            pTag.putString("CustomName", Component.Serializer.toJson(this.name, registries));
         }
     }
 
-    protected void loadClientData(CompoundTag pTag) {
+    protected void loadClientData(CompoundTag pTag, HolderLookup.@NotNull Provider registries) {
         if (pTag != null) {
             if (pTag.contains("CustomName", 8)) {
-                this.name = Component.Serializer.fromJson(pTag.getString("CustomName"));
+                this.name = Component.Serializer.fromJson(pTag.getString("CustomName"), registries);
             }
             if (pTag.contains(ITEMS_TAG)) {
-                this.inventory.load(pTag.getCompound(ITEMS_TAG));
+                this.inventory.load(pTag.getCompound(ITEMS_TAG), registries);
             }
         }
     }
@@ -225,8 +228,18 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
     // ========================================
 
     public void fromItem(ItemStack pItem) {
-        CompoundTag pTag = pItem.getTag();
-        loadClientData(pTag);
+        if (this.level == null) return;
+
+        CustomData blockEntityData = pItem.get(DataComponents.BLOCK_ENTITY_DATA);
+
+        if (blockEntityData != null) {
+            loadClientData(blockEntityData.copyTag(), this.level.registryAccess());
+        }
+
+        Component customName = pItem.get(DataComponents.CUSTOM_NAME);
+        if (customName != null) {
+            this.name = customName;
+        }
     }
 
     public ItemStack getItem() {
@@ -239,14 +252,15 @@ public class PlateBlockBlockEntity extends BlockEntity implements MenuProvider, 
             CompoundTag compoundtag = new CompoundTag();
 
             CompoundTag inventoryTag = new CompoundTag();
-            this.inventory.save(inventoryTag);
+            HolderLookup.Provider registries = Objects.requireNonNull(this.level).registryAccess();
+            this.inventory.save(inventoryTag, registries);
             compoundtag.put(ITEMS_TAG, inventoryTag);
 
             BlockItem.setBlockEntityData(itemstack, this.getType(), compoundtag);
         }
 
         if (this.name != null) {
-            itemstack.setHoverName(this.name);
+            itemstack.set(DataComponents.CUSTOM_NAME, this.name);
         }
 
         return itemstack;

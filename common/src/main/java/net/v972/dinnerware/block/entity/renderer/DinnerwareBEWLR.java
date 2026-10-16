@@ -45,10 +45,11 @@ public class DinnerwareBEWLR extends BlockEntityWithoutLevelRenderer {
     }
 
     private void renderPlate(ItemStack stack, ItemDisplayContext context, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
-        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+        Minecraft minecraft = Minecraft.getInstance();
+        ItemRenderer itemRenderer = minecraft.getItemRenderer();
 
         PlateBlock plateBlock = (PlateBlock)((PlateBlockBlockItem)stack.getItem()).getBlock();
-        ModelManager modelManager = Minecraft.getInstance().getModelManager();
+        ModelManager modelManager = minecraft.getModelManager();
         BakedModel bakedModel = modelManager.getModel(
             BlockModelShaper.stateToModelLocation(plateBlock.defaultBlockState())
         );
@@ -60,14 +61,27 @@ public class DinnerwareBEWLR extends BlockEntityWithoutLevelRenderer {
             poseStack.translate(0, 0, 0.485);
             poseStack.scale(0.625f, 0.625f, 0.625f);
 
-            boolean isLeftHand = context == ItemDisplayContext.FIRST_PERSON_LEFT_HAND || context == ItemDisplayContext.THIRD_PERSON_LEFT_HAND;
+            boolean isLeftHand = 
+                context == ItemDisplayContext.FIRST_PERSON_LEFT_HAND ||
+                context == ItemDisplayContext.THIRD_PERSON_LEFT_HAND;
             itemRenderer.render(stack, ItemDisplayContext.FIXED, isLeftHand, poseStack, buffer, packedLight, packedOverlay, bakedModel);
         }
         poseStack.popPose();
 
         Direction facing = Direction.SOUTH;
-        NonNullList<ItemStack> stacks = DinnerwareInventoryHelper.plateContentFromNBT(stack.getTag());
-        int nonEmptyCount = DinnerwareInventoryHelper.getNonEmptySlotsCount(stacks);
+
+        NonNullList<ItemStack> stacks;
+        int nonEmptyCount;
+
+        if (minecraft.getConnection() != null) {
+            stacks = DinnerwareInventoryHelper.plateContentFromItem(stack,
+                minecraft.getConnection().registryAccess()
+            );
+            nonEmptyCount = DinnerwareInventoryHelper.getNonEmptySlotsCount(stacks);
+        } else {
+            stacks = NonNullList.withSize(3, ItemStack.EMPTY);
+            nonEmptyCount = 0;
+        }
 
         DinnerwareRenderHelper.positionAndRenderPlateItems(poseStack, buffer, itemRenderer, stacks, nonEmptyCount, facing, null, packedLight);
     }
@@ -78,7 +92,7 @@ public class DinnerwareBEWLR extends BlockEntityWithoutLevelRenderer {
         // Tray itself is rendered via mixin
 
         Direction facing = Direction.SOUTH;
-        NonNullList<ItemStack> stacks = DinnerwareInventoryHelper.trayContentFromNBT(pStack.getTag());
+        NonNullList<ItemStack> stacks = DinnerwareInventoryHelper.trayContentFromItem(pStack);
 
         DinnerwareRenderHelper.positionAndRenderTrayItems(pPoseStack, pBuffer, itemRenderer,
                 stacks, facing, pDisplayContext, null, pPackedLight);

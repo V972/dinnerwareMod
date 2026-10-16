@@ -41,8 +41,8 @@ public class PlateScreen extends AbstractContainerScreen<PlateMenu> {
         if (DinnerwareConfig.eatingMode() == DinnerwareEatingMode.ROUND_ROBIN) {
             int selectedSlot = menu.getRoundRobinSelectedSlot();
             if (selectedSlot > -1) {
-                ResourceLocation widgets = new ResourceLocation(
-                        "minecraft", "textures/gui/widgets.png");
+                ResourceLocation widgets = ResourceLocation.fromNamespaceAndPath(
+                    "minecraft", "textures/gui/widgets.png");
 
                 int xOffset = switch (selectedSlot) {
                   case 0 -> DinnerwareConfig.rightToLeft() ? 96 : 56;
@@ -64,7 +64,7 @@ public class PlateScreen extends AbstractContainerScreen<PlateMenu> {
 
     @Override
     public void render(@NotNull GuiGraphics pGuiGraphics, int mouseX, int mouseY, float delta) {
-        renderBackground(pGuiGraphics);
+        renderBackground(pGuiGraphics, mouseX, mouseY, delta);
         super.render(pGuiGraphics, mouseX, mouseY, delta);
         renderTooltip(pGuiGraphics, mouseX, mouseY);
     }
