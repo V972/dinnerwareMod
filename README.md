@@ -32,7 +32,6 @@ Detailed description can be found on [GitHub Wiki](https://github.com/V972/dinne
 | Forge    |   ✅    |   ✅    |   ✅    |        |
 | Neoforge |        |        |        |   ✅    |
 | Fabric   |   ✅    |   ✅    |   ✅    |   ✅    |
-<sub>*At the time of writing, versions other than 1.20.1 are still in development.</sub>
 
 ## Potential Plans and Known Issues
 
@@ -42,10 +41,11 @@ Any of these may or may not be implemented, depends.
 - Modded materials for plates;  
 - Different sizes/types of plates;  
 - Provide robust [preferably user-driven] system for handling irregular modded food items;  
-- HUD and ability for switching top plate stack in the tray a-la quiver from Supplementaries.
-Fun, but unlikely stuff:
-- chance for plate to fall off on tall towers
-- burnable item burn with flames
+- HUD and ability for switching top plate stack in the tray a-la quiver from Supplementaries.  
+
+Fun, but unlikely stuff:  
+- Chance for plate to fall off tall tray towers;
+- Burnable item burn with flames (with potential soul flames?).
 
 </details>  
 
