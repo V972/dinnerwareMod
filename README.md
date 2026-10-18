@@ -44,6 +44,7 @@ Any of these may or may not be implemented, depends.
 - HUD and ability for switching top plate stack in the tray a-la quiver from Supplementaries.  
 
 Fun, but unlikely stuff:  
+- Actual plates washing;
 - Chance for plate to fall off tall tray towers;
 - Burnable item burn with flames (with potential soul flames?).
 
@@ -51,6 +52,10 @@ Fun, but unlikely stuff:
 
 <details><summary>Known Issues</summary>  
 
+- With Create Aeronautics:
+  - When dis-/assmebling sub-levels the contents of the plates is duped. It's a known bug with Aero and as far as I know, there's nothing I can do;  
+    - Use [Aeronautics: Dupe fix](https://modrinth.com/mod/aeronautics-dupe-fix) ([gihub](https://github.com/Feryaq/aerodupefix)) to fix this or at least eliminate duping potential.  
+  - When assembling sub-level with already placed plate, the late's inventory becomes a bit bugged. Placing plate on already assembled sub-level behaves normally.  
 - Tag-based crafting ingredients are not properly listed in recipe unlock criteria. This is irrelevant to 90% of the players, but there's still that 10%, so I will try to do something about it.  
 
 </details>  
