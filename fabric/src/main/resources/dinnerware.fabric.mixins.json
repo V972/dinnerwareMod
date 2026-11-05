@@ -2,16 +2,11 @@
   "required": true,
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
-  "package": "net.v972.dinnerware.mixins",
+  "package": "net.v972.dinnerware.fabric.mixins",
   "mixins": [
-    "AbstractContainerMenuAccessor",
-    "PistonBaseBlockMixin",
-    "LivingEntityAccessor"
+    "PistonBaseBlockMixin"
   ],
-  "client": [
-    "ItemRendererMixin",
-    "HumanoidModelMixin"
-  ],
+  "client": [],
   "injectors": {
     "defaultRequire": 1
   }
