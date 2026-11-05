@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.core.Registry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
+import net.v972.dinnerware.mixins_interfaces.IDinnerwareItemDynamicRendering;
 import net.v972.dinnerware.util.DinnerwareRegistryObject;
 
 import java.util.HashMap;
@@ -17,9 +18,10 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class DinnerwareBEWLRManager {
+    @Deprecated(forRemoval = false)
     public static final Map<Item, DinnerwareRegistryObject<BlockEntityWithoutLevelRenderer>> RENDERERS = new HashMap<>();
 
-    // Registers a single "ItemLike" instance to a single "BlockEntityWithoutLevelRenderer" instance, and provides "Minecraft".
+    /** Registers a single {@link ItemLike} instance to a single {@link BlockEntityWithoutLevelRenderer} instance, and provides {@link Minecraft}. */
     public static void register(ItemLike item, Function<Minecraft, BlockEntityWithoutLevelRenderer> renderer) {
         Objects.requireNonNull(item.asItem(), "item is null");
         Objects.requireNonNull(renderer, "renderer is null");
@@ -28,13 +30,13 @@ public class DinnerwareBEWLRManager {
             throw new IllegalArgumentException("Item " + Registry.ITEM.getKey(item.asItem()) + " is already registered as a BEWLR!");
     }
 
-    // Registers a single "ItemLike" instance to a single "BlockEntityWithoutLevelRenderer" instance, and provides "BlockEntityRenderDispatcher" and "EntityModelSet".
+    /** Registers a single {@link ItemLike} instance to a single {@link BlockEntityWithoutLevelRenderer} instance, and provides {@link BlockEntityRenderDispatcher} and {@link EntityModelSet}. */
     public static void register(ItemLike item, BiFunction<BlockEntityRenderDispatcher, EntityModelSet, BlockEntityWithoutLevelRenderer> renderer) {
         Objects.requireNonNull(renderer, "renderer is null");
         DinnerwareBEWLRManager.register(item, minecraft -> renderer.apply(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels()));
     }
 
-    // Registers a set of "ItemLike" instances to a single "BlockEntityWithoutLevelRenderer" instance, and provides "Minecraft".
+    /** Registers a {@link Set} of {@link ItemLike} instances to a single {@link BlockEntityWithoutLevelRenderer} instance, and provides {@link Minecraft}. */
     public static void register(Set<ItemLike> items, Function<Minecraft, BlockEntityWithoutLevelRenderer> renderer) {
         Objects.requireNonNull(items, "items is null");
         Objects.requireNonNull(renderer, "renderer is null");
@@ -52,15 +54,21 @@ public class DinnerwareBEWLRManager {
                 throw new IllegalArgumentException("Item " + Registry.ITEM.getKey(item.asItem()) + " is already registered as a BEWLR!");
     }
 
-    // Registers a set of "ItemLike" instances to a single "BlockEntityWithoutLevelRenderer" instance, and provides "BlockEntityRenderDispatcher" and "EntityModelSet".
+    /** Registers a {@link Set} of {@link ItemLike} instances to a single {@link BlockEntityWithoutLevelRenderer} instance, and provides {@link BlockEntityRenderDispatcher} and {@link EntityModelSet}. */
     public static void register(Set<ItemLike> items, BiFunction<BlockEntityRenderDispatcher, EntityModelSet, BlockEntityWithoutLevelRenderer> renderer) {
         Objects.requireNonNull(renderer, "renderer is null");
         DinnerwareBEWLRManager.register(items, minecraft -> renderer.apply(minecraft.getBlockEntityRenderDispatcher(), minecraft.getEntityModels()));
     }
 
+    /**
+     * Used to retrieve the {@link BlockEntityWithoutLevelRenderer} that corresponds to the given {@link ItemLike}.
+     * <p>
+     * <strong>NOTE:</strong> Avoid calling this method when possible, instead cast {@code item} to
+     * {@link IDinnerwareItemDynamicRendering} and use {@link IDinnerwareItemDynamicRendering#dinnerware$getBEWLR()}.</p>
+     */
+    @Deprecated(forRemoval = false)
     public static DinnerwareRegistryObject<BlockEntityWithoutLevelRenderer> get(ItemLike item) {
         Objects.requireNonNull(item.asItem(), "item is null");
-
         return DinnerwareBEWLRManager.RENDERERS.get(item.asItem());
     }
 }

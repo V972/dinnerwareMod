@@ -25,6 +25,7 @@
     ]
   },
   "mixins": [
+    "dinnerware.mixins.json",
     "dinnerware.fabric.mixins.json"
   ],
   "depends": {

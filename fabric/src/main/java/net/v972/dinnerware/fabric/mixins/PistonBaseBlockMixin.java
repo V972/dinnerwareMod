@@ -1,4 +1,4 @@
-package net.v972.dinnerware.mixins;
+package net.v972.dinnerware.fabric.mixins;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

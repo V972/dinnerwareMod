@@ -10,8 +10,11 @@
     "DispenserBlockAccessor"
   ],
   "client": [
+    "bewlr.GameRendererMixin",
+    "bewlr.ItemMixin",
+    "bewlr.ItemRendererMixin",
+    "bewlr.ItemStackMixin",
     "MinecraftAccessor",
-    "ItemRendererMixin",
     "HumanoidModelMixin"
   ],
   "injectors": {
