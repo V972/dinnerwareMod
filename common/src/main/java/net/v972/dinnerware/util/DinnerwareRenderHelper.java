@@ -10,13 +10,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
+import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
 import net.v972.dinnerware.config.DinnerwareConfig;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public final class DinnerwareRenderHelper {
@@ -56,11 +60,24 @@ public final class DinnerwareRenderHelper {
             }
         }
 
+        // To prevent over-rendering and/or clipping of lower plate's content into upper ones, all but topmost's plate
+        // content is omitted from rendering.
+        int topStackIndex = -1;
+        for (int i = pStacks.size() - 1; i >= 0; i--) {
+            if (!pStacks.get(i).isEmpty()) {
+                topStackIndex = i;
+                break;
+            }
+        }
+
         for (int i = 0; i < pStacks.size(); i++) {
             var stack = pStacks.get(i);
             if (stack.isEmpty()) continue;
 
             currentY += 0.05f;
+
+            ItemStack emptyRenderStack = copyWithoutPlateContents(stack);
+
             for (int j = 0; j < stack.getCount(); j++) {
                 currentY += j == 0 ? 0 : 0.025f;
 
@@ -83,13 +100,29 @@ public final class DinnerwareRenderHelper {
                 // Scale down
                 pPoseStack.scale(0.45f, 0.45f, 0.45f);
 
-                pItemRenderer.renderStatic(stack,
+                boolean isTopPlate = i == topStackIndex && j == stack.getCount() - 1;
+                ItemStack renderStack = isTopPlate ? stack : emptyRenderStack;
+
+                pItemRenderer.renderStatic(renderStack,
                     ItemTransforms.TransformType.FIXED, pLightLevel, OverlayTexture.NO_OVERLAY,
                     pPoseStack, pBuffer, i);
 
                 pPoseStack.popPose();
             }
         }
+    }
+
+    private static ItemStack copyWithoutPlateContents(ItemStack stack) {
+        CompoundTag blockEntityData = BlockItem.getBlockEntityData(stack);
+
+        if (blockEntityData == null || !blockEntityData.contains(PlateBlockBlockEntity.ITEMS_TAG)) {
+            return stack;
+        }
+
+        ItemStack copy = stack.copy();
+        Objects.requireNonNull(BlockItem.getBlockEntityData(copy)).remove(PlateBlockBlockEntity.ITEMS_TAG);
+
+        return copy;
     }
 
     private static int getPlateTowerCount(NonNullList<ItemStack> pStacks) {
