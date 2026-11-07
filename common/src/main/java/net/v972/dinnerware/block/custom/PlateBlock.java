@@ -241,6 +241,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     @Override
     public void entityInside(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, @NotNull Entity pEntity) {
         if (pLevel.isClientSide || !DinnerwareConfig.fragilePlates()) return;
+        if (MATERIAL == Blocks.BEDROCK) return;
         if (pEntity.getType().is(ModTags.Entities.FRAGILE_PLATE_IGNORED)) return;
 
         AABB plateBox = pState.getShape(pLevel, pPos).bounds().move(pPos);
