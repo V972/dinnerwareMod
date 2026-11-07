@@ -55,7 +55,7 @@ public final class DinnerwareFabricAdvancementProvider
                 FabricModBlocks.plateBlock(PlateDefinition.DIAMOND),
                 Component.translatable("advancement.dinnerware.get_diamond_plate.title"),
                 Component.translatable("advancement.dinnerware.get_diamond_plate.description"),
-                null, FrameType.TASK, true, false, false
+                null, FrameType.TASK, true, true, false
             )
             .addCriterion("got_diamond_plate",
                 InventoryChangeTrigger.TriggerInstance.hasItems(
@@ -92,7 +92,7 @@ public final class DinnerwareFabricAdvancementProvider
                 inceptionPlateStack,
                 Component.translatable("advancement.dinnerware.put_plate_in_plate.title"),
                 Component.translatable("advancement.dinnerware.put_plate_in_plate.description"),
-                null, FrameType.GOAL, true, false, false
+                null, FrameType.GOAL, true, true, false
             )
             .addCriterion("put_plate_in_plate",
                 ManualCriterionTrigger.TriggerInstance.byId(
