@@ -12,6 +12,7 @@ repositories {
 dependencies {
     compileOnly 'org.spongepowered:mixin:0.8.5'
     compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+    compileOnly 'org.jetbrains:annotations:24.1.0'
 }
 
 java {
