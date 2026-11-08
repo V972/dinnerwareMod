@@ -232,7 +232,7 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
                 return;
             }
 
-            if (pPlayer.isCrouching()) { //was isShiftDown(), test is breaks things
+            if (DinnerwareConfig.allowPickupPlates() && pPlayer.isCrouching()) { //was isShiftDown(), test is breaks things
                 pickUpPlate(plateEntity, pPlayer, pLevel, pPos);
                 return;
             }

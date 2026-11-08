@@ -105,6 +105,14 @@ public final class FabricCommonConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     public boolean dispensersPlacePlates = true;
 
+    @Comment("""
+        If set to true, players can pick up plates by Sneak + Attack. Except Bedrock plate of course.
+        Disabling this doesn't affect trays.
+        Default: true
+        """)
+    @ConfigEntry.Gui.Tooltip
+    public boolean allowPickupPlates = true;
+
     @Override
     public void validatePostLoad() throws ValidationException {
         maxPlateStackSize = Math.max(1, Math.min(64, maxPlateStackSize));

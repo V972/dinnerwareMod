@@ -57,6 +57,8 @@ public final class DinnerwareConfig {
         return backend().dispensersPlacePlates();
     }
 
+    public static boolean allowPickupPlates() { return backend().allowPickupPlates(); }
+
     public static boolean isInFoodBlacklist(Item item) {
         return backend().isInFoodBlacklist(item);
     }
