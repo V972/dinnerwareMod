@@ -125,6 +125,9 @@
   "text.autoconfig.dinnerware-common.option.dispensersPlacePlates": "Раздатчики устанавливают тарелки",
   "text.autoconfig.dinnerware-common.option.dispensersPlacePlates.@Tooltip": "Если установлено значение true, раздатчики будут размещать блоки тарелок.\nОтключите эту опцию, если другой мод предоставляет похожее поведение.\nПо умолчанию: true",
 
+  "text.autoconfig.dinnerware-common.option.allowPickupPlates": "Ручное поднятие тарелок",
+  "text.autoconfig.dinnerware-common.option.allowPickupPlates.@Tooltip": "Если установлено значение true, игроки могут подбирать тарелки левым кликом в присяде. Кроме тарелки из Бедрока разумеется.\nОтключение этой опции не влияет на подносы.\nПо умолчанию: true",
+
   "text.autoconfig.dinnerware-client.title": "Dinnerware: Настройки клиента",
 
   "text.autoconfig.dinnerware-client.option.maxTrayTooltipLines": "Максимальное количество строк подсказки подноса",

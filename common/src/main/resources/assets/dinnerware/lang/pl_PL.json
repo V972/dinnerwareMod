@@ -125,6 +125,9 @@
   "text.autoconfig.dinnerware-common.option.dispensersPlacePlates": "Dozownik umieszcza bloki talerzy",
   "text.autoconfig.dinnerware-common.option.dispensersPlacePlates.@Tooltip": "Jeśli ustawiono wartość true, dozowniki będą umieszczać bloki talerzy.\nTę opcję można wyłączyć, jeśli inny mod zapewnia podobne działanie.\nDomyślnie: true",
 
+  "text.autoconfig.dinnerware-common.option.allowPickupPlates": "Ręczne podnoszenie talerzy",
+  "text.autoconfig.dinnerware-common.option.allowPickupPlates.@Tooltip": "Jeśli ustawiono wartość true, gracze mogą podnosić talerze lewym przyciskiem myszy, kucając. Oczywiście z wyjątkiem talerzy z bedrocka.\nWyłączenie tej opcji nie ma wpływu na tace.\nDomyślnie: true",
+
   "text.autoconfig.dinnerware-client.title": "Dinnerware: Ustawienia klienta",
 
   "text.autoconfig.dinnerware-client.option.maxTrayTooltipLines": "Maksymalna liczba wierszy w podpowiedzi dotyczącej tacy",
