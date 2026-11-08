@@ -202,17 +202,13 @@ public class PlateBlock extends BaseEntityBlock implements SimpleWaterloggedBloc
     public void attack(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer) {
         BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
 
-        if (!(blockEntity instanceof PlateBlockBlockEntity plateEntity)) {
+        if (!(blockEntity instanceof PlateBlockBlockEntity plateEntity) ||
+            plateEntity.isEmpty() || this.MATERIAL == Blocks.BEDROCK) {
             super.attack(pState, pLevel, pPos, pPlayer);
             return;
         }
 
-        if (plateEntity.isEmpty() || this.MATERIAL == Blocks.BEDROCK) {
-            super.attack(pState, pLevel, pPos, pPlayer);
-            return;
-        }
-
-        if (pPlayer.isShiftKeyDown()) {
+        if (DinnerwareConfig.allowPickupPlates() && pPlayer.isCrouching()) {
             pickUpPlate(plateEntity, pPlayer, pLevel, pPos);
             return;
         }

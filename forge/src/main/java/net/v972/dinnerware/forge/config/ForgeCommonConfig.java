@@ -107,6 +107,15 @@ public class ForgeCommonConfig
             )
             .define("dispensersPlacePlates", true);
 
+    public static final ForgeConfigSpec.BooleanValue ALLOW_PICKUP_PLATES = BUILDER
+            .comment(
+                "\n" +
+                "If set to true, dispensers will place plate blocks. Except Bedrock plate ofc.\n" +
+                "Disabling this doesn't affect trays. \n" +
+                "Default: true"
+            )
+            .define("allowPickupPlates", true);
+
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
 

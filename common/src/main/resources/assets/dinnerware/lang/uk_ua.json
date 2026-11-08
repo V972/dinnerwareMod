@@ -126,6 +126,9 @@
   "text.autoconfig.dinnerware-common.option.dispensersPlacePlates": "Роздавачі встановлюють тарілки",
   "text.autoconfig.dinnerware-common.option.dispensersPlacePlates.@Tooltip": "Якщо встановлено значення true, роздавачі розміщуватимуть блоки тарілок.\nВимкніть цю опцію, якщо інший мод забезпечує подібну поведінку.\nЗа замовчуванням: true",
 
+  "text.autoconfig.dinnerware-common.option.allowPickupPlates": "Ручне підняття тарілок",
+  "text.autoconfig.dinnerware-common.option.allowPickupPlates.@Tooltip": "Якщо встановлено значення true, гравці підбирати тарілки лівим кліком у присяді. Окрім тарілки з корінної породи звісно.\nВідключення цієї опції не впливає на таці.\nЗа замовчуванням: true",
+
   "text.autoconfig.dinnerware-client.title": "Dinnerware: Налаштування клієнта",
 
   "text.autoconfig.dinnerware-client.option.maxTrayTooltipLines": "Максимальна кількість рядків підказки таці",

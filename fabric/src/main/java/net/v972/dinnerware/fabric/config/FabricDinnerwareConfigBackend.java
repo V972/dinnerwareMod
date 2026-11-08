@@ -57,6 +57,11 @@ public final class FabricDinnerwareConfigBackend
     }
 
     @Override
+    public boolean allowPickupPlates() {
+        return DinnerwareFabricConfigs.common().allowPickupPlates;
+    }
+
+    @Override
     public boolean isInFoodBlacklist(Item item) {
         ResourceLocation id = Registry.ITEM.getKey(item);
         if (id == Registry.ITEM.getDefaultKey()) return false;

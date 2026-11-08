@@ -12,6 +12,7 @@ public interface DinnerwareConfigBackend {
     DinnerwareEatingMode eatingMode();
     boolean trayMergeMatchingItem();
     boolean dispensersPlacePlates();
+    boolean allowPickupPlates();
     boolean isInFoodBlacklist(Item item);
     default boolean isInFoodBlacklist(ItemStack stack) {
         return isInFoodBlacklist(stack.getItem());

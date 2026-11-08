@@ -27,11 +27,11 @@ Detailed description can be found on [GitHub Wiki](https://github.com/V972/dinne
 
 ## Loaders / Versions
 
-|          | 1.18.2 | 1.19.2 | 1.20.1 | 1.21.1 |
-|----------|--------|--------|--------|--------|
-| Forge    |   ✅    |   ✅    |   ✅    |        |
-| Neoforge |        |        |        |   ✅    |
-| Fabric   |   ✅    |   ✅    |   ✅    |   ✅    |
+|          | 1.18.2 | 1.19.2 | 1.20.1 | 1.21.1 | 1.21.11 |
+|----------|:------:|:------:|:------:|:------:|:-------:|
+| Forge    |   ✅   |   ✅   |   ✅   |        |         |
+| NeoForge |        |        |        |   ✅   |   ✅    |
+| Fabric   |   ✅   |   ✅   |   ✅   |   ✅   |         |
 
 ## Potential Plans and Known Issues
 
