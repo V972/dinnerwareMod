@@ -1,7 +1,7 @@
 package net.v972.dinnerware.mixins.bewlr;
 
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.server.packs.resources.ResourceProvider;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.v972.dinnerware.block.entity.renderer.DinnerwareBEWLRManager;
 import net.v972.dinnerware.mixins_interfaces.IDinnerwareItemDynamicRendering;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,7 +17,7 @@ public class GameRendererMixin {
     // This method is a good place to attach our BEWLRs to their items,
     // it runs after Forge's enqueued client init, and before game rendering.
     @Inject(method = "reloadShaders", at = @At("TAIL"))
-    public void onShaderReload(ResourceProvider resourceProvider, CallbackInfo ci) {
+    public void onShaderReload(ResourceManager resourceManager, CallbackInfo ci) {
         // NOTE: Since this method gets called on every reload, we have to ensure the BEWLRs are only attached once
         if (!ATTACHED_RENDERERS) {
             DinnerwareBEWLRManager.RENDERERS.forEach((item, factory) -> {
