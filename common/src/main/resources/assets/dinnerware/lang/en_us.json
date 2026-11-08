@@ -126,6 +126,9 @@
   "text.autoconfig.dinnerware-common.option.dispensersPlacePlates": "Dispensers Place Plates",
   "text.autoconfig.dinnerware-common.option.dispensersPlacePlates.@Tooltip": "If set to true, dispensers will place plate blocks.\nDisable this if another mod provides similar behavior.\nDefault: true",
 
+  "text.autoconfig.dinnerware-common.option.allowPickupPlates": "Players Pick up Plates by Hand",
+  "text.autoconfig.dinnerware-common.option.allowPickupPlates.@Tooltip": "If set to true, players can pick up plates by Sneak + Attack. Except Bedrock plate of course.\nDisabling this doesn't affect trays.\nDefault: true",
+
   "text.autoconfig.dinnerware-client.title": "Dinnerware Client Config",
 
   "text.autoconfig.dinnerware-client.option.maxTrayTooltipLines": "Maximum Tray Tooltip Lines",

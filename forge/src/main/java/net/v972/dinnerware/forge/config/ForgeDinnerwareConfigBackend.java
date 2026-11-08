@@ -51,6 +51,11 @@ public final class ForgeDinnerwareConfigBackend implements DinnerwareConfigBacke
     }
 
     @Override
+    public boolean allowPickupPlates() {
+        return ForgeCommonConfig.ALLOW_PICKUP_PLATES.get();
+    }
+
+    @Override
     public boolean isInFoodBlacklist(Item item) {
         return ForgeCommonConfig.isInFoodBlacklist(item);
     }
