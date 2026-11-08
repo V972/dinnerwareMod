@@ -47,6 +47,9 @@ fabricApi {
 }
 
 loom {
+    mixin {
+        defaultRefmapName.set("${mod_id}.refmap.json")
+    }
     runs {
         datagen {
             property(
