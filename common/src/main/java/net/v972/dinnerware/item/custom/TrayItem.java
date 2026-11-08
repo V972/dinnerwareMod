@@ -289,7 +289,8 @@ public class TrayItem extends Item {
         ItemUtils.onContainerDestroyed(pItemEntity, contents.nonEmptyItems());
     }
 
-    public void appendHoverText(@NotNull ItemStack pStack, Level pLevel, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
+    @Override
+    public void appendHoverText(@NotNull ItemStack pStack, @NotNull TooltipContext pContext, List<Component> pTooltipComponents, @NotNull TooltipFlag pIsAdvanced) {
         String maxFullness = "64";
         pTooltipComponents.add(
             Component.translatable("container.dinnerware.tray.fullness",

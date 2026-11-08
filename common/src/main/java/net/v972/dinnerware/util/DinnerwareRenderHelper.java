@@ -9,10 +9,11 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.v972.dinnerware.block.entity.PlateBlockBlockEntity;
@@ -20,7 +21,6 @@ import net.v972.dinnerware.config.DinnerwareConfig;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 public final class DinnerwareRenderHelper {
@@ -112,18 +112,24 @@ public final class DinnerwareRenderHelper {
         }
     }
 
-    private static ItemStack copyWithoutPlateContents(ItemStack stack) {
-        CompoundTag blockEntityData = BlockItem.getBlockEntityData(stack);
 
-        if (blockEntityData == null || !blockEntityData.contains(PlateBlockBlockEntity.ITEMS_TAG)) {
+    private static ItemStack copyWithoutPlateContents(ItemStack stack) {
+        CustomData blockEntityData = stack.get(DataComponents.BLOCK_ENTITY_DATA);
+
+        if (blockEntityData == null ||
+                !blockEntityData.contains(PlateBlockBlockEntity.ITEMS_TAG)) {
             return stack;
         }
 
         ItemStack copy = stack.copy();
-        Objects.requireNonNull(BlockItem.getBlockEntityData(copy)).remove(PlateBlockBlockEntity.ITEMS_TAG);
+        CompoundTag tag = blockEntityData.copyTag();
+        tag.remove(PlateBlockBlockEntity.ITEMS_TAG);
+
+        copy.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(tag));
 
         return copy;
     }
+
 
     private static int getPlateTowerCount(NonNullList<ItemStack> pStacks) {
         int sum = 0;
